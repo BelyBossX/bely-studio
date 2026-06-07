@@ -14,6 +14,9 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState([]);
 
+  const [aiResponse, setAiResponse] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+
 const [stats, setStats] = useState({
 
   totalAudios: 0,
@@ -203,6 +206,65 @@ setLoading(false);
 
   };
 
+  const askAI = async () => {
+
+  if (text.trim() === "") {
+
+    alert("Tanpri antre yon kestyon oswa tèks");
+
+    return;
+
+  }
+
+  try {
+
+    setAiLoading(true);
+
+    setAiResponse("");
+
+    const response = await fetch(
+      "https://bely-studio-backend.onrender.com/ask-ai",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          prompt: text
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.success) {
+
+      setAiResponse(data.answer);
+
+    } else {
+
+      setAiResponse("Erè pandan repons AI a.");
+
+    }
+
+    setAiLoading(false);
+
+  } catch (error) {
+
+    console.error(error);
+
+    setAiLoading(false);
+
+    setAiResponse(
+      "Erè koneksyon ak AI a."
+    );
+
+  }
+
+};
+
   return (
 
     <div className="container">
@@ -326,6 +388,19 @@ setLoading(false);
     ? "⏳ Odyo w' la ap jenere, Pasyante..."
     : "🎙️ Jenere Odyo"}
 </button>
+
+<br />
+<br />
+
+<button
+  onClick={askAI}
+  disabled={aiLoading}
+>
+  {aiLoading
+    ? "⏳ AI ap reflechi..."
+    : "🤖 Mande AI"}
+</button>
+
       <br />
 <br />
 
@@ -460,6 +535,30 @@ setLoading(false);
   </p>
 
 </div>
+
+{aiResponse && (
+
+  <>
+
+    <br />
+
+    <h2
+      style={{
+        color: "white"
+      }}
+    >
+      🤖 Repons AI
+    </h2>
+
+    <div
+      className="history-card"
+    >
+      {aiResponse}
+    </div>
+
+  </>
+
+)}
 
 <footer>
 
