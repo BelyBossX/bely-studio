@@ -35,7 +35,7 @@ textarea{
 
   width:100%;
 
-  min-height:250px;
+  min-height:180px;
 
   padding:20px;
 
@@ -45,9 +45,14 @@ textarea{
 
   font-size:16px;
 
-  resize:vertical;
+  font-family:inherit;
+
+  outline:none;
+
+  resize:none;
 
 }
+
 select{
   width:100%;
   padding:12px;
