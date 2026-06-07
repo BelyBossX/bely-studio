@@ -4,8 +4,7 @@ import "./App.css";
 function App() {
 
   const [text, setText] = useState("");
-  const [voices, setVoices] = useState([]);
-  const [selectedVoice, setSelectedVoice] = useState(0);
+
 
   const [voice, setVoice] =
   useState("male");
@@ -35,24 +34,7 @@ const [stats, setStats] = useState({
 const estimatedSeconds =
   Math.ceil(wordCount / 2.5);
 
-  useEffect(() => {
-
-    const loadVoices = () => {
-
-      const available =
-        speechSynthesis.getVoices();
-
-      setVoices(available);
-
-    };
-
-
-    loadVoices();
-
-    speechSynthesis.onvoiceschanged =
-      loadVoices;
-
-  }, []);
+  
 
 useEffect(() => {
 
@@ -271,13 +253,21 @@ setLoading(false);
 
       <div className="header">
 
-  <h1 className="title">
-    🎙️ Bely AI Studio
-  </h1>
+  <div className="logo-box">
+  🎙️
+</div>
 
-  <p className="subtitle">
-    Haitian AI Voice Generator
-  </p>
+<h1 className="title">
+  Bely <span>AI Studio</span>
+</h1>
+
+<p className="subtitle">
+  Haitian AI Voice Generator
+</p>
+
+<p className="tagline">
+  🎵 Konvèti tèks kreyòl an odyo 🎵
+</p>
 
 </div>
 
@@ -313,32 +303,7 @@ setLoading(false);
 <br />
 <br />
 
-      <select
-        value={selectedVoice}
-        onChange={(e) =>
-          setSelectedVoice(
-            e.target.value
-          )
-        }
-      >
 
-        {voices.map((voice, index) => (
-
-          <option
-            key={index}
-            value={index}
-          >
-
-            {voice.name}
-
-          </option>
-
-        ))}
-
-      </select>
-
-      <br />
-      <br />
 
       <h3 style={{ color: "white" }}>
   📄 Chwazi yon fichye TXT
@@ -380,17 +345,16 @@ setLoading(false);
       <br />
       <br />
 
-      <button
+      <div className="button-row">
+
+<button
   onClick={generateAudio}
   disabled={loading}
 >
   {loading
-    ? "⏳ Odyo w' la ap jenere, Pasyante..."
+    ? "⏳ Odyo ap jenere..."
     : "🎙️ Jenere Odyo"}
 </button>
-
-<br />
-<br />
 
 <button
   onClick={askAI}
@@ -400,6 +364,8 @@ setLoading(false);
     ? "⏳ AI ap reflechi..."
     : "🤖 Mande AI"}
 </button>
+
+</div>
 
       <br />
 <br />
@@ -509,30 +475,43 @@ setLoading(false);
 
 )}
 
-<h2
-  style={{
-    color: "white"
-  }}
->
+<h2 className="section-title">
   📊 Estatistik
 </h2>
 
-<div className="stats-card">
+<div className="stats-grid">
 
-  <p>
-    🎙️ Total Odyo:
-    {stats.totalAudios}
-  </p>
+  <div className="stat-box">
 
-  <p>
-    📝 Total Mo:
-    {stats.totalWords}
-  </p>
+    <h3>🎙️</h3>
 
-  <p>
-    🕒 Dènye Itilizasyon:
-    {stats.lastUsed}
-  </p>
+    <h2>{stats.totalAudios}</h2>
+
+    <p>Total Odyo</p>
+
+  </div>
+
+  <div className="stat-box">
+
+    <h3>📝</h3>
+
+    <h2>{stats.totalWords}</h2>
+
+    <p>Total Mo</p>
+
+  </div>
+
+  <div className="stat-box">
+
+    <h3>🕒</h3>
+
+    <h2>
+      {stats.lastUsed || "--"}
+    </h2>
+
+    <p>Dènye Itilizasyon</p>
+
+  </div>
 
 </div>
 
@@ -550,11 +529,9 @@ setLoading(false);
       🤖 Repons AI
     </h2>
 
-    <div
-      className="history-card"
-    >
-      {aiResponse}
-    </div>
+    <div className="ai-response">
+  {aiResponse}
+</div>
 
   </>
 
