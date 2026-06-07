@@ -8,6 +8,10 @@ function App() {
 
   const [voice, setVoice] =
   useState("male");
+  const [language, setLanguage] =
+  useState("ht");
+  const [search, setSearch] =
+useState("");
 
   const [audioUrl, setAudioUrl] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,6 +19,9 @@ function App() {
 
   const [aiResponse, setAiResponse] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
+
+  const [showAbout, setShowAbout] =
+  useState(false);
 
 const [stats, setStats] = useState({
 
@@ -144,17 +151,23 @@ const handleFileUpload = (event) => {
   `https://bely-studio-backend.onrender.com/audio/${data.audio}?t=${Date.now()}`
 );
 
+const audioLink =
+`https://bely-studio-backend.onrender.com/audio/${data.audio}?t=${Date.now()}`;
+
+setAudioUrl(audioLink);
+
 setHistory((prev) => [
 
   {
     text: text,
     date: new Date()
-      .toLocaleTimeString()
+      .toLocaleTimeString(),
+    audio: audioLink
   },
 
   ...prev
 
-].slice(0, 5));
+].slice(0, 10));
 
 setStats((prev) => ({
 
@@ -249,7 +262,44 @@ setLoading(false);
 
   return (
 
-    <div className="container">
+  <div className="container">
+
+    <nav className="navbar">
+
+      <div className="nav-logo">
+        🎙️ Bely Studio
+      </div>
+
+      <div className="nav-links">
+
+        <button
+          onClick={() =>
+            window.scrollTo({
+              top:0,
+              behavior:"smooth"
+            })
+          }
+        >
+          Home
+        </button>
+
+        <button
+  onClick={() => {
+
+    console.log(
+      "About klike"
+    );
+
+    setShowAbout(true);
+
+  }}
+>
+  About
+</button>
+
+      </div>
+
+    </nav>
 
       <div className="header">
 
@@ -265,9 +315,89 @@ setLoading(false);
   Haitian AI Voice Generator
 </p>
 
+<div className="version-badge">
+
+  Version 1.0 Beta
+
+</div>
+
 <p className="tagline">
-  🎵 Konvèti tèks kreyòl an odyo 🎵
+
+  {language === "ht"
+
+    ? "🎵 Konvèti tèks kreyòl an odyo 🎵"
+
+    : "🎵 Convert text into speech 🎵"}
+
 </p>
+
+<select
+  className="language-select"
+  value={language}
+  onChange={(e) =>
+    setLanguage(
+      e.target.value
+    )
+  }
+>
+
+  <option value="ht">
+    🇭🇹 Kreyòl
+  </option>
+
+  <option value="en">
+    🇺🇸 English
+  </option>
+
+</select>
+
+<br />
+
+<div className="top-stats">
+
+  <div className="mini-stat">
+
+    <span>🎙️</span>
+
+    <h3>
+      {stats.totalAudios}
+    </h3>
+
+    <p>
+      Odyo Kreye
+    </p>
+
+  </div>
+
+  <div className="mini-stat">
+
+    <span>📝</span>
+
+    <h3>
+      {stats.totalWords}
+    </h3>
+
+    <p>
+      Mo Konvèti
+    </p>
+
+  </div>
+
+  <div className="mini-stat">
+
+    <span>🤖</span>
+
+    <h3>
+      {aiResponse ? 1 : 0}
+    </h3>
+
+    <p>
+      Repons AI
+    </p>
+
+  </div>
+
+</div>
 
 </div>
 
@@ -275,72 +405,113 @@ setLoading(false);
         Konvèti tèks kreyòl an odyo
       </p>
 
-      <h3 style={{ color: "white" }}>
-  Chwazi Vwa AI
-</h3>
+      <div className="generator-card">
 
-<select
-  value={voice}
-  onChange={(e) =>
-    setVoice(e.target.value)
-  }
+  <h3 style={{ color: "white" }}>
+    🌎 Chwazi Lang
+  </h3>
+
+  <select
+    value={language}
+    onChange={(e) =>
+      setLanguage(e.target.value)
+    }
+  >
+
+    <option value="ht">
+      🇭🇹 Kreyòl Ayisyen
+    </option>
+
+    <option value="en">
+      🇺🇸 English
+    </option>
+
+  </select>
+
+  <br />
+  <br />
+
+  <h3 style={{ color: "white" }}>
+    🎙️ Chwazi Vwa AI
+  </h3>
+
+  <select
+    value={voice}
+    onChange={(e) =>
+      setVoice(e.target.value)
+    }
+  >
+
+    <option value="male">
+      Haitian Male
+    </option>
+
+    <option value="female">
+      Haitian Female
+    </option>
+
+    <option value="narrator">
+      Narrator
+    </option>
+
+  </select>
+
+  <br />
+  <br />
+
+  <h3 style={{ color: "white" }}>
+    📄 Chwazi yon fichye TXT
+  </h3>
+
+  <input
+    type="file"
+    accept=".txt"
+    onChange={handleFileUpload}
+  />
+
+  <br />
+  <br />
+
+  <textarea
+    maxLength={5000}
+    placeholder={
+      language === "ht"
+        ? "Ekri tèks ou a la..."
+        : "Write your text here..."
+    }
+    value={text}
+    onChange={(e) =>
+      setText(e.target.value)
+    }
+  />
+
+<div className="text-stats">
+
+  <span
+  style={{
+    color:
+      text.length > 4500
+      ? "#ef4444"
+      : "#22c55e"
+  }}
 >
 
-  <option value="male">
-    🎙️ Haitian Male
-  </option>
-
-  <option value="female">
-    🎙️ Haitian Female
-  </option>
-
-  <option value="narrator">
-    🎙️ Narrator
-  </option>
-
-</select>
-
-<br />
-<br />
-
-
-
-      <h3 style={{ color: "white" }}>
-  📄 Chwazi yon fichye TXT
-</h3>
-
-<input
-  type="file"
-  accept=".txt"
-  onChange={handleFileUpload}
-/>
-
-<br />
-<br />
-
-      <textarea
-        maxLength={5000}
-        placeholder="Ekri tèks ou a la..."
-        value={text}
-        onChange={(e) =>
-          setText(
-            e.target.value
-          )
-        }
-      />
-
-      <p style={{ color: "white" }}>
   {text.length}/5000 karaktè
-</p>
 
-<p style={{ color: "white" }}>
-  📝 Mo: {wordCount}
-</p>
+</span>
 
-<p style={{ color: "white" }}>
-  ⏱️ Tan estime:
-  {estimatedSeconds} segonn
-</p>
+  <span>
+    📝 Mo: {wordCount}
+  </span>
+
+  <span>
+    ⏱️ Tan estime:
+    {estimatedSeconds} segonn
+  </span>
+
+</div>
+
+</div>
 
       <br />
       <br />
@@ -351,9 +522,17 @@ setLoading(false);
   onClick={generateAudio}
   disabled={loading}
 >
+
   {loading
-    ? "⏳ Odyo ap jenere..."
-    : "🎙️ Jenere Odyo"}
+
+    ? language === "ht"
+      ? "⏳ Odyo a ap jenere..."
+      : "⏳ Generating audio..."
+
+    : language === "ht"
+      ? "🎙️ Jenere Odyo"
+      : "🎙️ Generate Audio"}
+
 </button>
 
 <button
@@ -370,25 +549,55 @@ setLoading(false);
       <br />
 <br />
 
-{audioUrl && (
+{!audioUrl && (
 
-  <>
+  <div className="empty-state">
 
-    <p
-      style={{
-        color: "lightgreen"
-      }}
-    >
-      ✅ Odyo w' la pare!
+    <div className="status-card">
+
+  <h3>
+    🚀 Estati
+  </h3>
+
+  {text.length === 0 ? (
+
+    <p>
+      Ekri yon tèks oswa upload yon TXT pou kòmanse.
     </p>
 
-    <h3
-      style={{
-        color: "white"
-      }}
-    >
-      🎵 Odyo w' la fin' Jenere!
-    </h3>
+  ) : (
+
+    <p>
+      ✅ Pare pou jenere odyo.
+    </p>
+
+  )}
+
+</div>
+
+    <p>
+
+      Ekri yon tèks
+      oswa upload yon TXT
+      pou kreye premye odyo ou.
+
+    </p>
+
+  </div>
+
+)}
+
+{audioUrl && (
+
+  <div className="audio-card">
+
+    <h2>
+      🎵 Odyo a Pare
+    </h2>
+
+    <p>
+      Odyo w' la fin' jenere avèk siksè.
+    </p>
 
     <audio
       controls
@@ -396,7 +605,7 @@ setLoading(false);
       src={audioUrl}
     />
 
-  </>
+  </div>
 
 )}
 
@@ -405,15 +614,19 @@ setLoading(false);
 
 {audioUrl && (
 
-  <a
-  className="download-btn"
-  href={audioUrl}
-  download="bely-audio.mp3"
->
-    <button>
-      ⬇️ Telechaje Odyo
-    </button>
-  </a>
+  <div className="download-wrapper">
+
+    <a
+      className="download-btn"
+      href={audioUrl}
+      download="bely-audio.mp3"
+    >
+
+      ⬇️ Telechaje MP3
+
+    </a>
+
+  </div>
 
 )}
 
@@ -422,6 +635,7 @@ setLoading(false);
   <>
 
   <button
+  className="delete-history"
   onClick={() => {
 
     setHistory([]);
@@ -432,44 +646,72 @@ setLoading(false);
 
   }}
 >
-
   🗑️ Efase Istorik
-
 </button>
 
 <br />
 <br />
 
-    <h2
-      style={{
-        color: "white"
-      }}
-    >
-      📜 Dènye Odyo w' yo
-    </h2>
+    <div className="section-title">
+
+  <h2>
+    📜 Dènye Odyo w yo
+  </h2>
+
+</div>
+
+<input
+  type="text"
+  placeholder="🔍 Chèche nan istorik..."
+/>
 
     {history.map(
-      (item, index) => (
+  (item, index) => (
 
-        <div
-  key={index}
-  className="history-card"
+    <div
+      key={index}
+      className="history-card"
+    >
+
+      <div className="history-left">
+
+        <button
+  className="play-btn"
+  onClick={() => {
+
+    setAudioUrl(item.audio);
+
+  }}
 >
-          <strong>
-            {item.date}
-          </strong>
+  ▶
+</button>
 
-          <br />
+      </div>
 
-          {item.text
-            .substring(0,60)}
+      <div className="history-right">
 
+        <strong>
+          {item.date}
+        </strong>
+
+        <p>
+          <a
+  href={item.audio}
+  download
+  className="history-download"
+>
+  ⬇️ Telechaje
+</a>
+          {item.text.substring(0,60)}
           ...
+        </p>
 
-        </div>
+      </div>
 
-      )
-    )}
+    </div>
+
+  )
+)}
 
   </>
 
@@ -537,9 +779,61 @@ setLoading(false);
 
 )}
 
+{showAbout && (
+
+  <div className="modal-overlay">
+
+    <div className="modal">
+
+      <h2>
+        🎙️ Bely Studio
+      </h2>
+
+      <p>
+
+        Bely AI Studio se yon
+        Jeneratè Vokal Atifisyèl
+        ki fèt pou ede moun
+        konvèti tèks kreyòl
+        an odyo.
+
+      </p>
+
+      <p>
+
+        Version 1.0
+
+      </p>
+
+      <button
+        onClick={() =>
+          setShowAbout(false)
+        }
+      >
+
+        Fèmen
+
+      </button>
+
+    </div>
+
+  </div>
+
+)}
+
 <footer>
 
-  Bely Studio © 2026
+  <h3>
+    🎙️ Bely AI Studio
+  </h3>
+
+  <p>
+    Haitian AI Voice Generator
+  </p>
+
+  <small>
+    © 2026 Bely Studio. Tout dwa rezève.
+  </small>
 
 </footer>
 
