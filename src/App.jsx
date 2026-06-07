@@ -134,7 +134,7 @@ const handleFileUpload = (event) => {
 
       const response =
         await fetch(
-          "http://localhost:5000/generate",
+  "https://bely-studio-backend.onrender.com/generate",
           {
             method: "POST",
 
@@ -156,7 +156,7 @@ const handleFileUpload = (event) => {
       console.log(data);
 
       setAudioUrl(
-  `http://localhost:5000/audio/${data.audio}?t=${Date.now()}`
+  `https://bely-studio-backend.onrender.com/audio/${data.audio}?t=${Date.now()}`
 );
 
 setHistory((prev) => [
