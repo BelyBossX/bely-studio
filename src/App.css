@@ -885,3 +885,39 @@ textarea{
   font-size:14px;
 
 }
+
+.modal ul{
+
+  text-align:left;
+
+  margin-top:15px;
+
+}
+
+.modal li{
+
+  margin-bottom:10px;
+
+}
+
+.search-input{
+
+  width:100%;
+
+  box-sizing:border-box;
+
+  padding:12px;
+
+  border-radius:12px;
+
+  border:none;
+
+  margin-bottom:20px;
+
+}
+
+.copy-btn{
+
+  margin-top:15px;
+
+}

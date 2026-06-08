@@ -23,11 +23,14 @@ useState("");
   const [showAbout, setShowAbout] =
   useState(false);
 
-const [stats, setStats] = useState({
+const [stats, setStats] =
+useState({
 
   totalAudios: 0,
 
   totalWords: 0,
+
+  totalAI: 0,
 
   lastUsed: ""
 
@@ -236,9 +239,20 @@ setLoading(false);
 
     if (data.success) {
 
-      setAiResponse(data.answer);
+  setAiResponse(
+    data.answer
+  );
 
-    } else {
+  setStats((prev) => ({
+
+    ...prev,
+
+    totalAI:
+      prev.totalAI + 1
+
+  }));
+
+} else {
 
       setAiResponse("Erè pandan repons AI a.");
 
@@ -658,6 +672,16 @@ setLoading(false);
     📜 Dènye Odyo w yo
   </h2>
 
+  <input
+  type="text"
+  placeholder="🔍 Chèche nan istorik..."
+  value={search}
+  onChange={(e) =>
+    setSearch(e.target.value)
+  }
+  className="search-input"
+/>
+
 </div>
 
 <input
@@ -665,7 +689,15 @@ setLoading(false);
   placeholder="🔍 Chèche nan istorik..."
 />
 
-    {history.map(
+    {history
+.filter((item) =>
+  item.text
+    .toLowerCase()
+    .includes(
+      search.toLowerCase()
+    )
+)
+.map(
   (item, index) => (
 
     <div
@@ -751,7 +783,15 @@ setLoading(false);
       {stats.lastUsed || "--"}
     </h2>
 
-    <p>Dènye Itilizasyon</p>
+    <p>
+  🕒 Dènye Itilizasyon:
+  {stats.lastUsed}
+</p>
+
+    <p>
+  🤖 Total kestyon AI:
+  {stats.totalAI}
+</p>
 
   </div>
 
@@ -775,6 +815,24 @@ setLoading(false);
   {aiResponse}
 </div>
 
+<button
+  className="copy-btn"
+  onClick={() => {
+
+    navigator.clipboard
+      .writeText(aiResponse);
+
+    alert(
+      "Repons lan kopye."
+    );
+
+  }}
+>
+
+  📋 Kopye Repons
+
+</button>
+
   </>
 
 )}
@@ -786,24 +844,49 @@ setLoading(false);
     <div className="modal">
 
       <h2>
-        🎙️ Bely Studio
-      </h2>
+  🎙️ Bely AI Studio
+</h2>
 
-      <p>
+<p>
 
-        Bely AI Studio se yon
-        Jeneratè Vokal Atifisyèl
-        ki fèt pou ede moun
-        konvèti tèks kreyòl
-        an odyo.
+  Bely AI Studio se yon
+  aplikasyon ki itilize
+  entèlijans atifisyèl pou
+  konvèti tèks an odyo.
 
-      </p>
+</p>
 
-      <p>
+<p>
 
-        Version 1.0
+  Fonksyon prensipal yo:
 
-      </p>
+</p>
+
+<ul>
+
+  <li>
+    🎙️ Text To Speech
+  </li>
+
+  <li>
+    🤖 AI Assistant
+  </li>
+
+  <li>
+    📄 Upload TXT
+  </li>
+
+  <li>
+    📜 Istorik
+  </li>
+
+</ul>
+
+<p>
+
+  Version 1.0 Beta
+
+</p>
 
       <button
         onClick={() =>
