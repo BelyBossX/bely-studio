@@ -144,7 +144,11 @@ textarea{
 
   box-sizing:border-box;
 
-  min-height:120px;
+  min-height:30px;
+
+  max-height:60px;
+
+  overflow-y:auto;
 
   background:#071226;
 
@@ -155,7 +159,7 @@ textarea{
 
   border-radius:20px;
 
-  padding:20px;
+  padding-left:60px;
 
   font-size:16px;
 
@@ -366,6 +370,8 @@ footer{
   color:white;
 
   line-height:1.8;
+
+  margin-bottom:130px;
 
   white-space:pre-wrap;
 
@@ -615,10 +621,15 @@ footer{
 
   position:fixed;
 
-  inset:0;
+  top:0;
 
-  background:
-    rgba(0,0,0,.75);
+  left:0;
+
+  width:100vw;
+
+  height:100vh;
+
+  background:rgba(0,0,0,.7);
 
   display:flex;
 
@@ -626,25 +637,23 @@ footer{
 
   align-items:center;
 
-  z-index:999;
+  z-index:9999;
 
 }
 
 .modal{
 
-  background:#071226;
+  width:90%;
 
-  border-radius:25px;
+  max-width:450px;
+
+  background:#071226;
 
   padding:30px;
 
-  width:90%;
-
-  max-width:500px;
+  border-radius:20px;
 
   color:white;
-
-  text-align:center;
 
 }
 
@@ -1168,5 +1177,188 @@ textarea{
 .login-btn{
 
   margin:0;
+
+}
+
+.copy-btn{
+
+  margin-top:15px;
+
+}
+
+.modal input{
+
+  width:100%;
+
+  box-sizing:border-box;
+
+  height:50px;
+
+  border:none;
+
+  border-radius:12px;
+
+  padding:0 15px;
+
+}
+
+.hero-section{
+
+  text-align:center;
+
+  margin-bottom:40px;
+
+}
+
+.hero-logo{
+
+  width:120px;
+
+  height:120px;
+
+  border-radius:25px;
+
+  object-fit:cover;
+
+  box-shadow:
+    0 0 30px rgba(
+      124,
+      58,
+      237,
+      .5
+    );
+
+}
+
+.hero-title{
+
+  color:white;
+
+  font-size:52px;
+
+  margin-top:20px;
+
+  margin-bottom:10px;
+
+  font-weight:700;
+
+}
+
+.hero-subtitle{
+
+  color:#94a3b8;
+
+  font-size:18px;
+
+}
+
+.chat-area{
+
+  min-height:350px;
+
+  margin-bottom:20px;
+
+}
+
+.assistant-message{
+
+  background:#071226;
+
+  border:1px solid
+  rgba(59,130,246,.3);
+
+  padding:20px;
+
+  border-radius:20px;
+
+  color:white;
+
+  line-height:1.8;
+
+}
+
+.upload-btn{
+
+  width:40px;
+
+  height:40px;
+
+  border-radius:50%;
+
+  background:#0b1730;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  color:white;
+
+  font-size:24px;
+
+  cursor:pointer;
+
+}
+
+.ai-response{
+
+  position:relative;
+
+}
+
+.copy-icon{
+
+  position:absolute;
+
+  top:10px;
+
+  right:10px;
+
+  width:35px !important;
+
+  height:35px !important;
+
+  border-radius:10px;
+
+  font-size:16px;
+
+  padding:0;
+
+}
+
+.input-wrapper{
+
+  position:relative;
+
+}
+
+.upload-inside{
+
+  position:absolute;
+
+  left:15px;
+
+  top:12px;
+
+  width:35px;
+
+  height:35px;
+
+  border-radius:50%;
+
+  background:#0b1730;
+
+  color:white;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  cursor:pointer;
+
+  z-index:2;
 
 }

@@ -5,7 +5,11 @@ import logo from "./assets/logo.jpeg";
 function App() {
 
   const [text, setText] = useState("");
-
+  const [showLogin,
+setShowLogin] =
+useState(false);
+const [messages, setMessages] =
+useState([]);
 
   const [voice, setVoice] =
   useState("male");
@@ -245,6 +249,22 @@ setLoading(false);
   setAiResponse(
     data.answer
   );
+  setMessages((prev) => [
+
+  ...prev,
+
+  {
+    type:"user",
+    text:text
+  },
+
+  {
+    type:"ai",
+    text:data.answer
+  }
+
+]);
+  setText("");
 
   setStats((prev) => ({
 
@@ -280,6 +300,20 @@ setLoading(false);
   return (
 
   <div className="container">
+
+    <div className="hero-section">
+
+  <img
+    src={logo}
+    alt="Bely AI Studio"
+    className="hero-logo"
+  />
+
+  <p className="hero-subtitle">
+    Haitian AI Voice Generator
+  </p>
+
+</div>
 
     <div className="topbar">
 
@@ -326,9 +360,16 @@ setLoading(false);
 
     </select>
 
-    <button className="login-btn">
-      Login
-    </button>
+    <button
+  className="login-btn"
+  onClick={() =>
+    setShowLogin(true)
+  }
+>
+
+  Login
+
+</button>
 
   </div>
 
@@ -398,7 +439,27 @@ setLoading(false);
 
 ) : (
 
-history.map((item,index)=>(
+<>
+
+<input
+  type="text"
+  className="search-input"
+  placeholder="🔍 Chèche nan istorik..."
+  value={search}
+  onChange={(e) =>
+    setSearch(e.target.value)
+  }
+/>
+
+{history
+  .filter((item) =>
+    item.text
+      .toLowerCase()
+      .includes(
+        search.toLowerCase()
+      )
+  )
+  .map((item,index)=>(
 
 <div
   key={index}
@@ -415,7 +476,9 @@ history.map((item,index)=>(
 
 </div>
 
-))
+))}
+
+</>
 
 )}
 
@@ -488,10 +551,6 @@ history.map((item,index)=>(
 
 </div>
 
-      <p>
-        Konvèti tèks kreyòl an odyo
-      </p>
-
       <div className="generator-card">
 
   <br />
@@ -525,43 +584,95 @@ history.map((item,index)=>(
   <br />
   <br />
 
-  <h3 style={{ color: "white" }}>
-    📄 Chwazi yon fichye TXT
-  </h3>
-
-  <input
-    type="file"
-    accept=".txt"
-    onChange={handleFileUpload}
-  />
-
   <br />
   <br />
 
   {aiResponse && (
 
-  <div className="ai-response-box">
+  <>
 
-    <h3>🤖 Repons AI</h3>
+    <br />
 
-    <p>{aiResponse}</p>
+    <h2
+      style={{
+        color: "white"
+      }}
+    >
+      🤖 Repons AI
+    </h2>
 
-  </div>
+    <div className="ai-response">
+
+  <button
+    className="copy-icon"
+    onClick={() => {
+
+      navigator.clipboard.writeText(
+        aiResponse
+      );
+
+    }}
+  >
+
+    📋
+
+  </button>
+
+  {aiResponse}
+
+</div>
+
+  </>
 
 )}
 
+  <div className="input-wrapper">
+
+  <label
+    className="upload-inside"
+  >
+
+    +
+
+    <input
+      type="file"
+      accept=".txt"
+      onChange={handleFileUpload}
+      hidden
+    />
+
+  </label>
+
   <textarea
+
+    rows={1}
+
     maxLength={5000}
-    placeholder={
-      language === "ht"
-        ? "Ekri tèks ou a la..."
-        : "Write your text here..."
-    }
+
+    placeholder="Ekri la..."
+
     value={text}
-    onChange={(e) =>
-      setText(e.target.value)
-    }
+
+    onChange={(e) => {
+
+      setText(
+        e.target.value
+      );
+
+      e.target.style.height =
+        "auto";
+
+      e.target.style.height =
+        Math.min(
+          e.target.scrollHeight,
+          250
+        ) + "px";
+
+    }}
+
   />
+
+</div>
 
 <div className="text-stats">
 
@@ -670,46 +781,6 @@ history.map((item,index)=>(
 
 )}
 
-{aiResponse && (
-
-  <>
-
-    <br />
-
-    <h2
-      style={{
-        color: "white"
-      }}
-    >
-      🤖 Repons AI
-    </h2>
-
-    <div className="ai-response">
-  {aiResponse}
-</div>
-
-<button
-  className="copy-btn"
-  onClick={() => {
-
-    navigator.clipboard
-      .writeText(aiResponse);
-
-    alert(
-      "Repons lan kopye."
-    );
-
-  }}
->
-
-  📋 Kopye Repons
-
-</button>
-
-  </>
-
-)}
-
 {showAbout && (
 
   <div className="modal-overlay">
@@ -777,6 +848,59 @@ history.map((item,index)=>(
 
 )}
 
+{showLogin && (
+
+  <div className="modal-overlay">
+
+    <div className="modal">
+
+      <h2>
+
+        👤 Login
+
+      </h2>
+
+      <input
+        type="email"
+        placeholder="Email"
+      />
+
+      <br />
+      <br />
+
+      <input
+        type="password"
+        placeholder="Password"
+      />
+
+      <br />
+      <br />
+
+      <button>
+
+        Login
+
+      </button>
+
+      <br />
+      <br />
+
+      <button
+        onClick={() =>
+          setShowLogin(false)
+        }
+      >
+
+        Fèmen
+
+      </button>
+
+    </div>
+
+  </div>
+
+)}
+
 <footer>
 
   <h3>
@@ -792,14 +916,6 @@ history.map((item,index)=>(
   </small>
 
 </footer>
-
-<h3 style={{ color: "white" }}>
-  Tèks la:
-</h3>
-
-<p style={{ color: "white" }}>
-  {text}
-</p>
 
 </>
 )}
