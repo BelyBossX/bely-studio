@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import logo from "./assets/logo.jpeg";
 
 function App() {
 
@@ -16,6 +17,8 @@ useState("");
   const [audioUrl, setAudioUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState([]);
+
+  const [activePage, setActivePage] = useState("home");
 
   const [aiResponse, setAiResponse] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
@@ -278,140 +281,210 @@ setLoading(false);
 
   <div className="container">
 
-    <nav className="navbar">
+    <div className="topbar">
 
-      <div className="nav-logo">
-        🎙️ Bely Studio
-      </div>
+  <div className="logo-area">
 
-      <div className="nav-links">
+  <button
+    className="menu-btn"
+    onClick={() =>
+      setActivePage("menu")
+    }
+  >
+    ☰
+  </button>
 
-        <button
-          onClick={() =>
-            window.scrollTo({
-              top:0,
-              behavior:"smooth"
-            })
-          }
-        >
-          Home
-        </button>
+  <div
+    className="logo-wrapper"
+    onClick={() =>
+      setActivePage("home")
+    }
+  >
 
-        <button
-  onClick={() => {
+    <img
+      src={logo}
+      alt="Bely AI Studio"
+      className="site-logo"
+    />
 
-    console.log(
-      "About klike"
-    );
+    <span className="logo-text">
+      Bely AI Studio
+    </span>
 
-    setShowAbout(true);
-
-  }}
->
-  About
-</button>
-
-      </div>
-
-    </nav>
-
-      <div className="header">
-
-  <div className="logo-box">
-  🎙️
-</div>
-
-<h1 className="title">
-  Bely <span>AI Studio</span>
-</h1>
-
-<p className="subtitle">
-  Haitian AI Voice Generator
-</p>
-
-<div className="version-badge">
-
-  Version 1.0 Beta
+  </div>
 
 </div>
 
-<p className="tagline">
+  <div className="right-menu">
 
-  {language === "ht"
+    <select className="flag-select">
 
-    ? "🎵 Konvèti tèks kreyòl an odyo 🎵"
+      <option>🇭🇹</option>
+      <option>🇺🇸</option>
+      <option>🇫🇷</option>
+      <option>🇪🇸</option>
 
-    : "🎵 Convert text into speech 🎵"}
+    </select>
 
-</p>
+    <button className="login-btn">
+      Login
+    </button>
 
-<select
-  className="language-select"
-  value={language}
-  onChange={(e) =>
-    setLanguage(
-      e.target.value
-    )
+  </div>
+
+</div>
+
+    {activePage === "menu" && (
+
+<div className="menu-page">
+
+  <h2>☰ Menu</h2>
+
+  <button
+  onClick={() =>
+    setActivePage("home")
   }
 >
+  ❌ Fèmen
+</button>
 
-  <option value="ht">
-    🇭🇹 Kreyòl
-  </option>
+  <button
+    onClick={() =>
+      setActivePage("home")
+    }
+  >
+    🏠 Home
+  </button>
 
-  <option value="en">
-    🇺🇸 English
-  </option>
+  <button
+    onClick={() =>
+      setActivePage("history")
+    }
+  >
+    📜 Istorik
+  </button>
 
-</select>
+  <button
+    onClick={() =>
+      setActivePage("stats")
+    }
+  >
+    📊 Estatistik
+  </button>
 
-<br />
-
-<div className="top-stats">
-
-  <div className="mini-stat">
-
-    <span>🎙️</span>
-
-    <h3>
-      {stats.totalAudios}
-    </h3>
-
-    <p>
-      Odyo Kreye
-    </p>
-
-  </div>
-
-  <div className="mini-stat">
-
-    <span>📝</span>
-
-    <h3>
-      {stats.totalWords}
-    </h3>
-
-    <p>
-      Mo Konvèti
-    </p>
-
-  </div>
-
-  <div className="mini-stat">
-
-    <span>🤖</span>
-
-    <h3>
-      {aiResponse ? 1 : 0}
-    </h3>
-
-    <p>
-      Repons AI
-    </p>
-
-  </div>
+  <button
+    onClick={() =>
+      setActivePage("about")
+    }
+  >
+    ℹ️ A Pwopo
+  </button>
 
 </div>
+
+)}
+
+{activePage === "history" && (
+
+<div className="menu-content">
+
+  <h2>📜 Istorik</h2>
+
+{history.length === 0 ? (
+
+<p>
+  Pa gen istorik disponib.
+</p>
+
+) : (
+
+history.map((item,index)=>(
+
+<div
+  key={index}
+  className="history-card"
+>
+
+  <strong>
+    {item.date}
+  </strong>
+
+  <br/>
+
+  {item.text.substring(0,80)}
+
+</div>
+
+))
+
+)}
+
+</div>
+
+)}
+
+{activePage === "stats" && (
+
+<div className="menu-content">
+
+  <h2>📊 Estatistik</h2>
+
+<p>
+  🎙️ Total Odyo:
+  {stats.totalAudios}
+</p>
+
+<p>
+  📝 Total Mo:
+  {stats.totalWords}
+</p>
+
+<p>
+  🤖 Total kesyon AI:
+  {stats.totalAI || 0}
+</p>
+
+<p>
+  🕒 Dènye Itilizasyon:
+  {stats.lastUsed}
+</p>
+
+</div>
+
+)}
+
+{activePage === "about" && (
+
+<div className="menu-content">
+
+  <h2>ℹ️ A Pwopo</h2>
+
+  <p>
+    Bely AI Studio se yon platfòm
+    ki pèmèt itilizatè nou yo
+    konvèti tèks an odyo.
+  </p>
+
+  <p>
+    Powered by AI Technology.
+  </p>
+
+  <p>
+    Version 1.0 Beta
+  </p>
+
+  <p>
+    © 2026 Bely AI Studio
+  </p>
+
+</div>
+
+)}
+
+    {activePage === "home" && (
+<>
+
+      <div className="header">
 
 </div>
 
@@ -420,27 +493,6 @@ setLoading(false);
       </p>
 
       <div className="generator-card">
-
-  <h3 style={{ color: "white" }}>
-    🌎 Chwazi Lang
-  </h3>
-
-  <select
-    value={language}
-    onChange={(e) =>
-      setLanguage(e.target.value)
-    }
-  >
-
-    <option value="ht">
-      🇭🇹 Kreyòl Ayisyen
-    </option>
-
-    <option value="en">
-      🇺🇸 English
-    </option>
-
-  </select>
 
   <br />
   <br />
@@ -485,6 +537,18 @@ setLoading(false);
 
   <br />
   <br />
+
+  {aiResponse && (
+
+  <div className="ai-response-box">
+
+    <h3>🤖 Repons AI</h3>
+
+    <p>{aiResponse}</p>
+
+  </div>
+
+)}
 
   <textarea
     maxLength={5000}
@@ -563,44 +627,6 @@ setLoading(false);
       <br />
 <br />
 
-{!audioUrl && (
-
-  <div className="empty-state">
-
-    <div className="status-card">
-
-  <h3>
-    🚀 Estati
-  </h3>
-
-  {text.length === 0 ? (
-
-    <p>
-      Ekri yon tèks oswa upload yon TXT pou kòmanse.
-    </p>
-
-  ) : (
-
-    <p>
-      ✅ Pare pou jenere odyo.
-    </p>
-
-  )}
-
-</div>
-
-    <p>
-
-      Ekri yon tèks
-      oswa upload yon TXT
-      pou kreye premye odyo ou.
-
-    </p>
-
-  </div>
-
-)}
-
 {audioUrl && (
 
   <div className="audio-card">
@@ -643,159 +669,6 @@ setLoading(false);
   </div>
 
 )}
-
-{history.length > 0 && (
-
-  <>
-
-  <button
-  className="delete-history"
-  onClick={() => {
-
-    setHistory([]);
-
-    localStorage.removeItem(
-      "belyHistory"
-    );
-
-  }}
->
-  🗑️ Efase Istorik
-</button>
-
-<br />
-<br />
-
-    <div className="section-title">
-
-  <h2>
-    📜 Dènye Odyo w yo
-  </h2>
-
-  <input
-  type="text"
-  placeholder="🔍 Chèche nan istorik..."
-  value={search}
-  onChange={(e) =>
-    setSearch(e.target.value)
-  }
-  className="search-input"
-/>
-
-</div>
-
-<input
-  type="text"
-  placeholder="🔍 Chèche nan istorik..."
-/>
-
-    {history
-.filter((item) =>
-  item.text
-    .toLowerCase()
-    .includes(
-      search.toLowerCase()
-    )
-)
-.map(
-  (item, index) => (
-
-    <div
-      key={index}
-      className="history-card"
-    >
-
-      <div className="history-left">
-
-        <button
-  className="play-btn"
-  onClick={() => {
-
-    setAudioUrl(item.audio);
-
-  }}
->
-  ▶
-</button>
-
-      </div>
-
-      <div className="history-right">
-
-        <strong>
-          {item.date}
-        </strong>
-
-        <p>
-          <a
-  href={item.audio}
-  download
-  className="history-download"
->
-  ⬇️ Telechaje
-</a>
-          {item.text.substring(0,60)}
-          ...
-        </p>
-
-      </div>
-
-    </div>
-
-  )
-)}
-
-  </>
-
-)}
-
-<h2 className="section-title">
-  📊 Estatistik
-</h2>
-
-<div className="stats-grid">
-
-  <div className="stat-box">
-
-    <h3>🎙️</h3>
-
-    <h2>{stats.totalAudios}</h2>
-
-    <p>Total Odyo</p>
-
-  </div>
-
-  <div className="stat-box">
-
-    <h3>📝</h3>
-
-    <h2>{stats.totalWords}</h2>
-
-    <p>Total Mo</p>
-
-  </div>
-
-  <div className="stat-box">
-
-    <h3>🕒</h3>
-
-    <h2>
-      {stats.lastUsed || "--"}
-    </h2>
-
-    <p>
-  🕒 Dènye Itilizasyon:
-  {stats.lastUsed}
-</p>
-
-    <p>
-  🤖 Total kestyon AI:
-  {stats.totalAI}
-</p>
-
-  </div>
-
-</div>
 
 {aiResponse && (
 
@@ -915,7 +788,7 @@ setLoading(false);
   </p>
 
   <small>
-    © 2026 Bely Studio. Tout dwa rezève.
+    © 2026 Bely AI Studio. Tout dwa rezève.
   </small>
 
 </footer>
@@ -927,6 +800,9 @@ setLoading(false);
 <p style={{ color: "white" }}>
   {text}
 </p>
+
+</>
+)}
 
     </div>
 
