@@ -315,9 +315,19 @@ const translateText = async () => {
         },
 
         body: JSON.stringify({
-          prompt:
-            `Tradui tèks sa a an kreyòl ayisyen. Bay sèlman tradiksyon an:\n\n${text}`
-        })
+  prompt: `
+Tradui tèks sa a an kreyòl ayisyen.
+
+Règ:
+- Bay sèlman tradiksyon an.
+- Pa ajoute eksplikasyon.
+- Kenbe sans orijinal la.
+
+Tèks la:
+
+${text}
+`
+})
       }
     );
 
@@ -385,8 +395,18 @@ const rewriteText = async () => {
         },
 
         body: JSON.stringify({
-          prompt:
-            `Re-ekri tèks sa a yon fason ki pi pwofesyonèl, pi klè ak pi natirèl. Bay sèlman nouvo vèsyon an:\n\n${text}`
+          prompt: `
+Re-ekri tèks sa a nan yon fason ki pi pwofesyonèl ak pi fasil pou konprann.
+
+Règ:
+- Kenbe menm sans lan.
+- Korije fot si genyen.
+- Amelyore estrikti fraz yo.
+
+Tèks la:
+
+${text}
+`
         })
       }
     );
@@ -453,8 +473,18 @@ const summarizeText = async () => {
         },
 
         body: JSON.stringify({
-          prompt:
-            `Rezime tèks sa a. Bay sèlman rezime a ak pwen ki pi enpòtan yo:\n\n${text}`
+          prompt: `
+Fè yon rezime kout ak klè sou tèks sa a.
+
+Règ:
+- Konsève lide prensipal yo.
+- Itilize paragraf kout.
+- Fè li fasil pou konprann.
+
+Tèks la:
+
+${text}
+`
         })
       }
     );
@@ -521,9 +551,31 @@ const generateTikTokScript = async () => {
         },
 
         body: JSON.stringify({
-          prompt:
-            `Kreye yon script TikTok viral, kout, enteresan ak pwofesyonèl sou sijè sa a:\n\n${text}\n\nMete Hook, Kontni prensipal ak Call To Action.`
-        })
+  prompt: `
+Kreye yon script TikTok pwofesyonèl sou sijè sa a:
+
+${text}
+
+Règ:
+
+- Reponn tankou ChatGPT.
+- Fè repons lan pwòp, byen estriktire, ak fasil pou li.
+- Itilize tit ak emojis.
+- Separe chak seksyon ak espas.
+- Pa itilize senbòl tankou *** oswa ---.
+- Bay sèlman pati ki nesesè yo.
+- Fòmate l konsa:
+
+🎣 Hook
+
+🎬 Devlopman
+
+📢 Call To Action
+
+- Script la dwe dire apeprè 60 segonn.
+- Itilize yon ton dinamik ak natirèl.
+`
+})
       }
     );
 
@@ -584,9 +636,23 @@ const generateQuiz = async () => {
         },
 
         body: JSON.stringify({
-          prompt:
-            `Kreye yon quiz ak 5 kestyon ak 4 chwa repons sou sijè sa a: ${text}. Endike bon repons lan pou chak kestyon.`
-        })
+  prompt: `
+Kreye 10 kestyon quiz kaptivan sou sijè sa a:
+
+${text}
+
+Règ:
+- Bay kestyon yo ak repons yo.
+- Fè kestyon yo enteresan.
+- Fòma a dwe:
+
+1. Kesyon?
+Repons: ...
+
+2. Kesyon?
+Repons: ...
+`
+})
       }
     );
 
@@ -1414,8 +1480,6 @@ if (activePage === "ask-ai") {
 
   <>
 
-    <br />
-
     <h2
       style={{
         color: "white"
@@ -1427,27 +1491,27 @@ if (activePage === "ask-ai") {
     <div className="ai-response">
 
       <div className="response-text">
-  {answer}
-</div>
 
-  <button
-    className="copy-icon"
-    onClick={() => {
+        {aiResponse}
 
-      navigator.clipboard.writeText(
-        aiResponse
-      );
+      </div>
 
-    }}
-  >
+      <button
+        className="copy-icon"
+        onClick={() => {
 
-    📋
+          navigator.clipboard.writeText(
+            aiResponse
+          );
 
-  </button>
+        }}
+      >
 
-  {aiResponse}
+        📋
 
-</div>
+      </button>
+
+    </div>
 
   </>
 
