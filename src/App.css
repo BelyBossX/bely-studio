@@ -369,6 +369,8 @@ footer{
 
   color:white;
 
+  white-space: pre-wrap;
+
   line-height:1.8;
 
   margin-bottom:130px;
@@ -1361,4 +1363,220 @@ textarea{
 
   z-index:2;
 
+}
+
+.audio-box {
+
+  margin-top: 25px;
+
+}
+
+.audio-player-container {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+}
+
+.audio-player-container audio {
+
+  width: 300px;
+
+}
+
+.download-btn {
+
+  font-size: 28px;
+
+  text-decoration: none;
+
+}
+
+.latest-audio {
+
+  margin-top: 20px;
+
+}
+
+.audio-row {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin: 10px 0;
+
+}
+
+.audio-row button {
+
+  padding: 5px 10px;
+
+  cursor: pointer;
+
+}
+
+.audio-container {
+
+  margin-top: 20px;
+
+  text-align: center;
+
+}
+
+.audio-player {
+
+  width: 300px;
+
+  max-width: 90%;
+
+}
+
+.tools-grid {
+
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 15px;
+
+  margin: 25px 0;
+
+}
+
+.tool-card {
+
+  background: rgba(255,255,255,0.08);
+
+  border-radius: 20px;
+
+  padding: 25px;
+
+  text-align: center;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+
+}
+
+.tool-card:hover {
+
+  transform: translateY(-5px);
+
+}
+
+.tool-icon {
+
+  font-size: 35px;
+
+}
+
+.tool-card p {
+
+  margin-top: 10px;
+
+}
+
+.tools-grid.compact {
+
+  grid-template-columns: repeat(3, 1fr);
+
+}
+
+.tools-grid.compact .tool-card {
+
+  padding: 15px;
+
+}
+
+.tools-grid.compact .tool-icon {
+
+  font-size: 28px;
+
+}
+
+.back-btn {
+
+  margin-bottom: 20px;
+
+}
+
+.chat-container {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 15px;
+
+  margin: 20px 0;
+
+}
+
+.user-message {
+
+  align-self: flex-end;
+
+  background: #2563eb;
+
+  color: white;
+
+  padding: 15px;
+
+  border-radius: 15px;
+
+  max-width: 80%;
+
+}
+
+.ai-message {
+
+  align-self: flex-start;
+
+  background: #1f2937;
+
+  color: white;
+
+  padding: 15px;
+
+  border-radius: 15px;
+
+  max-width: 80%;
+
+}
+
+.welcome-text {
+
+  text-align: center;
+
+  opacity: 0.8;
+
+  margin: 30px 0;
+
+}
+
+.textarea-wrapper{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.upload-inside{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+  background:#111827;
+  color:white;
+  font-size:22px;
+  flex-shrink:0;
 }

@@ -8,8 +8,19 @@ function App() {
   const [showLogin,
 setShowLogin] =
 useState(false);
+
 const [messages, setMessages] =
 useState([]);
+
+const [translations, setTranslations] = useState([]);
+
+const [rewrites, setRewrites] = useState([]);
+
+const [summaries, setSummaries] = useState([]);
+
+const [tiktokScripts, setTiktokScripts] = useState([]);
+
+const [quizzes, setQuizzes] = useState([]);
 
   const [voice, setVoice] =
   useState("male");
@@ -123,95 +134,74 @@ const handleFileUpload = (event) => {
 
 };
 
-  const generateAudio = async () => {
+const generateAudio = async () => {
 
-    if (text.trim() === "") {
-      alert("Tanpri antre yon tèks");
-      return;
-    }
+  console.log("BOUTON AN KLIKE");
 
-    try {
+  if (text.trim() === "") {
+    alert("Tanpri antre yon tèks");
+    return;
+  }
 
-      setLoading(true);
+  try {
 
-      const response =
-        await fetch(
-  "https://bely-studio-backend.onrender.com/generate",
-          {
-            method: "POST",
+    setLoading(true);
 
-            headers: {
-              "Content-Type":
-                "application/json"
-            },
+    const response = await fetch(
+      "http://localhost:5000/generate",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text,
+          voice,
+        }),
+      }
+    );
 
-            body: JSON.stringify({
-  text: text,
-  voice: voice
-})
-          }
-        );
+    const data = await response.json();
 
-      const data =
-        await response.json();
+    console.log("DATA:", data);
 
-      console.log(data);
+    if (data.success) {
 
-      setAudioUrl(
-  `https://bely-studio-backend.onrender.com/audio/${data.audio}?t=${Date.now()}`
-);
+      const audioLink =
+        `http://localhost:5000/audio/${data.audio}?t=${Date.now()}`;
 
-const audioLink =
-`https://bely-studio-backend.onrender.com/audio/${data.audio}?t=${Date.now()}`;
+      setAudioUrl(audioLink);
 
-setAudioUrl(audioLink);
+      setHistory((prev) => [
+        {
+          text,
+          date: new Date().toLocaleTimeString(),
+          textContent: text,
+          audio: audioLink,
+        },
+        ...prev,
+      ].slice(0, 5));
 
-setHistory((prev) => [
+    } else {
 
-  {
-    text: text,
-    date: new Date()
-      .toLocaleTimeString(),
-    audio: audioLink
-  },
-
-  ...prev
-
-].slice(0, 10));
-
-setStats((prev) => ({
-
-  totalAudios:
-    prev.totalAudios + 1,
-
-  totalWords:
-    prev.totalWords + wordCount,
-
-  lastUsed:
-    new Date()
-      .toLocaleTimeString()
-
-}));
-
-setLoading(false);
+      alert("Erè pandan jenerasyon odyo a");
 
     }
 
-    catch (error) {
+  } catch (error) {
 
-      setLoading(false);
+    console.error(error);
 
-      console.error(error);
+    alert("Erè koneksyon ak backend la");
 
-      alert(
-        "Erè koneksyon ak backend la"
-      );
+  } finally {
 
-    }
+    setLoading(false);
 
-  };
+  }
+};
 
-  const askAI = async () => {
+const askAI = async () => {
 
   if (text.trim() === "") {
 
@@ -226,6 +216,8 @@ setLoading(false);
     setAiLoading(true);
 
     setAiResponse("");
+
+    console.log("Kesyon voye:", text);
 
     const response = await fetch(
       "https://bely-studio-backend.onrender.com/ask-ai",
@@ -243,6 +235,8 @@ setLoading(false);
     );
 
     const data = await response.json();
+
+console.log(data);
 
     if (data.success) {
 
@@ -297,7 +291,792 @@ setLoading(false);
 
 };
 
+const translateText = async () => {
+
+  if (text.trim() === "") {
+
+    alert("Tanpri antre yon tèks");
+
+    return;
+
+  }
+
+  try {
+
+    setAiLoading(true);
+
+    const response = await fetch(
+      "https://bely-studio-backend.onrender.com/ask-ai",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          prompt:
+            `Tradui tèks sa a an kreyòl ayisyen. Bay sèlman tradiksyon an:\n\n${text}`
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    console.log(data);
+
+    if (data.success) {
+
+      setTranslations((prev) => [
+
+        ...prev,
+
+        {
+          type: "user",
+          text: text
+        },
+
+        {
+          type: "ai",
+          text: data.answer
+        }
+
+      ]);
+
+      setText("");
+
+    }
+
+    setAiLoading(false);
+
+  } catch (error) {
+
+    console.error(error);
+
+    setAiLoading(false);
+
+    alert("Erè koneksyon");
+
+  }
+
+};
+
+const rewriteText = async () => {
+
+  if (text.trim() === "") {
+
+    alert("Tanpri antre yon tèks");
+
+    return;
+
+  }
+
+  try {
+
+    setAiLoading(true);
+
+    const response = await fetch(
+      "https://bely-studio-backend.onrender.com/ask-ai",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          prompt:
+            `Re-ekri tèks sa a yon fason ki pi pwofesyonèl, pi klè ak pi natirèl. Bay sèlman nouvo vèsyon an:\n\n${text}`
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.success) {
+
+      setRewrites((prev) => [
+
+        ...prev,
+
+        {
+          type: "user",
+          text: text
+        },
+
+        {
+          type: "ai",
+          text: data.answer
+        }
+
+      ]);
+
+      setText("");
+
+    }
+
+    setAiLoading(false);
+
+  } catch (error) {
+
+    console.error(error);
+
+    setAiLoading(false);
+
+    alert("Erè koneksyon");
+
+  }
+
+};
+
+const summarizeText = async () => {
+
+  if (text.trim() === "") {
+
+    alert("Tanpri antre yon tèks");
+
+    return;
+
+  }
+
+  try {
+
+    setAiLoading(true);
+
+    const response = await fetch(
+      "https://bely-studio-backend.onrender.com/ask-ai",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          prompt:
+            `Rezime tèks sa a. Bay sèlman rezime a ak pwen ki pi enpòtan yo:\n\n${text}`
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.success) {
+
+      setSummaries((prev) => [
+
+        ...prev,
+
+        {
+          type: "user",
+          text: text
+        },
+
+        {
+          type: "ai",
+          text: data.answer
+        }
+
+      ]);
+
+      setText("");
+
+    }
+
+    setAiLoading(false);
+
+  } catch (error) {
+
+    console.error(error);
+
+    setAiLoading(false);
+
+    alert("Erè koneksyon");
+
+  }
+
+};
+
+const generateTikTokScript = async () => {
+
+  if (text.trim() === "") {
+
+    alert("Tanpri antre yon sijè");
+
+    return;
+
+  }
+
+  try {
+
+    setAiLoading(true);
+
+    const response = await fetch(
+      "https://bely-studio-backend.onrender.com/ask-ai",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          prompt:
+            `Kreye yon script TikTok viral, kout, enteresan ak pwofesyonèl sou sijè sa a:\n\n${text}\n\nMete Hook, Kontni prensipal ak Call To Action.`
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.success) {
+
+      setTiktokScripts((prev) => [
+        ...prev,
+        {
+          type: "user",
+          text: text
+        },
+        {
+         type: "ai",
+         text: data.answer
+        }
+      ]);
+
+      setText("");
+    }
+
+    setAiLoading(false);
+
+    } catch (error) {
+
+      console.error(error);
+
+      setAiLoading(false);
+
+      alert("Erè koneksyon");
+
+    }
+
+    }; 
+    
+const generateQuiz = async () => {
+
+  if (text.trim() === "") {
+
+    alert("Tanpri antre yon sijè");
+
+    return;
+
+  }
+
+  try {
+
+    setAiLoading(true);
+
+    const response = await fetch(
+      "https://bely-studio-backend.onrender.com/ask-ai",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          prompt:
+            `Kreye yon quiz ak 5 kestyon ak 4 chwa repons sou sijè sa a: ${text}. Endike bon repons lan pou chak kestyon.`
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.success) {
+
+      setQuizzes((prev) => [
+
+        ...prev,
+
+        {
+          type: "user",
+          text: text
+        },
+
+        {
+          type: "ai",
+          text: data.answer
+        }
+
+      ]);
+
+      setText("");
+
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert("Erè koneksyon");
+
+  }
+
+    setAiLoading(false);
+
+};
+
+if (activePage === "rewrite") {
+
   return (
+
+    <div className="hero-section">
+
+      <button
+        className="back-btn"
+        onClick={() => setActivePage("home")}
+      >
+        ← Retounen
+      </button>
+
+      <h1>
+        ✍️ Re-ekri
+      </h1>
+
+      {rewrites.length === 0 && (
+
+        <p className="welcome-text">
+
+          Bonjou! 👋
+
+          Ekri tèks ou vle amelyore a.
+
+        </p>
+
+      )}
+
+      <div className="chat-container">
+
+        {rewrites.map((msg, index) => (
+
+          <div
+            key={index}
+            className={
+              msg.type === "user"
+                ? "user-message"
+                : "ai-message"
+            }
+          >
+
+            {msg.text}
+
+          </div>
+
+        ))}
+
+      </div>
+
+      <textarea
+
+        value={text}
+
+        onChange={(e) =>
+          setText(e.target.value)
+        }
+
+        placeholder="Ekri tèks pou re-ekri a..."
+
+      />
+
+      <button
+
+        onClick={rewriteText}
+
+        disabled={aiLoading}
+
+      >
+
+        {aiLoading
+
+          ? "⏳ AI ap re-ekri tèks ou a..."
+
+          : "✍️ Re-ekri"}
+
+      </button>
+
+    </div>
+
+  );
+
+}
+
+if (activePage === "summary") {
+
+  return (
+
+    <div className="hero-section">
+
+      <button
+        className="back-btn"
+        onClick={() =>
+          setActivePage("home")
+        }
+      >
+        ← Retounen
+      </button>
+
+      <h1>
+        📄 Rezime
+      </h1>
+      
+
+      {summaries.length === 0 && (
+
+        <p className="welcome-text">
+
+          Kole yon tèks pou AI a fè yon rezime.
+
+        </p>
+
+      )}
+
+      <div className="chat-container">
+
+        {summaries.map((msg, index) => (
+
+          <div
+            key={index}
+            className={
+              msg.type === "user"
+                ? "user-message"
+                : "ai-message"
+            }
+          >
+
+            {msg.text}
+
+          </div>
+
+        ))}
+
+      </div>
+
+      <textarea
+
+        value={text}
+
+        onChange={(e) =>
+          setText(e.target.value)
+        }
+
+        placeholder="Kole tèks la isit..."
+
+      />
+
+      <button
+
+        onClick={summarizeText}
+
+        disabled={aiLoading}
+
+      >
+
+        {aiLoading
+
+          ? "⏳ Rezime a ap fèt..."
+
+          : "📄 Rezime"}
+
+      </button>
+
+    </div>
+
+  );
+
+}
+
+if (activePage === "translate") {
+
+  return (
+
+    <div className="hero-section">
+
+      <button
+        className="back-btn"
+        onClick={() => setActivePage("home")}
+      >
+        ← Retounen
+      </button>
+
+      <h1>🌍 Tradui</h1>
+
+      <div className="chat-container">
+
+        {translations.map((msg, index) => (
+
+          <div
+            key={index}
+            className={
+              msg.type === "user"
+                ? "user-message"
+                : "ai-message"
+            }
+          >
+            {msg.text}
+          </div>
+
+        ))}
+
+      </div>
+
+      <textarea
+        value={text}
+        onChange={(e) =>
+          setText(e.target.value)
+        }
+        placeholder="Ekri tèks pou tradui..."
+      />
+
+      <button
+  onClick={translateText}
+  disabled={aiLoading}
+>
+
+  {aiLoading
+    ? "⏳ Tradiksyon an ap fèt..."
+    : "🌍 Tradui"}
+
+</button>
+
+    </div>
+
+  );
+
+}
+
+if (activePage === "tiktok") {
+
+  return (
+
+    <div className="hero-section">
+
+      <button
+        className="back-btn"
+        onClick={() =>
+          setActivePage("home")
+        }
+      >
+        ← Retounen
+      </button>
+
+      <h1>
+        🎬 Script TikTok
+      </h1>
+
+      {tiktokScripts.length === 0 && (
+
+        <p className="welcome-text">
+
+          Ekri yon sijè epi AI a ap kreye yon script TikTok.
+
+        </p>
+
+      )}
+
+      <div className="chat-container">
+
+        {tiktokScripts.map((msg, index) => (
+
+          <div
+            key={index}
+            className={
+              msg.type === "user"
+                ? "user-message"
+                : "ai-message"
+            }
+          >
+
+            {msg.text}
+
+          </div>
+
+        ))}
+
+      </div>
+
+      <textarea
+
+        value={text}
+
+        onChange={(e) =>
+          setText(e.target.value)
+        }
+
+        placeholder="Ekri sijè videyo a..."
+
+      />
+
+      <button
+
+        onClick={generateTikTokScript}
+
+        disabled={aiLoading}
+
+      >
+
+        {aiLoading
+
+          ? "⏳ Script la ap kreye..."
+
+          : "🎬 Kreye Script"}
+
+      </button>
+
+    </div>
+
+  );
+
+}
+
+if (activePage === "quiz") {
+
+  return (
+
+    <div className="hero-section">
+
+      <button
+        className="back-btn"
+        onClick={() =>
+          setActivePage("home")
+        }
+      >
+        ← Retounen
+      </button>
+
+      <h1>
+        ❓ Kreye Quiz
+      </h1>
+
+      <p className="welcome-text">
+         TEST QUIZ
+      </p>
+
+      <div className="chat-container">
+
+        {quizzes.map((msg, index) => (
+
+          <div
+            key={index}
+            className={
+              msg.type === "user"
+                ? "user-message"
+                : "ai-message"
+            }
+          >
+
+            {msg.text}
+
+          </div>
+
+        ))}
+
+      </div>
+
+      <textarea
+
+        value={text}
+
+        onChange={(e) =>
+          setText(e.target.value)
+        }
+
+        placeholder="Ekri sijè quiz la..."
+
+      />
+
+      <button
+
+        onClick={generateQuiz}
+
+        disabled={aiLoading}
+
+      >
+
+        {aiLoading
+
+          ? "⏳ Quiz la ap kreye..."
+
+          : "❓ Kreye Quiz"}
+
+      </button>
+
+    </div>
+
+  );
+
+}
+
+if (activePage === "ask-ai") {
+
+  return (
+
+    <div className="hero-section">
+
+      <button
+        className="back-btn"
+        onClick={() => setActivePage("home")}
+      >
+        ← Retounen
+      </button>
+
+      <h1>🤖 Mande AI</h1>
+
+      <div className="chat-container">
+
+        {messages.map((msg, index) => (
+
+          <div
+            key={index}
+            className={
+              msg.type === "user"
+                ? "user-message"
+                : "ai-message"
+            }
+          >
+            {msg.text}
+          </div>
+
+        ))}
+
+      </div>
+
+      <textarea
+        value={text}
+        onChange={(e) =>
+          setText(e.target.value)
+        }
+        placeholder="Poze AI a kesyon..."
+      />
+
+      <button
+  onClick={askAI}
+  disabled={aiLoading}
+>
+
+  {aiLoading
+    ? "⏳ AI ap reflechi..."
+    : "🤖 Voye"}
+
+</button>
+
+    </div>
+
+  );
+
+}
+
+  return (
+    
 
   <div className="container">
 
@@ -429,7 +1208,51 @@ setLoading(false);
 
 <div className="menu-content">
 
-  <h2>📜 Istorik</h2>
+  <h2>
+  📜 Istorik
+</h2>
+
+{history.map((item, index) => (
+
+  <div
+    key={index}
+    className="audio-row"
+  >
+
+    <button
+      onClick={() => {
+
+        const utterance =
+          new SpeechSynthesisUtterance(
+            item.textContent
+          );
+
+        utterance.lang = "fr-FR";
+
+        speechSynthesis.speak(utterance);
+
+      }}
+    >
+
+      ▶️
+
+    </button>
+
+    <span>
+
+      {item.date}
+
+    </span>
+
+    <button>
+
+      ⬇️
+
+    </button>
+
+  </div>
+
+))}
 
 {history.length === 0 ? (
 
@@ -603,6 +1426,10 @@ setLoading(false);
 
     <div className="ai-response">
 
+      <div className="response-text">
+  {answer}
+</div>
+
   <button
     className="copy-icon"
     onClick={() => {
@@ -626,7 +1453,69 @@ setLoading(false);
 
 )}
 
-  <div className="input-wrapper">
+  
+
+  <div className={`tools-grid ${audioUrl ? "compact" : ""}`}>
+
+  <div
+    className="tool-card"
+    onClick={() => setActivePage("ask-ai")}
+  >
+    <div className="tool-icon">🤖</div>
+
+    {!audioUrl && <p>Mande AI</p>}
+  </div>
+
+  <div
+    className="tool-card"
+    onClick={() => setActivePage("translate")}
+  >
+    <div className="tool-icon">🌍</div>
+
+    {!audioUrl && <p>Tradui</p>}
+  </div>
+
+  <div
+    className="tool-card"
+    onClick={() => setActivePage("rewrite")}
+  >
+    <div className="tool-icon">✍️</div>
+
+    {!audioUrl && <p>Re-ekri</p>}
+  </div>
+
+  <div
+  className="tool-card"
+  onClick={() => setActivePage("summary")}
+>
+    <div className="tool-icon">📝</div>
+
+    {!audioUrl && <p>Rezime</p>}
+  </div>
+
+  <div
+    className="tool-card"
+    onClick={() =>
+  setActivePage("tiktok")
+}
+  >
+    <div className="tool-icon">🎬</div>
+
+    {!audioUrl && <p>Script TikTok</p>}
+  </div>
+
+  <div
+    className="tool-card"
+    onClick={() => setActivePage("quiz")}
+  >
+    <div className="tool-icon">❓</div>
+
+    {!audioUrl && <p>Kreye Quiz</p>}
+  </div>
+
+</div>
+
+<div className="input-wrapper">
 
   <label
     className="upload-inside"
@@ -724,14 +1613,6 @@ setLoading(false);
 
 </button>
 
-<button
-  onClick={askAI}
-  disabled={aiLoading}
->
-  {aiLoading
-    ? "⏳ AI ap reflechi..."
-    : "🤖 Mande AI"}
-</button>
 
 </div>
 
@@ -740,41 +1621,24 @@ setLoading(false);
 
 {audioUrl && (
 
-  <div className="audio-card">
+  <div className="audio-container">
 
-    <h2>
-      🎵 Odyo a Pare
-    </h2>
-
-    <p>
-      Odyo w' la fin' jenere avèk siksè.
-    </p>
+    <h3>🎵 Odyo w la fin' jenere</h3>
 
     <audio
       controls
-      autoPlay
       src={audioUrl}
+      className="audio-player"
     />
 
-  </div>
-
-)}
-
-<br />
-<br />
-
-{audioUrl && (
-
-  <div className="download-wrapper">
+    <br /><br />
 
     <a
-      className="download-btn"
       href={audioUrl}
       download="bely-audio.mp3"
+      className="download-btn"
     >
-
       ⬇️ Telechaje MP3
-
     </a>
 
   </div>
