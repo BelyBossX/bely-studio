@@ -696,14 +696,17 @@ if (activePage === "rewrite") {
 
   return (
 
-    <div className="hero-section">
+    <div className="ai-page">
+
+    <div className="ai-card">
 
       <button
-        className="back-btn"
-        onClick={() => setActivePage("home")}
-      >
-        ← Retounen
-      </button>
+  className="back-btn"
+  onClick={() => setActivePage("home")}
+>
+  ←
+</button>
+
 
       <h1>
         ✍️ Re-ekri
@@ -725,20 +728,20 @@ if (activePage === "rewrite") {
 
         {rewrites.map((msg, index) => (
 
-          <div
-            key={index}
-            className={
-              msg.type === "user"
-                ? "user-message"
-                : "ai-message"
-            }
-          >
+  <div
+  key={index}
+  className={
+    msg.type === "user"
+      ? "user-message"
+      : "ai-message"
+  }
+>
 
-            {msg.text}
+  <div>{msg.text}</div>
 
-          </div>
+</div>
 
-        ))}
+))}
 
       </div>
 
@@ -754,6 +757,32 @@ if (activePage === "rewrite") {
 
       />
 
+      {rewrites.some(
+  msg => msg.type === "ai"
+) && (
+
+  <button
+    className="copy-btn"
+    onClick={() => {
+
+      const lastAI =
+        rewrites
+          .filter(
+            m => m.type === "ai"
+          )
+          .slice(-1)[0];
+
+      navigator.clipboard.writeText(
+        lastAI.text
+      );
+
+    }}
+  >
+    ⧉
+  </button>
+
+)}
+
       <button
 
         onClick={rewriteText}
@@ -768,7 +797,9 @@ if (activePage === "rewrite") {
 
           : "✍️ Re-ekri"}
 
-      </button>
+            </button>
+
+    </div>
 
     </div>
 
@@ -776,11 +807,46 @@ if (activePage === "rewrite") {
 
 }
 
+<textarea
+  value={text}
+  onChange={(e) => setText(e.target.value)}
+  placeholder="Ekri tèks pou re-ekri a..."
+/>
+
+{rewrites.some(
+  msg => msg.type === "ai"
+) && (
+
+  <button
+    className="copy-btn"
+    onClick={() => {
+
+      const lastAI =
+        rewrites
+          .filter(
+            m => m.type === "ai"
+          )
+          .slice(-1)[0];
+
+      navigator.clipboard.writeText(
+        lastAI.text
+      );
+
+    }}
+  >
+    ⧉
+  </button>
+
+)}
+
+
 if (activePage === "summary") {
 
   return (
 
-    <div className="hero-section">
+    <div className="ai-page">
+
+    <div className="ai-card">
 
       <button
         className="back-btn"
@@ -788,7 +854,7 @@ if (activePage === "summary") {
           setActivePage("home")
         }
       >
-        ← Retounen
+        ←
       </button>
 
       <h1>
@@ -811,19 +877,19 @@ if (activePage === "summary") {
         {summaries.map((msg, index) => (
 
           <div
-            key={index}
-            className={
-              msg.type === "user"
-                ? "user-message"
-                : "ai-message"
-            }
-          >
+  key={index}
+  className={
+    msg.type === "user"
+      ? "user-message"
+      : "ai-message"
+  }
+>
 
-            {msg.text}
+  <div>{msg.text}</div>
 
-          </div>
+</div>
 
-        ))}
+))}
 
       </div>
 
@@ -838,6 +904,32 @@ if (activePage === "summary") {
         placeholder="Kole tèks la isit..."
 
       />
+
+      {summaries.some(
+  msg => msg.type === "ai"
+) && (
+
+  <button
+    className="copy-btn"
+    onClick={() => {
+
+      const lastAI =
+        summaries
+          .filter(
+            m => m.type === "ai"
+          )
+          .slice(-1)[0];
+
+      navigator.clipboard.writeText(
+        lastAI.text
+      );
+
+    }}
+  >
+    ⧉
+  </button>
+
+)}
 
       <button
 
@@ -857,21 +949,51 @@ if (activePage === "summary") {
 
     </div>
 
+    </div>
+
   );
 
 }
+
+{summaries.some(
+  msg => msg.type === "ai"
+) && (
+
+  <button
+    className="copy-btn"
+    onClick={() => {
+
+      const lastAI =
+        summaries
+          .filter(
+            m => m.type === "ai"
+          )
+          .slice(-1)[0];
+
+      navigator.clipboard.writeText(
+        lastAI.text
+      );
+
+    }}
+  >
+    ⧉
+  </button>
+
+)}
 
 if (activePage === "translate") {
 
   return (
 
-    <div className="hero-section">
+    <div className="ai-page">
+
+    <div className="ai-card">
 
       <button
         className="back-btn"
         onClick={() => setActivePage("home")}
       >
-        ← Retounen
+        ←
       </button>
 
       <h1>🌍 Tradui</h1>
@@ -881,17 +1003,19 @@ if (activePage === "translate") {
         {translations.map((msg, index) => (
 
           <div
-            key={index}
-            className={
-              msg.type === "user"
-                ? "user-message"
-                : "ai-message"
-            }
-          >
-            {msg.text}
-          </div>
+  key={index}
+  className={
+    msg.type === "user"
+      ? "user-message"
+      : "ai-message"
+  }
+>
 
-        ))}
+  <div>{msg.text}</div>
+
+</div>
+
+))}
 
       </div>
 
@@ -902,6 +1026,32 @@ if (activePage === "translate") {
         }
         placeholder="Ekri tèks pou tradui..."
       />
+
+      {translations.some(
+  msg => msg.type === "ai"
+) && (
+
+  <button
+    className="copy-btn"
+    onClick={() => {
+
+      const lastAI =
+        translations
+          .filter(
+            m => m.type === "ai"
+          )
+          .slice(-1)[0];
+
+      navigator.clipboard.writeText(
+        lastAI.text
+      );
+
+    }}
+  >
+    ⧉
+  </button>
+
+)}
 
       <button
   onClick={translateText}
@@ -916,15 +1066,45 @@ if (activePage === "translate") {
 
     </div>
 
+    </div>
+
   );
 
 }
+
+{translations.some(
+  msg => msg.type === "ai"
+) && (
+
+  <button
+    className="copy-btn"
+    onClick={() => {
+
+      const lastAI =
+        translations
+          .filter(
+            m => m.type === "ai"
+          )
+          .slice(-1)[0];
+
+      navigator.clipboard.writeText(
+        lastAI.text
+      );
+
+    }}
+  >
+    ⧉
+  </button>
+
+)}
 
 if (activePage === "tiktok") {
 
   return (
 
-    <div className="hero-section">
+    <div className="ai-page">
+
+    <div className="ai-card">
 
       <button
         className="back-btn"
@@ -932,7 +1112,7 @@ if (activePage === "tiktok") {
           setActivePage("home")
         }
       >
-        ← Retounen
+        ←
       </button>
 
       <h1>
@@ -954,19 +1134,19 @@ if (activePage === "tiktok") {
         {tiktokScripts.map((msg, index) => (
 
           <div
-            key={index}
-            className={
-              msg.type === "user"
-                ? "user-message"
-                : "ai-message"
-            }
-          >
+  key={index}
+  className={
+    msg.type === "user"
+      ? "user-message"
+      : "ai-message"
+  }
+>
 
-            {msg.text}
+  <div>{msg.text}</div>
 
-          </div>
+</div>
 
-        ))}
+))}
 
       </div>
 
@@ -981,6 +1161,32 @@ if (activePage === "tiktok") {
         placeholder="Ekri sijè videyo a..."
 
       />
+
+      {tiktokScripts.some(
+  msg => msg.type === "ai"
+) && (
+
+  <button
+    className="copy-btn"
+    onClick={() => {
+
+      const lastAI =
+        tiktokScripts
+          .filter(
+            m => m.type === "ai"
+          )
+          .slice(-1)[0];
+
+      navigator.clipboard.writeText(
+        lastAI.text
+      );
+
+    }}
+  >
+    ⧉
+  </button>
+
+)}
 
       <button
 
@@ -1000,15 +1206,45 @@ if (activePage === "tiktok") {
 
     </div>
 
+    </div>
+
   );
 
 }
+
+{tiktokScripts.some(
+  msg => msg.type === "ai"
+) && (
+
+  <button
+    className="copy-btn"
+    onClick={() => {
+
+      const lastAI =
+        tiktokScripts
+          .filter(
+            m => m.type === "ai"
+          )
+          .slice(-1)[0];
+
+      navigator.clipboard.writeText(
+        lastAI.text
+      );
+
+    }}
+  >
+    ⧉
+  </button>
+
+)}
 
 if (activePage === "quiz") {
 
   return (
 
-    <div className="hero-section">
+    <div className="ai-page">
+
+    <div className="ai-card">
 
       <button
         className="back-btn"
@@ -1016,7 +1252,7 @@ if (activePage === "quiz") {
           setActivePage("home")
         }
       >
-        ← Retounen
+        ←
       </button>
 
       <h1>
@@ -1032,19 +1268,19 @@ if (activePage === "quiz") {
         {quizzes.map((msg, index) => (
 
           <div
-            key={index}
-            className={
-              msg.type === "user"
-                ? "user-message"
-                : "ai-message"
-            }
-          >
+  key={index}
+  className={
+    msg.type === "user"
+      ? "user-message"
+      : "ai-message"
+  }
+>
 
-            {msg.text}
+  <div>{msg.text}</div>
 
-          </div>
+</div>
 
-        ))}
+))}
 
       </div>
 
@@ -1059,6 +1295,32 @@ if (activePage === "quiz") {
         placeholder="Ekri sijè quiz la..."
 
       />
+
+      {quizzes.some(
+  msg => msg.type === "ai"
+) && (
+
+  <button
+    className="copy-btn"
+    onClick={() => {
+
+      const lastAI =
+        quizzes
+          .filter(
+            m => m.type === "ai"
+          )
+          .slice(-1)[0];
+
+      navigator.clipboard.writeText(
+        lastAI.text
+      );
+
+    }}
+  >
+    ⧉
+  </button>
+
+)}
 
       <button
 
@@ -1078,62 +1340,128 @@ if (activePage === "quiz") {
 
     </div>
 
+    </div>
+
   );
 
 }
+
+{quizzes.some(
+  msg => msg.type === "ai"
+) && (
+
+  <button
+    className="copy-btn"
+    onClick={() => {
+
+      const lastAI =
+        quizzes
+          .filter(
+            m => m.type === "ai"
+          )
+          .slice(-1)[0];
+
+      navigator.clipboard.writeText(
+        lastAI.text
+      );
+
+    }}
+  >
+    ⧉
+  </button>
+
+)}
 
 if (activePage === "ask-ai") {
 
   return (
 
-    <div className="hero-section">
+    <div className="ai-page">
 
-      <button
-        className="back-btn"
-        onClick={() => setActivePage("home")}
-      >
-        ← Retounen
-      </button>
+      <div className="ai-card">
 
-      <h1>🤖 Mande AI</h1>
+        <div className="ai-header">
 
-      <div className="chat-container">
-
-        {messages.map((msg, index) => (
-
-          <div
-            key={index}
-            className={
-              msg.type === "user"
-                ? "user-message"
-                : "ai-message"
-            }
+          <button
+            className="back-btn"
+            onClick={() => setActivePage("home")}
           >
-            {msg.text}
-          </div>
+            ←
+          </button>
 
-        ))}
+          <h1 className="ai-title">
+            🤖 Mande AI
+          </h1>
+
+        </div>
+
+        <div className="chat-container">
+
+          {messages.map((msg, index) => (
+
+            <div
+              key={index}
+              className={
+                msg.type === "user"
+                  ? "user-message"
+                  : "ai-message"
+              }
+            >
+
+              <div>{msg.text}</div>
+
+            </div>
+
+          ))}
+
+        </div>
+
+        <textarea
+          value={text}
+          onChange={(e) =>
+            setText(e.target.value)
+          }
+          placeholder="Poze AI a kesyon..."
+        />
+
+        {messages.some(
+          msg => msg.type === "ai"
+        ) && (
+
+          <button
+            className="copy-btn"
+            onClick={() => {
+
+              const lastAI =
+                messages
+                  .filter(
+                    m => m.type === "ai"
+                  )
+                  .slice(-1)[0];
+
+              navigator.clipboard.writeText(
+                lastAI.text
+              );
+
+            }}
+          >
+            ⧉
+          </button>
+
+        )}
+
+        <button
+          onClick={askAI}
+          disabled={aiLoading}
+        >
+
+          {aiLoading
+            ? "⏳ AI ap reflechi..."
+            : "🤖 Voye"}
+
+        </button>
 
       </div>
-
-      <textarea
-        value={text}
-        onChange={(e) =>
-          setText(e.target.value)
-        }
-        placeholder="Poze AI a kesyon..."
-      />
-
-      <button
-  onClick={askAI}
-  disabled={aiLoading}
->
-
-  {aiLoading
-    ? "⏳ AI ap reflechi..."
-    : "🤖 Voye"}
-
-</button>
 
     </div>
 
@@ -1475,49 +1803,6 @@ if (activePage === "ask-ai") {
 
   <br />
   <br />
-
-  {aiResponse && (
-
-  <>
-
-    <h2
-      style={{
-        color: "white"
-      }}
-    >
-      🤖 Repons AI
-    </h2>
-
-    <div className="ai-response">
-
-      <div className="response-text">
-
-        {aiResponse}
-
-      </div>
-
-      <button
-        className="copy-icon"
-        onClick={() => {
-
-          navigator.clipboard.writeText(
-            aiResponse
-          );
-
-        }}
-      >
-
-        📋
-
-      </button>
-
-    </div>
-
-  </>
-
-)}
-
-  
 
   <div className={`tools-grid ${audioUrl ? "compact" : ""}`}>
 
