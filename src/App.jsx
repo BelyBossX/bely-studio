@@ -4,10 +4,7 @@ import logo from "./assets/logo.jpeg";
 
 function App() {
 
-  const [text, setText] = useState("");
-  const [showLogin,
-setShowLogin] =
-useState(false);
+const [text, setText] = useState("");
 
 const [messages, setMessages] =
 useState([]);
@@ -40,6 +37,18 @@ useState("");
 
   const [showAbout, setShowAbout] =
   useState(false);
+
+  const [showLogin, setShowLogin] =
+useState(false);
+
+const [showSignup, setShowSignup] =
+useState(false);
+
+const [email, setEmail] =
+useState("");
+
+const [password, setPassword] =
+useState("");
 
 const [stats, setStats] =
 useState({
@@ -148,7 +157,7 @@ const generateAudio = async () => {
     setLoading(true);
 
     const response = await fetch(
-      "https://bely-studio-backend.onrender.com/generate",
+      "http://localhost:5000/generate",
       {
         method: "POST",
         headers: {
@@ -168,19 +177,50 @@ const generateAudio = async () => {
     if (data.success) {
 
       const audioLink =
-        `https://bely-studio-backend.onrender.com/audio/${data.audio}?t=${Date.now()}`;
+        `http://localhost:5000/audio/${data.audio}?t=${Date.now()}`;
 
       setAudioUrl(audioLink);
 
-      setHistory((prev) => [
-        {
-          text,
-          date: new Date().toLocaleTimeString(),
-          textContent: text,
-          audio: audioLink,
-        },
-        ...prev,
-      ].slice(0, 5));
+      const newItem = {
+        text,
+        date: new Date().toLocaleTimeString(),
+        textContent: text,
+        audio: audioLink,
+      };
+
+      setHistory((prev) => {
+
+        const updatedHistory = [
+          newItem,
+          ...prev,
+        ].slice(0, 20);
+
+        return updatedHistory;
+
+      });
+
+      setStats((prev) => {
+
+        const updatedStats = {
+
+          totalAudios:
+            prev.totalAudios + 1,
+
+          totalWords:
+            prev.totalWords +
+            text.split(/\s+/).length,
+
+          totalAI:
+            prev.totalAI,
+
+          lastUsed:
+            new Date().toLocaleString()
+
+        };
+
+        return updatedStats;
+
+      });
 
     } else {
 
@@ -199,6 +239,7 @@ const generateAudio = async () => {
     setLoading(false);
 
   }
+
 };
 
 const askAI = async () => {
@@ -258,6 +299,18 @@ console.log(data);
   }
 
 ]);
+
+setStats((prev) => ({
+
+  ...prev,
+
+  totalAI: prev.totalAI + 1,
+
+  lastUsed:
+    new Date().toLocaleString()
+
+}));
+
   setText("");
 
   setStats((prev) => ({
@@ -353,6 +406,17 @@ ${text}
 
       ]);
 
+      setStats((prev) => ({
+
+  ...prev,
+
+  totalAI: prev.totalAI + 1,
+
+  lastUsed:
+    new Date().toLocaleString()
+
+}));
+
       setText("");
 
     }
@@ -431,6 +495,17 @@ ${text}
 
       ]);
 
+      setStats((prev) => ({
+
+  ...prev,
+
+  totalAI: prev.totalAI + 1,
+
+  lastUsed:
+    new Date().toLocaleString()
+
+}));
+
       setText("");
 
     }
@@ -508,6 +583,17 @@ ${text}
         }
 
       ]);
+
+      setStats((prev) => ({
+
+  ...prev,
+
+  totalAI: prev.totalAI + 1,
+
+  lastUsed:
+    new Date().toLocaleString()
+
+}));
 
       setText("");
 
@@ -595,6 +681,17 @@ Règ:
         }
       ]);
 
+      setStats((prev) => ({
+
+  ...prev,
+
+  totalAI: prev.totalAI + 1,
+
+  lastUsed:
+    new Date().toLocaleString()
+
+}));
+
       setText("");
     }
 
@@ -637,20 +734,41 @@ const generateQuiz = async () => {
 
         body: JSON.stringify({
   prompt: `
-Kreye 10 kestyon quiz kaptivan sou sijè sa a:
+
+Ou se yon pwofesè ak ekspè nan kreye quiz.
+
+Kreye 10 kestyon sou:
 
 ${text}
 
+Fòma egzak pou chak kestyon:
+
+━━━━━━━━━━━━━━
+
+❓ Kesyon 1
+
+A) ...
+B) ...
+C) ...
+D) ...
+
+✅ Bon Repons:
+...
+
+📖 Eksplikasyon:
+...
+
+━━━━━━━━━━━━━━
+
+Kontinye menm fòma a pou 10 kestyon.
+
 Règ:
-- Bay kestyon yo ak repons yo.
+- Ekri an kreyòl.
 - Fè kestyon yo enteresan.
-- Fòma a dwe:
+- Mete 4 chwa sèlman.
+- Mete yon sèl bon repons.
+- Mete eksplikasyon pou chak kestyon.
 
-1. Kesyon?
-Repons: ...
-
-2. Kesyon?
-Repons: ...
 `
 })
       }
@@ -675,6 +793,17 @@ Repons: ...
         }
 
       ]);
+
+      setStats((prev) => ({
+
+  ...prev,
+
+  totalAI: prev.totalAI + 1,
+
+  lastUsed:
+    new Date().toLocaleString()
+
+}));
 
       setText("");
 
@@ -737,7 +866,29 @@ if (activePage === "rewrite") {
   }
 >
 
-  <div>{msg.text}</div>
+ <div
+  style={{
+    whiteSpace: "pre-wrap",
+    lineHeight: "1.8"
+  }}
+>
+  {msg.text}
+</div>
+
+  {msg.type === "ai" && (
+
+    <button
+      className="message-copy-btn"
+      onClick={() =>
+        navigator.clipboard.writeText(
+          msg.text
+        )
+      }
+    >
+      ⧉ Kopye
+    </button>
+
+  )}
 
 </div>
 
@@ -756,32 +907,6 @@ if (activePage === "rewrite") {
         placeholder="Ekri tèks pou re-ekri a..."
 
       />
-
-      {rewrites.some(
-  msg => msg.type === "ai"
-) && (
-
-  <button
-    className="copy-btn"
-    onClick={() => {
-
-      const lastAI =
-        rewrites
-          .filter(
-            m => m.type === "ai"
-          )
-          .slice(-1)[0];
-
-      navigator.clipboard.writeText(
-        lastAI.text
-      );
-
-    }}
-  >
-    ⧉
-  </button>
-
-)}
 
       <button
 
@@ -812,33 +937,6 @@ if (activePage === "rewrite") {
   onChange={(e) => setText(e.target.value)}
   placeholder="Ekri tèks pou re-ekri a..."
 />
-
-{rewrites.some(
-  msg => msg.type === "ai"
-) && (
-
-  <button
-    className="copy-btn"
-    onClick={() => {
-
-      const lastAI =
-        rewrites
-          .filter(
-            m => m.type === "ai"
-          )
-          .slice(-1)[0];
-
-      navigator.clipboard.writeText(
-        lastAI.text
-      );
-
-    }}
-  >
-    ⧉
-  </button>
-
-)}
-
 
 if (activePage === "summary") {
 
@@ -885,7 +983,29 @@ if (activePage === "summary") {
   }
 >
 
-  <div>{msg.text}</div>
+  <div
+  style={{
+    whiteSpace: "pre-wrap",
+    lineHeight: "1.8"
+  }}
+>
+  {msg.text}
+</div>
+
+  {msg.type === "ai" && (
+
+    <button
+      className="message-copy-btn"
+      onClick={() =>
+        navigator.clipboard.writeText(
+          msg.text
+        )
+      }
+    >
+      ⧉ Kopye
+    </button>
+
+  )}
 
 </div>
 
@@ -904,32 +1024,6 @@ if (activePage === "summary") {
         placeholder="Kole tèks la isit..."
 
       />
-
-      {summaries.some(
-  msg => msg.type === "ai"
-) && (
-
-  <button
-    className="copy-btn"
-    onClick={() => {
-
-      const lastAI =
-        summaries
-          .filter(
-            m => m.type === "ai"
-          )
-          .slice(-1)[0];
-
-      navigator.clipboard.writeText(
-        lastAI.text
-      );
-
-    }}
-  >
-    ⧉
-  </button>
-
-)}
 
       <button
 
@@ -954,32 +1048,6 @@ if (activePage === "summary") {
   );
 
 }
-
-{summaries.some(
-  msg => msg.type === "ai"
-) && (
-
-  <button
-    className="copy-btn"
-    onClick={() => {
-
-      const lastAI =
-        summaries
-          .filter(
-            m => m.type === "ai"
-          )
-          .slice(-1)[0];
-
-      navigator.clipboard.writeText(
-        lastAI.text
-      );
-
-    }}
-  >
-    ⧉
-  </button>
-
-)}
 
 if (activePage === "translate") {
 
@@ -1011,7 +1079,29 @@ if (activePage === "translate") {
   }
 >
 
-  <div>{msg.text}</div>
+  <div
+  style={{
+    whiteSpace: "pre-wrap",
+    lineHeight: "1.8"
+  }}
+>
+  {msg.text}
+</div>
+
+  {msg.type === "ai" && (
+
+    <button
+      className="message-copy-btn"
+      onClick={() =>
+        navigator.clipboard.writeText(
+          msg.text
+        )
+      }
+    >
+      ⧉ Kopye
+    </button>
+
+  )}
 
 </div>
 
@@ -1026,32 +1116,6 @@ if (activePage === "translate") {
         }
         placeholder="Ekri tèks pou tradui..."
       />
-
-      {translations.some(
-  msg => msg.type === "ai"
-) && (
-
-  <button
-    className="copy-btn"
-    onClick={() => {
-
-      const lastAI =
-        translations
-          .filter(
-            m => m.type === "ai"
-          )
-          .slice(-1)[0];
-
-      navigator.clipboard.writeText(
-        lastAI.text
-      );
-
-    }}
-  >
-    ⧉
-  </button>
-
-)}
 
       <button
   onClick={translateText}
@@ -1071,32 +1135,6 @@ if (activePage === "translate") {
   );
 
 }
-
-{translations.some(
-  msg => msg.type === "ai"
-) && (
-
-  <button
-    className="copy-btn"
-    onClick={() => {
-
-      const lastAI =
-        translations
-          .filter(
-            m => m.type === "ai"
-          )
-          .slice(-1)[0];
-
-      navigator.clipboard.writeText(
-        lastAI.text
-      );
-
-    }}
-  >
-    ⧉
-  </button>
-
-)}
 
 if (activePage === "tiktok") {
 
@@ -1142,7 +1180,29 @@ if (activePage === "tiktok") {
   }
 >
 
-  <div>{msg.text}</div>
+  <div
+  style={{
+    whiteSpace: "pre-wrap",
+    lineHeight: "1.8"
+  }}
+>
+  {msg.text}
+</div>
+
+  {msg.type === "ai" && (
+
+    <button
+      className="message-copy-btn"
+      onClick={() =>
+        navigator.clipboard.writeText(
+          msg.text
+        )
+      }
+    >
+      ⧉ Kopye
+    </button>
+
+  )}
 
 </div>
 
@@ -1161,32 +1221,6 @@ if (activePage === "tiktok") {
         placeholder="Ekri sijè videyo a..."
 
       />
-
-      {tiktokScripts.some(
-  msg => msg.type === "ai"
-) && (
-
-  <button
-    className="copy-btn"
-    onClick={() => {
-
-      const lastAI =
-        tiktokScripts
-          .filter(
-            m => m.type === "ai"
-          )
-          .slice(-1)[0];
-
-      navigator.clipboard.writeText(
-        lastAI.text
-      );
-
-    }}
-  >
-    ⧉
-  </button>
-
-)}
 
       <button
 
@@ -1211,32 +1245,6 @@ if (activePage === "tiktok") {
   );
 
 }
-
-{tiktokScripts.some(
-  msg => msg.type === "ai"
-) && (
-
-  <button
-    className="copy-btn"
-    onClick={() => {
-
-      const lastAI =
-        tiktokScripts
-          .filter(
-            m => m.type === "ai"
-          )
-          .slice(-1)[0];
-
-      navigator.clipboard.writeText(
-        lastAI.text
-      );
-
-    }}
-  >
-    ⧉
-  </button>
-
-)}
 
 if (activePage === "quiz") {
 
@@ -1276,7 +1284,29 @@ if (activePage === "quiz") {
   }
 >
 
-  <div>{msg.text}</div>
+  <div
+  style={{
+    whiteSpace: "pre-wrap",
+    lineHeight: "1.8"
+  }}
+>
+  {msg.text}
+</div>
+
+  {msg.type === "ai" && (
+
+    <button
+      className="message-copy-btn"
+      onClick={() =>
+        navigator.clipboard.writeText(
+          msg.text
+        )
+      }
+    >
+      ⧉ Kopye
+    </button>
+
+  )}
 
 </div>
 
@@ -1295,32 +1325,6 @@ if (activePage === "quiz") {
         placeholder="Ekri sijè quiz la..."
 
       />
-
-      {quizzes.some(
-  msg => msg.type === "ai"
-) && (
-
-  <button
-    className="copy-btn"
-    onClick={() => {
-
-      const lastAI =
-        quizzes
-          .filter(
-            m => m.type === "ai"
-          )
-          .slice(-1)[0];
-
-      navigator.clipboard.writeText(
-        lastAI.text
-      );
-
-    }}
-  >
-    ⧉
-  </button>
-
-)}
 
       <button
 
@@ -1345,32 +1349,6 @@ if (activePage === "quiz") {
   );
 
 }
-
-{quizzes.some(
-  msg => msg.type === "ai"
-) && (
-
-  <button
-    className="copy-btn"
-    onClick={() => {
-
-      const lastAI =
-        quizzes
-          .filter(
-            m => m.type === "ai"
-          )
-          .slice(-1)[0];
-
-      navigator.clipboard.writeText(
-        lastAI.text
-      );
-
-    }}
-  >
-    ⧉
-  </button>
-
-)}
 
 if (activePage === "ask-ai") {
 
@@ -1400,17 +1378,39 @@ if (activePage === "ask-ai") {
           {messages.map((msg, index) => (
 
             <div
-              key={index}
-              className={
-                msg.type === "user"
-                  ? "user-message"
-                  : "ai-message"
-              }
-            >
+  key={index}
+  className={
+    msg.type === "user"
+      ? "user-message"
+      : "ai-message"
+  }
+>
 
-              <div>{msg.text}</div>
+  <div
+  style={{
+    whiteSpace: "pre-wrap",
+    lineHeight: "1.8"
+  }}
+>
+  {msg.text}
+</div>
 
-            </div>
+  {msg.type === "ai" && (
+
+    <button
+      className="message-copy-btn"
+      onClick={() =>
+        navigator.clipboard.writeText(
+          msg.text
+        )
+      }
+    >
+      ⧉ Kopye
+    </button>
+
+  )}
+
+</div>
 
           ))}
 
@@ -1423,32 +1423,6 @@ if (activePage === "ask-ai") {
           }
           placeholder="Poze AI a kesyon..."
         />
-
-        {messages.some(
-          msg => msg.type === "ai"
-        ) && (
-
-          <button
-            className="copy-btn"
-            onClick={() => {
-
-              const lastAI =
-                messages
-                  .filter(
-                    m => m.type === "ai"
-                  )
-                  .slice(-1)[0];
-
-              navigator.clipboard.writeText(
-                lastAI.text
-              );
-
-            }}
-          >
-            ⧉
-          </button>
-
-        )}
 
         <button
           onClick={askAI}
@@ -1492,6 +1466,8 @@ if (activePage === "ask-ai") {
 
   <div className="logo-area">
 
+  {activePage !== "menu" && (
+
   <button
     className="menu-btn"
     onClick={() =>
@@ -1500,6 +1476,8 @@ if (activePage === "ask-ai") {
   >
     ☰
   </button>
+
+)}
 
   <div
     className="logo-wrapper"
@@ -1539,10 +1517,10 @@ if (activePage === "ask-ai") {
     setShowLogin(true)
   }
 >
-
-  Login
-
+  👤
 </button>
+
+
 
   </div>
 
@@ -1602,18 +1580,94 @@ if (activePage === "ask-ai") {
 
 <div className="menu-content">
 
-  <h2>
-  📜 Istorik
-</h2>
+  <h2 className="dashboard-title">
+    📜 Istorik Aktivite
+  </h2>
 
-{history.map((item, index) => (
+  <p className="dashboard-subtitle">
+    Tout aktivite ou yo anrejistre isit.
+  </p>
 
-  <div
-    key={index}
-    className="audio-row"
-  >
+  <div className="history-summary">
+
+    <div className="stat-card">
+
+      <h3>📂</h3>
+
+      <h2>{history.length}</h2>
+
+      <p>Total Aktivite</p>
+
+    </div>
+
+  </div>
+
+  <input
+    type="text"
+    className="search-input"
+    placeholder="🔍 Chèche nan istorik..."
+    value={search}
+    onChange={(e) =>
+      setSearch(e.target.value)
+    }
+  />
+
+  {history.length === 0 ? (
+
+    <div className="empty-history">
+
+      <h3>📭 Pa gen istorik disponib</h3>
+
+      <p>
+        Jenere premye odyo ou oswa itilize AI a
+        pou wè aktivite yo isit.
+      </p>
+
+    </div>
+
+  ) : (
+
+    history
+.filter((item) =>
+  item.text
+    .toLowerCase()
+    .includes(
+      search.toLowerCase()
+    )
+)
+.map((item, index) => (
+
+<div
+  key={index}
+  className="history-card"
+>
+
+  <div className="history-top">
+
+    <div className="history-type">
+
+      🎙️ Odyo
+
+    </div>
+
+    <div className="history-time">
+
+      🕒 {item.date}
+
+    </div>
+
+  </div>
+
+  <div className="history-content">
+
+    {item.text}
+
+  </div>
+
+  <div className="history-footer">
 
     <button
+      className="history-icon-btn"
       onClick={() => {
 
         const utterance =
@@ -1623,7 +1677,9 @@ if (activePage === "ask-ai") {
 
         utterance.lang = "fr-FR";
 
-        speechSynthesis.speak(utterance);
+        speechSynthesis.speak(
+          utterance
+        );
 
       }}
     >
@@ -1632,72 +1688,13 @@ if (activePage === "ask-ai") {
 
     </button>
 
-    <span>
-
-      {item.date}
-
-    </span>
-
-    <button>
-
-      ⬇️
-
-    </button>
-
   </div>
-
-))}
-
-{history.length === 0 ? (
-
-<p>
-  Pa gen istorik disponib.
-</p>
-
-) : (
-
-<>
-
-<input
-  type="text"
-  className="search-input"
-  placeholder="🔍 Chèche nan istorik..."
-  value={search}
-  onChange={(e) =>
-    setSearch(e.target.value)
-  }
-/>
-
-{history
-  .filter((item) =>
-    item.text
-      .toLowerCase()
-      .includes(
-        search.toLowerCase()
-      )
-  )
-  .map((item,index)=>(
-
-<div
-  key={index}
-  className="history-card"
->
-
-  <strong>
-    {item.date}
-  </strong>
-
-  <br/>
-
-  {item.text.substring(0,80)}
 
 </div>
 
-))}
+))
 
-</>
-
-)}
+  )}
 
 </div>
 
@@ -1707,27 +1704,47 @@ if (activePage === "ask-ai") {
 
 <div className="menu-content">
 
-  <h2>📊 Estatistik</h2>
+  <h2 className="dashboard-title">
+    📊 Dashboard Bely AI
+  </h2>
 
-<p>
-  🎙️ Total Odyo:
-  {stats.totalAudios}
-</p>
+  <p className="dashboard-subtitle">
+    Swiv tout aktivite w' yo nan tan reyèl
+  </p>
 
-<p>
-  📝 Total Mo:
-  {stats.totalWords}
-</p>
+  <div className="stats-grid">
 
-<p>
-  🤖 Total kesyon AI:
-  {stats.totalAI || 0}
-</p>
+  <div className="stat-card">
+    <h3>🎙️</h3>
+    <h2>{stats.totalAudios}</h2>
+    <p>Odyo Kreye</p>
+  </div>
 
-<p>
-  🕒 Dènye Itilizasyon:
-  {stats.lastUsed}
-</p>
+  <div className="stat-card">
+    <h3>🤖</h3>
+    <h2>{stats.totalAI}</h2>
+    <p>Itilizasyon AI</p>
+  </div>
+
+  <div className="stat-card">
+    <h3>📂</h3>
+    <h2>{history.length}</h2>
+    <p>Total Aktivite</p>
+  </div>
+
+  <div className="stat-card">
+    <h3>📝</h3>
+    <h2>{stats.totalWords}</h2>
+    <p>Mo Trete</p>
+  </div>
+
+  <div className="stat-card stat-card-wide">
+    <h3>🕒</h3>
+    <p>{stats.lastUsed || "Pa gen done"}</p>
+    <span>Dènye Aktivite</span>
+  </div>
+
+</div>
 
 </div>
 
@@ -2063,54 +2080,134 @@ if (activePage === "ask-ai") {
 
 {showLogin && (
 
-  <div className="modal-overlay">
+<div className="modal-overlay">
 
-    <div className="modal">
+  <div className="auth-modal">
 
-      <h2>
+    <h2>
+      Bely AI Studio
+    </h2>
 
-        👤 Login
+    <input
+      type="email"
+      placeholder="Email"
+      value={email}
+      onChange={(e)=>
+        setEmail(e.target.value)
+      }
+    />
 
-      </h2>
+    <input
+      type="password"
+      placeholder="Password"
+      value={password}
+      onChange={(e)=>
+        setPassword(e.target.value)
+      }
+    />
 
-      <input
-        type="email"
-        placeholder="Email"
-      />
+    <button className="auth-btn">
+      Login
+    </button>
 
-      <br />
-      <br />
+    <p>
 
-      <input
-        type="password"
-        placeholder="Password"
-      />
+      Pa gen kont?
 
-      <br />
-      <br />
+      <span
+        className="signup-link"
+        onClick={() => {
 
-      <button>
+          setShowLogin(false);
+
+          setShowSignup(true);
+
+        }}
+      >
+
+        Kreye youn
+
+      </span>
+
+    </p>
+
+    <button
+      className="close-btn"
+      onClick={() =>
+        setShowLogin(false)
+      }
+    >
+      Fèmen
+    </button>
+
+  </div>
+
+</div>
+
+)}
+
+{showSignup && (
+
+<div className="modal-overlay">
+
+  <div className="auth-modal">
+
+    <h2>
+      Kreye Kont
+    </h2>
+
+    <input
+      type="text"
+      placeholder="Non"
+    />
+
+    <input
+      type="email"
+      placeholder="Email"
+    />
+
+    <input
+      type="password"
+      placeholder="Password"
+    />
+
+    <button className="auth-btn">
+      Kreye Kont
+    </button>
+
+    <p>
+
+      Ou deja gen kont?
+
+      <span
+        className="signup-link"
+        onClick={() => {
+
+          setShowSignup(false);
+
+          setShowLogin(true);
+
+        }}
+      >
 
         Login
 
-      </button>
+      </span>
 
-      <br />
-      <br />
+    </p>
 
-      <button
-        onClick={() =>
-          setShowLogin(false)
-        }
-      >
-
-        Fèmen
-
-      </button>
-
-    </div>
+    <button
+      className="close-btn"
+      onClick={() =>
+        setShowSignup(false)
+      }
+    >
+      Fèmen
+    </button>
 
   </div>
+
+</div>
 
 )}
 
