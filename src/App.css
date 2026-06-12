@@ -2570,3 +2570,29 @@ font-weight:bold;
   }
 
 }
+
+.apk-btn-top {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  background: #22c55e;
+  color: white;
+
+  text-decoration: none;
+
+  padding: 10px 14px;
+
+  border-radius: 12px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+
+  transition: .3s;
+}
+
+.apk-btn-top:hover {
+  transform: translateY(-2px);
+}

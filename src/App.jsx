@@ -157,7 +157,7 @@ const generateAudio = async () => {
     setLoading(true);
 
     const response = await fetch(
-      "http://localhost:5000/generate",
+      "https://bely-studio-backend.onrender.com/generate",
       {
         method: "POST",
         headers: {
@@ -177,7 +177,7 @@ const generateAudio = async () => {
     if (data.success) {
 
       const audioLink =
-        `http://localhost:5000/audio/${data.audio}?t=${Date.now()}`;
+        `https://bely-studio-backend.onrender.com/audio/${data.audio}?t=${Date.now()}`;
 
       setAudioUrl(audioLink);
 
@@ -1782,6 +1782,14 @@ if (activePage === "ask-ai") {
 <>
 
       <div className="header">
+
+      <a
+  href="/app-release.apk"
+  download
+  className="apk-btn-top"
+>
+  📱 Telechaje Apk
+</a>
 
 </div>
 
