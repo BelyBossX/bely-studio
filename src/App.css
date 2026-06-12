@@ -75,7 +75,7 @@ circle at top,
 
   color:white;
 
-  font-size:22px;
+  font-size:18px;
 
   font-weight:bold;
 
@@ -90,7 +90,7 @@ circle at top,
 .right-menu{
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:8px;
 }
 
 
@@ -105,9 +105,10 @@ circle at top,
 }
 
 .login-btn{
-  width:auto !important;
-  height:42px !important;
-  padding:0 15px;
+  min-width:42px;
+  width:42px;
+  height:42px;
+  flex-shrink:0;
 }
 
 .menu-btn{
@@ -2571,10 +2572,13 @@ font-weight:bold;
 
 }
 
-.apk-btn-top {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+.apk-btn{
+  position: fixed;
+
+  top: 40px;
+  right: 25px;
+
+  z-index: 9999;
 
   background: #22c55e;
   color: white;
@@ -2589,10 +2593,233 @@ font-weight:bold;
   font-weight: 600;
 
   box-shadow: 0 4px 12px rgba(0,0,0,.15);
-
-  transition: .3s;
 }
 
-.apk-btn-top:hover {
+.apk-btn:hover {
   transform: translateY(-2px);
+}
+
+.header{
+  position: relative;
+}
+
+.login-btn{
+  display:flex !important;
+  align-items:center;
+  justify-content:center;
+
+  width:42px !important;
+  height:42px !important;
+
+  min-width:42px !important;
+
+  border-radius:50%;
+}
+
+@media (max-width: 768px){
+
+  .logo-text{
+    font-size: 1.2rem;
+  }
+
+  .right-menu{
+    gap: 4px;
+  }
+
+  .flag-select{
+    width: 70px;
+  }
+
+}
+
+@media (max-width: 768px){
+
+  .logo-text{
+    font-size:16px;
+  }
+
+  .logo-area{
+    gap:6px;
+  }
+
+  .logo-wrapper{
+    gap:6px;
+  }
+
+  .right-menu{
+    gap:4px;
+  }
+
+  .login-btn{
+    width:42px !important;
+    min-width:42px !important;
+    padding:0 !important;
+  }
+
+}
+
+@media (max-width: 768px){
+
+  .logo-text{
+    display:none;
+  }
+
+}
+
+.input-wrapper{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  width:96.5%;
+}
+
+.upload-inside{
+  width:50px;
+  height:60px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  flex-shrink:0;
+
+  border-radius:12px;
+
+  cursor:pointer;
+
+  font-size:24px;
+  font-weight:bold;
+}
+
+.input-wrapper textarea{
+  flex:1;
+}
+
+.section-divider{
+  width:80%;
+  height:1px;
+
+  margin:20px auto 25px;
+
+  background:linear-gradient(
+    to right,
+    transparent,
+    rgba(255,255,255,0.4),
+    transparent
+  );
+}
+
+.about-version{
+  opacity:.7;
+  margin-bottom:15px;
+}
+
+.about-text{
+  line-height:1.8;
+  text-align:center;
+}
+
+.about-features{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin-top:15px;
+}
+
+.about-features div{
+  padding:12px;
+  border-radius:12px;
+  background:rgba(255,255,255,.08);
+}
+
+.about-powered{
+  font-weight:600;
+  opacity:.85;
+}
+
+.about-footer{
+  margin-top:10px;
+  opacity:.7;
+}
+
+.about-text{
+  color:#e2e8f0;
+  line-height:1.8;
+  text-align:center;
+}
+
+.about-version{
+  color:#94a3b8;
+}
+
+.about-powered{
+  color:#60a5fa;
+  font-weight:600;
+}
+
+.about-footer{
+  color:#94a3b8;
+}
+
+.about-features div{
+  color:white;
+}
+
+.menu-content h3{
+  color:#38bdf8;
+}
+
+.side-menu{
+
+  position:fixed;
+
+  left:0;
+  top:0;
+
+  width:300px;
+  height:100vh;
+
+  background:#00153a;
+
+  z-index:9999;
+
+  padding:20px;
+
+}
+
+.menu-page{
+  position: fixed;
+  left: 0;
+  top: 0;
+
+  width: 300px;
+  height: 100vh;
+
+  z-index: 9999;
+}
+
+.menu-page button{
+
+  width: 90%;
+
+  max-width: 320px;
+
+  margin: 15px auto;
+
+  display: block;
+
+  box-sizing: border-box;
+
+}
+
+.menu-page{
+
+  width: 100%;
+
+  overflow-x: hidden;
+
+  box-sizing: border-box;
+
+  padding: 20px;
+
 }

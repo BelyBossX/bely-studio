@@ -2,7 +2,28 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import logo from "./assets/logo.jpeg";
 
+import { App as CapacitorApp } from "@capacitor/app";
+
+import { Capacitor } from "@capacitor/core";
+
 function App() {
+
+useEffect(() => {
+
+  CapacitorApp.addListener(
+    "backButton",
+    () => {
+
+      console.log("BACK PEZE");
+
+    }
+  );
+
+}, []);  
+
+const isNative = Capacitor.isNativePlatform();
+
+const [showMenu, setShowMenu] = useState(false);
 
 const [text, setText] = useState("");
 
@@ -845,13 +866,13 @@ if (activePage === "rewrite") {
 
         <p className="welcome-text">
 
-          Bonjou! 👋
-
-          Ekri tèks ou vle amelyore a.
+          ♻️Ekri tèks ou vle amelyore a♻️
 
         </p>
 
       )}
+
+      <div className="section-divider"></div>
 
       <div className="chat-container">
 
@@ -896,17 +917,30 @@ if (activePage === "rewrite") {
 
       </div>
 
-      <textarea
+      <div className="input-wrapper">
 
-        value={text}
+  <label className="upload-inside">
 
-        onChange={(e) =>
-          setText(e.target.value)
-        }
+    +
 
-        placeholder="Ekri tèks pou re-ekri a..."
+    <input
+      type="file"
+      accept=".txt"
+      onChange={handleFileUpload}
+      hidden
+    />
 
-      />
+  </label>
+
+  <textarea
+    value={text}
+    onChange={(e) =>
+      setText(e.target.value)
+    }
+    placeholder="Ekri tèks pou re-ekri a..."
+  />
+
+</div>
 
       <button
 
@@ -964,11 +998,13 @@ if (activePage === "summary") {
 
         <p className="welcome-text">
 
-          Kole yon tèks pou AI a fè yon rezime.
+          🔰Kole tèks ou bezwen rezime a🔰
 
         </p>
 
       )}
+
+      <div className="section-divider"></div>
 
       <div className="chat-container">
 
@@ -1013,17 +1049,30 @@ if (activePage === "summary") {
 
       </div>
 
-      <textarea
+      <div className="input-wrapper">
 
-        value={text}
+  <label className="upload-inside">
 
-        onChange={(e) =>
-          setText(e.target.value)
-        }
+    +
 
-        placeholder="Kole tèks la isit..."
+    <input
+      type="file"
+      accept=".txt"
+      onChange={handleFileUpload}
+      hidden
+    />
 
-      />
+  </label>
+
+  <textarea
+    value={text}
+    onChange={(e) =>
+      setText(e.target.value)
+    }
+    placeholder="Kole tèks la isit..."
+  />
+
+</div>
 
       <button
 
@@ -1065,6 +1114,12 @@ if (activePage === "translate") {
       </button>
 
       <h1>🌍 Tradui</h1>
+
+      <p className="welcome-text">
+         🌐Tradui nenpòt sa w' vle nan 3 lang vivant yo🌐
+      </p>
+
+      <div className="section-divider"></div>
 
       <div className="chat-container">
 
@@ -1109,13 +1164,30 @@ if (activePage === "translate") {
 
       </div>
 
-      <textarea
-        value={text}
-        onChange={(e) =>
-          setText(e.target.value)
-        }
-        placeholder="Ekri tèks pou tradui..."
-      />
+      <div className="input-wrapper">
+
+  <label className="upload-inside">
+
+    +
+
+    <input
+      type="file"
+      accept=".txt"
+      onChange={handleFileUpload}
+      hidden
+    />
+
+  </label>
+
+  <textarea
+    value={text}
+    onChange={(e) =>
+      setText(e.target.value)
+    }
+    placeholder="Ekri tèks pou tradui..."
+  />
+
+</div>
 
       <button
   onClick={translateText}
@@ -1161,11 +1233,13 @@ if (activePage === "tiktok") {
 
         <p className="welcome-text">
 
-          Ekri yon sijè epi AI a ap kreye yon script TikTok.
+          🔷Ekri yon sijè epi AI a ap kreye yon script TikTok🔷
 
         </p>
 
       )}
+
+      <div className="section-divider"></div>
 
       <div className="chat-container">
 
@@ -1210,17 +1284,30 @@ if (activePage === "tiktok") {
 
       </div>
 
-      <textarea
+      <div className="input-wrapper">
 
-        value={text}
+  <label className="upload-inside">
 
-        onChange={(e) =>
-          setText(e.target.value)
-        }
+    +
 
-        placeholder="Ekri sijè videyo a..."
+    <input
+      type="file"
+      accept=".txt"
+      onChange={handleFileUpload}
+      hidden
+    />
 
-      />
+  </label>
+
+  <textarea
+    value={text}
+    onChange={(e) =>
+      setText(e.target.value)
+    }
+    placeholder="Ekri sijè videyo a..."
+  />
+
+</div>
 
       <button
 
@@ -1268,8 +1355,10 @@ if (activePage === "quiz") {
       </h1>
 
       <p className="welcome-text">
-         TEST QUIZ
+          💡Jis ekri sijè a, AI a ap jenere Quizz pou w' viral la💡
       </p>
+
+      <div className="section-divider"></div>
 
       <div className="chat-container">
 
@@ -1314,17 +1403,30 @@ if (activePage === "quiz") {
 
       </div>
 
-      <textarea
+      <div className="input-wrapper">
 
-        value={text}
+  <label className="upload-inside">
 
-        onChange={(e) =>
-          setText(e.target.value)
-        }
+    +
 
-        placeholder="Ekri sijè quiz la..."
+    <input
+      type="file"
+      accept=".txt"
+      onChange={handleFileUpload}
+      hidden
+    />
 
-      />
+  </label>
+
+  <textarea
+    value={text}
+    onChange={(e) =>
+      setText(e.target.value)
+    }
+    placeholder="Ekri sijè quiz la..."
+  />
+
+</div>
 
       <button
 
@@ -1371,7 +1473,13 @@ if (activePage === "ask-ai") {
             🤖 Mande AI
           </h1>
 
+          <p className="welcome-text">
+         ⚜️Poze AI a tout kesyon w' vle⚜️
+      </p>
+
         </div>
+
+        <div className="section-divider"></div>
 
         <div className="chat-container">
 
@@ -1416,13 +1524,30 @@ if (activePage === "ask-ai") {
 
         </div>
 
-        <textarea
-          value={text}
-          onChange={(e) =>
-            setText(e.target.value)
-          }
-          placeholder="Poze AI a kesyon..."
-        />
+        <div className="input-wrapper">
+
+  <label className="upload-inside">
+
+    +
+
+    <input
+      type="file"
+      accept=".txt"
+      onChange={handleFileUpload}
+      hidden
+    />
+
+  </label>
+
+  <textarea
+    value={text}
+    onChange={(e) =>
+      setText(e.target.value)
+    }
+    placeholder="Poze AI a kesyon..."
+  />
+
+</div>
 
         <button
           onClick={askAI}
@@ -1466,18 +1591,12 @@ if (activePage === "ask-ai") {
 
   <div className="logo-area">
 
-  {activePage !== "menu" && (
-
   <button
-    className="menu-btn"
-    onClick={() =>
-      setActivePage("menu")
-    }
-  >
-    ☰
-  </button>
-
-)}
+  className="menu-btn"
+  onClick={() => setShowMenu(true)}
+>
+  ☰
+</button>
 
   <div
     className="logo-wrapper"
@@ -1511,7 +1630,9 @@ if (activePage === "ask-ai") {
 
     </select>
 
-    <button
+    {activePage !== "menu" && (
+
+<button
   className="login-btn"
   onClick={() =>
     setShowLogin(true)
@@ -1520,13 +1641,15 @@ if (activePage === "ask-ai") {
   👤
 </button>
 
+)}
+
 
 
   </div>
 
 </div>
 
-    {activePage === "menu" && (
+    {showMenu && (
 
 <div className="menu-page">
 
@@ -1534,43 +1657,47 @@ if (activePage === "ask-ai") {
 
   <button
   onClick={() =>
-    setActivePage("home")
+    setShowMenu(false)
   }
 >
   ❌ Fèmen
 </button>
 
   <button
-    onClick={() =>
-      setActivePage("home")
-    }
-  >
-    🏠 Home
-  </button>
+  onClick={() => {
+    setActivePage("home");
+    setShowMenu(false);
+  }}
+>
+  🏠 Home
+</button>
 
   <button
-    onClick={() =>
-      setActivePage("history")
-    }
-  >
-    📜 Istorik
-  </button>
+  onClick={() => {
+    setActivePage("history");
+    setShowMenu(false);
+  }}
+>
+  📜 Istorik
+</button>
 
   <button
-    onClick={() =>
-      setActivePage("stats")
-    }
-  >
-    📊 Estatistik
-  </button>
+  onClick={() => {
+    setActivePage("stats");
+    setShowMenu(false);
+  }}
+>
+  📊 Estatistik
+</button>
 
   <button
-    onClick={() =>
-      setActivePage("about")
-    }
-  >
-    ℹ️ A Pwopo
-  </button>
+  onClick={() => {
+    setActivePage("about");
+    setShowMenu(false);
+  }}
+>
+  ℹ️ A Pwopo
+</button>
 
 </div>
 
@@ -1620,7 +1747,7 @@ if (activePage === "ask-ai") {
 
       <p>
         Jenere premye odyo ou oswa itilize AI a
-        pou wè aktivite yo isit.
+        pou wè aktivite yo isit la.
       </p>
 
     </div>
@@ -1754,24 +1881,59 @@ if (activePage === "ask-ai") {
 
 <div className="menu-content">
 
-  <h2>ℹ️ A Pwopo</h2>
-
-  <p>
-    Bely AI Studio se yon platfòm
-    ki pèmèt itilizatè nou yo
-    konvèti tèks an odyo.
-  </p>
-
-  <p>
-    Powered by AI Technology.
-  </p>
-
-  <p>
+  <p className="about-version">
     Version 1.0 Beta
   </p>
 
-  <p>
+  <div className="section-divider"></div>
+
+  <p className="about-text">
+
+    Bely AI Studio se yon platfòm
+    entèlijans atifisyèl ki pèmèt ou
+    kreye odyo, tradui tèks,
+    re-ekri kontni, rezime dokiman,
+    kreye script TikTok, jenere quiz
+    epi kominike ak AI fasilman.
+
+  </p>
+
+  <div className="section-divider"></div>
+
+  <h3 className="about-features-title">
+  ✨ Fonksyon Disponib
+</h3>
+
+  <div className="about-features">
+
+    <div>🎙️ Audio AI</div>
+
+    <div>🌍 Tradiksyon</div>
+
+    <div>✍️ Re-ekriti</div>
+
+    <div>📄 Rezime</div>
+
+    <div>🎬 Script TikTok</div>
+
+    <div>❓ Quiz AI</div>
+
+    <div>🤖 Mande AI</div>
+
+  </div>
+
+  <div className="section-divider"></div>
+
+  <p className="about-powered">
+
+    Powered by Artificial Intelligence
+
+  </p>
+
+  <p className="about-footer">
+
     © 2026 Bely AI Studio
+
   </p>
 
 </div>
@@ -1783,13 +1945,14 @@ if (activePage === "ask-ai") {
 
       <div className="header">
 
-      <a
-  href="/app-release.apk"
-  download
-  className="apk-btn-top"
->
-  📱 Telechaje Apk
-</a>
+      {!isNative && (
+  <a
+    href="/bely-ai.apk"
+    className="apk-btn"
+  >
+    📱 Telechaje Apk
+  </a>
+)}
 
 </div>
 
