@@ -290,17 +290,48 @@ const generateImage = async () => {
 
   }
 
-  setImageLoading(true);
+  try {
 
-  setTimeout(() => {
+    setImageLoading(true);
 
-    setGeneratedImage(
-      "https://placehold.co/1024x1024/png"
+    const response = await fetch(
+      "https://bely-studio-backend.onrender.com/generate-image",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt: imagePrompt,
+        }),
+      }
     );
+
+    const data = await response.json();
+
+    console.log("IMAGE DATA:", data);
+
+    if (data.success) {
+
+      setGeneratedImage(data.image);
+
+    } else {
+
+      alert(data.message || "Erè pandan jenerasyon imaj la");
+
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert("Erè koneksyon ak backend la");
+
+  } finally {
 
     setImageLoading(false);
 
-  }, 1500);
+  }
 
 };
 
