@@ -40,6 +40,16 @@ const [tiktokScripts, setTiktokScripts] = useState([]);
 
 const [quizzes, setQuizzes] = useState([]);
 
+const [imagePrompt, setImagePrompt] = useState("");
+
+const [generatedImage, setGeneratedImage] = useState("");
+
+const [imageLoading, setImageLoading] = useState(false);
+
+const [selectedImage, setSelectedImage] = useState(null);
+
+const [previewImage, setPreviewImage] = useState("");
+
   const [voice, setVoice] =
   useState("male");
   const [language, setLanguage] =
@@ -193,7 +203,8 @@ const generateAudio = async () => {
 
     const data = await response.json();
 
-    console.log("DATA:", data);
+console.log("STATUS:", response.status);
+console.log("DATA:", data);
 
     if (data.success) {
 
@@ -201,6 +212,12 @@ const generateAudio = async () => {
         `https://bely-studio-backend.onrender.com/audio/${data.audio}?t=${Date.now()}`;
 
       setAudioUrl(audioLink);
+
+      console.log("audioUrl mete:", audioLink);
+
+setTimeout(() => {
+  console.log("audioUrl apre 1 segonn:", audioLink);
+}, 1000);
 
       const newItem = {
         text,
@@ -260,6 +277,44 @@ const generateAudio = async () => {
     setLoading(false);
 
   }
+
+};
+
+const generateImage = async () => {
+
+  if (!imagePrompt.trim()) {
+
+    alert("Ekri sa ou vle kreye");
+
+    return;
+
+  }
+
+  setImageLoading(true);
+
+  setTimeout(() => {
+
+    setGeneratedImage(
+      "https://placehold.co/1024x1024/png"
+    );
+
+    setImageLoading(false);
+
+  }, 1500);
+
+};
+
+const handleImageUpload = (e) => {
+
+  const file = e.target.files[0];
+
+  if (!file) return;
+
+  setSelectedImage(file);
+
+  setPreviewImage(
+    URL.createObjectURL(file)
+  );
 
 };
 
@@ -1452,6 +1507,162 @@ if (activePage === "quiz") {
 
 }
 
+if (activePage === "audio") {
+
+  return (
+
+    <div className="ai-page">
+
+      <div className="ai-card">
+
+        <button
+          className="back-btn"
+          onClick={() =>
+            setActivePage("home")
+          }
+        >
+          ←
+        </button>
+
+        <h1>
+          🎙️ Jenere Odyo
+        </h1>
+
+        <p className="welcome-text">
+
+          🔊 Ekri tèks ou epi AI a ap
+          konvèti li an odyo.
+
+        </p>
+
+        <div className="section-divider"></div>
+
+        <h3 style={{ color: "white" }}>
+          🎙️ Chwazi Vwa AI
+        </h3>
+
+        <select
+          value={voice}
+          onChange={(e) =>
+            setVoice(e.target.value)
+          }
+        >
+
+          <option value="male">
+            Haitian Male
+          </option>
+
+          <option value="female">
+            Haitian Female
+          </option>
+
+          <option value="narrator">
+            Narrator
+          </option>
+
+        </select>
+
+        {audioUrl && (
+
+  <div className="audio-container">
+
+    <h3>🎵 Odyo w la fin' jenere</h3>
+
+    <audio
+      controls
+      src={audioUrl}
+      className="audio-player"
+    />
+
+    <br /><br />
+
+    <a
+      href={audioUrl}
+      download="bely-audio.mp3"
+      className="download-btn"
+    >
+      ⬇️ Telechaje MP3
+    </a>
+
+  </div>
+
+)}
+
+        <div style={{ flex: 1 }}></div>
+
+        <div className="input-wrapper">
+
+          <label
+            className="upload-inside"
+          >
+
+            +
+
+            <input
+              type="file"
+              accept=".txt"
+              onChange={handleFileUpload}
+              hidden
+            />
+
+          </label>
+
+
+          <textarea
+
+            rows={1}
+
+            maxLength={5000}
+
+            placeholder="Ekri tèks la..."
+
+            value={text}
+
+            onChange={(e) => {
+
+              setText(
+                e.target.value
+              );
+
+              e.target.style.height =
+                "auto";
+
+              e.target.style.height =
+                Math.min(
+                  e.target.scrollHeight,
+                  250
+                ) + "px";
+
+            }}
+
+          />
+
+        </div>
+
+        <button
+
+          onClick={generateAudio}
+
+          disabled={loading}
+
+        >
+
+          {loading
+
+            ? "⏳ Jenerasyon..."
+
+            : "🎙️ Jenere Odyo"}
+
+        </button>
+
+      </div>
+
+    </div>
+
+  );
+
+}
+
 if (activePage === "ask-ai") {
 
   return (
@@ -1559,6 +1770,117 @@ if (activePage === "ask-ai") {
             : "🤖 Voye"}
 
         </button>
+
+      </div>
+
+    </div>
+
+  );
+
+}
+
+if (activePage === "image") {
+
+  return (
+
+    <div className="ai-page">
+
+      <div className="ai-card">
+
+        <div className="ai-header">
+
+          <button
+            className="back-btn"
+            onClick={() => setActivePage("home")}
+          >
+            ←
+          </button>
+
+          <h1 className="ai-title">
+            🖼️ Jenere Imaj
+          </h1>
+
+          <p className="welcome-text">
+  💫 Dekri nenpòt imaj ou vle a, AI a kreye l' pou ou 💫
+</p>
+
+<div className="section-divider"></div>
+
+        </div>
+
+        <div className="chat-container">
+
+          {previewImage && (
+
+  <div className="image-result">
+
+    <img
+      src={previewImage}
+      alt="Preview"
+      className="generated-image"
+    />
+
+  </div>
+
+)}
+
+  {generatedImage && (
+
+    <div className="image-result">
+
+      <img
+        src={generatedImage}
+        alt="AI Generated"
+        className="generated-image"
+      />
+
+      <a
+        href={generatedImage}
+        download="bely-image.png"
+        className="download-btn"
+      >
+        ⬇️ Telechaje Imaj
+      </a>
+
+    </div>
+
+  )}
+
+</div>
+
+<div className="input-wrapper">
+
+  <label className="upload-inside">
+
+    +
+
+    <input
+  type="file"
+  accept="image/*"
+  onChange={handleImageUpload}
+  hidden
+/>
+
+  </label>
+
+  <textarea
+    value={imagePrompt}
+    onChange={(e) =>
+      setImagePrompt(e.target.value)
+    }
+    placeholder="Dekri imaj ou vle kreye..."
+  />
+
+</div>
+
+<button
+  onClick={generateImage}
+  disabled={imageLoading}
+>
+  {imageLoading
+    ? "⏳ Imaj la ap Kreye..."
+    : "🖼️ Jenere Imaj"}
+</button>
 
       </div>
 
@@ -1707,6 +2029,13 @@ if (activePage === "ask-ai") {
 
 <div className="menu-content">
 
+  <button
+  className="page-close-btn"
+  onClick={() => setActivePage("home")}
+>
+  ✕
+</button>
+
   <h2 className="dashboard-title">
     📜 Istorik Aktivite
   </h2>
@@ -1841,6 +2170,13 @@ if (activePage === "ask-ai") {
 
   <div className="stats-grid">
 
+    <button
+  className="page-close-btn"
+  onClick={() => setActivePage("home")}
+>
+  ✕
+</button>
+
   <div className="stat-card">
     <h3>🎙️</h3>
     <h2>{stats.totalAudios}</h2>
@@ -1884,6 +2220,13 @@ if (activePage === "ask-ai") {
   <p className="about-version">
     Version 1.0 Beta
   </p>
+
+  <button
+  className="page-close-btn"
+  onClick={() => setActivePage("home")}
+>
+  ✕
+</button>
 
   <div className="section-divider"></div>
 
@@ -1958,229 +2301,83 @@ if (activePage === "ask-ai") {
 
       <div className="generator-card">
 
-  <br />
-  <br />
+  <div className="tools-grid">
 
-  <h3 style={{ color: "white" }}>
-    🎙️ Chwazi Vwa AI
-  </h3>
+<div
+  className="tool-card"
+  onClick={() => setActivePage("ask-ai")}
+>
+  <div className="tool-icon">🤖</div>
 
-  <select
-    value={voice}
-    onChange={(e) =>
-      setVoice(e.target.value)
-    }
-  >
-
-    <option value="male">
-      Haitian Male
-    </option>
-
-    <option value="female">
-      Haitian Female
-    </option>
-
-    <option value="narrator">
-      Narrator
-    </option>
-
-  </select>
-
-  <br />
-  <br />
-
-  <br />
-  <br />
-
-  <div className={`tools-grid ${audioUrl ? "compact" : ""}`}>
+  <p>Mande AI</p>
+</div>
 
   <div
-    className="tool-card"
-    onClick={() => setActivePage("ask-ai")}
-  >
-    <div className="tool-icon">🤖</div>
+  className="tool-card"
+  onClick={() => setActivePage("translate")}
+>
+  <div className="tool-icon">🌍</div>
 
-    {!audioUrl && <p>Mande AI</p>}
-  </div>
-
-  <div
-    className="tool-card"
-    onClick={() => setActivePage("translate")}
-  >
-    <div className="tool-icon">🌍</div>
-
-    {!audioUrl && <p>Tradui</p>}
-  </div>
+  <p>Tradui</p>
+</div>
 
   <div
-    className="tool-card"
-    onClick={() => setActivePage("rewrite")}
-  >
-    <div className="tool-icon">✍️</div>
+  className="tool-card"
+  onClick={() => setActivePage("rewrite")}
+>
+  <div className="tool-icon">✍️</div>
 
-    {!audioUrl && <p>Re-ekri</p>}
-  </div>
+  <p>Re-ekri</p>
+</div>
 
   <div
   className="tool-card"
   onClick={() => setActivePage("summary")}
 >
-    <div className="tool-icon">📝</div>
+  <div className="tool-icon">📝</div>
 
-    {!audioUrl && <p>Rezime</p>}
-  </div>
+  <p>Rezime</p>
+</div>
 
   <div
-    className="tool-card"
-    onClick={() =>
-  setActivePage("tiktok")
-}
-  >
-    <div className="tool-icon">🎬</div>
+  className="tool-card"
+  onClick={() => setActivePage("tiktok")}
+>
+  <div className="tool-icon">🎬</div>
 
-    {!audioUrl && <p>Script TikTok</p>}
-  </div>
+  <p>Script TikTok</p>
+</div>
 
   <div
-    className="tool-card"
-    onClick={() => setActivePage("quiz")}
-  >
-    <div className="tool-icon">❓</div>
-
-    {!audioUrl && <p>Kreye Quiz</p>}
-  </div>
-
-</div>
-
-<div className="input-wrapper">
-
-  <label
-    className="upload-inside"
-  >
-
-    +
-
-    <input
-      type="file"
-      accept=".txt"
-      onChange={handleFileUpload}
-      hidden
-    />
-
-  </label>
-
-  <textarea
-
-    rows={1}
-
-    maxLength={5000}
-
-    placeholder="Ekri la..."
-
-    value={text}
-
-    onChange={(e) => {
-
-      setText(
-        e.target.value
-      );
-
-      e.target.style.height =
-        "auto";
-
-      e.target.style.height =
-        Math.min(
-          e.target.scrollHeight,
-          250
-        ) + "px";
-
-    }}
-
-  />
-
-</div>
-
-<div className="text-stats">
-
-  <span
-  style={{
-    color:
-      text.length > 4500
-      ? "#ef4444"
-      : "#22c55e"
-  }}
+  className="tool-card"
+  onClick={() => setActivePage("quiz")}
 >
+  <div className="tool-icon">❓</div>
 
-  {text.length}/5000 karaktè
-
-</span>
-
-  <span>
-    📝 Mo: {wordCount}
-  </span>
-
-  <span>
-    ⏱️ Tan estime:
-    {estimatedSeconds} segonn
-  </span>
-
+  <p>Kreye Quiz</p>
 </div>
 
-</div>
-
-      <br />
-      <br />
-
-      <div className="button-row">
-
-<button
-  onClick={generateAudio}
-  disabled={loading}
+  <div
+  className="tool-card"
+  onClick={() => setActivePage("audio")}
 >
+  <div className="tool-icon">🎙️</div>
 
-  {loading
+  <p>Jenere Odyo</p>
+</div>
 
-    ? language === "ht"
-      ? "⏳ Odyo a ap jenere..."
-      : "⏳ Generating audio..."
+<div
+  className="tool-card"
+  onClick={() => setActivePage("image")}
+>
+  <div className="tool-icon">🖼️</div>
 
-    : language === "ht"
-      ? "🎙️ Jenere Odyo"
-      : "🎙️ Generate Audio"}
-
-</button>
-
+  <p>Jenere Imaj</p>
+</div>
 
 </div>
 
-      <br />
-<br />
-
-{audioUrl && (
-
-  <div className="audio-container">
-
-    <h3>🎵 Odyo w la fin' jenere</h3>
-
-    <audio
-      controls
-      src={audioUrl}
-      className="audio-player"
-    />
-
-    <br /><br />
-
-    <a
-      href={audioUrl}
-      download="bely-audio.mp3"
-      className="download-btn"
-    >
-      ⬇️ Telechaje MP3
-    </a>
-
-  </div>
-
-)}
+</div>
 
 {showAbout && (
 

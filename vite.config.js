@@ -10,7 +10,11 @@ export default defineConfig({
 
     VitePWA({
 
-      registerType: "autoUpdate",
+  registerType: "autoUpdate",
+
+  devOptions: {
+    enabled: false
+  },
 
       manifest: {
 
