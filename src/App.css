@@ -1468,7 +1468,7 @@ textarea{
 
   transition: 0.3s;
 
-  min-height:300px;
+  min-height:200px;
 }
 
 .tool-card:hover {
@@ -2924,11 +2924,11 @@ font-weight:bold;
 }
 
 .tool-icon{
-  font-size:100px;
+  font-size:50px;
 }
 
 .tool-card p{
-  font-size:30px;
+  font-size:18px;
   font-weight:800;
   font-family:'Poppins',sans-serif;
 }

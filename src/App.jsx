@@ -18,24 +18,14 @@ import guides from "./guides";
 
 import ReactMarkdown from "react-markdown";
 
-function App() {
+import {
+ useSwipeable
+}
+from "react-swipeable";
 
-useEffect(() => {
-
-  CapacitorApp.addListener(
-    "backButton",
-    () => {
-
-      console.log("BACK PEZE");
-
-    }
-  );
-
-}, []);  
+function App() {  
 
 const isNative = Capacitor.isNativePlatform();
-
-const [showMenu, setShowMenu] = useState(false);
 
 const [text, setText] = useState("");
 
@@ -124,6 +114,62 @@ useState("");
 
   const [activePage, setActivePage] = useState("home");
 
+  const [showMenu, setShowMenu] = useState(false);
+
+useEffect(() => {
+
+  const setupBackButton = async () => {
+
+    const listener =
+      await CapacitorApp.addListener(
+        "backButton",
+        () => {
+
+          if (showMenu) {
+
+            setShowMenu(false);
+
+            return;
+
+          }
+
+          if (
+            activePage !== "home"
+          ) {
+
+            setActivePage("home");
+
+            return;
+
+          }
+
+        }
+      );
+
+    return listener;
+
+  };
+
+  let listener;
+
+  setupBackButton().then(
+    (l) => {
+      listener = l;
+    }
+  );
+
+  return () => {
+
+    if (listener) {
+
+      listener.remove();
+
+    }
+
+  };
+
+}, [activePage, showMenu]);
+
   const [aiResponse, setAiResponse] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
 
@@ -141,6 +187,31 @@ useState("");
 
 const [password, setPassword] =
 useState("");
+
+const handlers =
+useSwipeable({
+
+ onSwipedLeft: () => {
+
+   if(currentSlide===1){
+
+      setCurrentSlide(2);
+
+   }
+
+ },
+
+ onSwipedRight: () => {
+
+   if(currentSlide===2){
+
+      setCurrentSlide(1);
+
+   }
+
+ }
+
+});
 
 const [stats, setStats] =
 useState({
@@ -195,7 +266,13 @@ useEffect(() => {
   const recognition =
     new SpeechRecognition();
 
-  recognition.lang = "fr-FR";
+  recognition.lang = language === "ht"
+? "ht-HT"
+: language === "en"
+? "en-US"
+: language === "es"
+? "es-ES"
+: "fr-FR";
 
   recognition.continuous = false;
 
@@ -250,7 +327,7 @@ useEffect(() => {
 
 }, [stats]);
 
-const startVoiceInput = () => {
+const startVoiceInput = async () => {
 
   const SpeechRecognition =
     window.SpeechRecognition ||
@@ -258,15 +335,40 @@ const startVoiceInput = () => {
 
   if (!SpeechRecognition) {
 
-    alert("Voice Input pa sipòte sou navigatè sa");
+    alert(
+      "Voice Input pa sipòte sou aparèy sa"
+    );
 
     return;
 
   }
 
-  const recognition = new SpeechRecognition();
+  try {
 
-  recognition.lang = "fr-FR";
+    await navigator.mediaDevices.getUserMedia({
+      audio: true
+    });
+
+  } catch (err) {
+
+    alert(
+      "Tanpri bay aplikasyon an aksè ak mikwo a"
+    );
+
+    return;
+
+  }
+
+  const recognition =
+    new SpeechRecognition();
+
+  recognition.lang = language === "ht"
+? "ht-HT"
+: language === "en"
+? "en-US"
+: language === "es"
+? "es-ES"
+: "fr-FR";
 
   recognition.continuous = false;
 
@@ -285,7 +387,14 @@ const startVoiceInput = () => {
 
   };
 
-  recognition.onerror = () => {
+  recognition.onerror = (event) => {
+
+    console.log(event.error);
+
+    console.log(
+      "Speech Error:",
+      event.error
+    );
 
     setIsListening(false);
 
@@ -1984,7 +2093,10 @@ if (activePage === "ask-ai") {
 
       <div className="ai-card">
 
-        <div className="ai-header">
+        <div
+ className="header"
+ {...handlers}
+>
 
           <button
             className="back-btn"
@@ -2116,7 +2228,10 @@ if (activePage === "image") {
 
       <div className="ai-card">
 
-        <div className="ai-header">
+        <div
+ className="header"
+ {...handlers}
+>
 
           <button
             className="back-btn"
@@ -2491,16 +2606,25 @@ if (activePage === "image") {
       className="history-icon-btn"
       onClick={() => {
 
-        const utterance =
-          new SpeechSynthesisUtterance(
-            item.textContent
-          );
+        const languageMap = {
+  ht: "ht-HT",
+  en: "en-US",
+  fr: "fr-FR",
+  es: "es-ES"
+};
 
-        utterance.lang = "fr-FR";
+const utterance =
+  new SpeechSynthesisUtterance(
+    item.text
+  );
 
-        speechSynthesis.speak(
-          utterance
-        );
+utterance.lang =
+  languageMap[language] ||
+  "en-US";
+
+speechSynthesis.speak(
+  utterance
+);
 
       }}
     >
@@ -2703,7 +2827,10 @@ if (activePage === "image") {
     {activePage === "home" && (
 <>
 
-      <div className="header">
+      <div
+ className="header"
+ {...handlers}
+>
 
       {!isNative && (
   <a
