@@ -127,21 +127,19 @@ useEffect(() => {
 
           if (showMenu) {
 
-            setShowMenu(false);
+  setShowMenu(false);
+  return;
 
-            return;
+}
 
-          }
+if (activePage !== "home") {
 
-          if (
-            activePage !== "home"
-          ) {
+  setActivePage("home");
+  return;
 
-            setActivePage("home");
+}
 
-            return;
-
-          }
+CapacitorApp.exitApp();
 
         }
       );
@@ -330,39 +328,62 @@ useEffect(() => {
 const startVoiceInput = async () => {
 
   const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
+window.SpeechRecognition ||
+window.webkitSpeechRecognition;
 
-  if (!SpeechRecognition) {
+if (!SpeechRecognition) {
+
+  if (Capacitor.isNativePlatform()) {
 
     alert(
-      "Voice Input pa sipòte sou aparèy sa"
+      language === "ht"
+        ? "Fonksyon vokal pa disponib sou aparèy sa."
+        : language === "en"
+        ? "Voice recognition is not available on this device."
+        : language === "fr"
+        ? "La reconnaissance vocale n'est pas disponible sur cet appareil."
+        : "El reconocimiento de voz no está disponible en este dispositivo."
     );
 
-    return;
-
   }
+
+  return;
+
+}
 
   try {
 
-    await navigator.mediaDevices.getUserMedia({
-      audio: true
-    });
+  await navigator.mediaDevices.getUserMedia({
+    audio: true
+  });
 
-  } catch (err) {
+} catch (err) {
 
-    alert(
-      "Tanpri bay aplikasyon an aksè ak mikwo a"
-    );
+  alert(
+    language === "ht"
+      ? "Tanpri bay aplikasyon an aksè ak mikwo a."
+      : language === "en"
+      ? "Please allow microphone access."
+      : language === "fr"
+      ? "Veuillez autoriser l'accès au microphone."
+      : "Por favor permita acceso al micrófono."
+  );
 
-    return;
+  console.log(err);
 
-  }
+  return;
+
+}
+
+console.log(
+  "SpeechRecognition =",
+  SpeechRecognition
+);
 
   const recognition =
-    new SpeechRecognition();
+  new SpeechRecognition();
 
-  recognition.lang = language === "ht"
+recognition.lang = language === "ht"
 ? "ht-HT"
 : language === "en"
 ? "en-US"
@@ -370,13 +391,32 @@ const startVoiceInput = async () => {
 ? "es-ES"
 : "fr-FR";
 
-  recognition.continuous = false;
+recognition.continuous = false;
 
-  recognition.interimResults = false;
+recognition.interimResults = false;
+
+recognition.onstart = () => {
+
+  console.log("VOICE STARTED");
 
   setIsListening(true);
 
+};
+
+try {
+
   recognition.start();
+
+} catch(error) {
+
+  console.log(
+    "START ERROR:",
+    error
+  );
+
+  setIsListening(false);
+
+}
 
   recognition.onresult = (event) => {
 
@@ -431,7 +471,7 @@ const generateAudio = async () => {
   console.log("BOUTON AN KLIKE");
 
   if (text.trim() === "") {
-    alert("Tanpri antre yon tèks");
+    alert(t.microphonePermission);
     return;
   }
 
@@ -1328,28 +1368,40 @@ if (activePage === "rewrite") {
   </label>
 
   <textarea
+    rows={1}
     value={text}
-    onChange={(e) =>
-      setText(e.target.value)
-    }
+    onChange={(e) => {
+
+      setText(e.target.value);
+
+      e.target.style.height = "22px";
+
+      e.target.style.height =
+        Math.min(
+          e.target.scrollHeight,
+          150
+        ) + "px";
+
+    }}
     placeholder={t.rewritePlaceholder}
   />
 
   <button
-  type="button"
-  className={
-    isListening
-      ? "voice-btn listening"
-      : "voice-btn"
-  }
-  onClick={startVoiceInput}
->
-  <HiMiniMicrophone />
+    type="button"
+    className={
+      isListening
+        ? "voice-btn listening"
+        : "voice-btn"
+    }
+    onClick={startVoiceInput}
+  >
+    <HiMiniMicrophone />
 
-  {isListening && (
-    <span className="mic-dot"></span>
-  )}
-</button>
+    {isListening && (
+      <span className="mic-dot"></span>
+    )}
+
+  </button>
 
 </div>
 
@@ -1469,28 +1521,40 @@ if (activePage === "summary") {
   </label>
 
   <textarea
+    rows={1}
     value={text}
-    onChange={(e) =>
-      setText(e.target.value)
-    }
+    onChange={(e) => {
+
+      setText(e.target.value);
+
+      e.target.style.height = "22px";
+
+      e.target.style.height =
+        Math.min(
+          e.target.scrollHeight,
+          150
+        ) + "px";
+
+    }}
     placeholder={t.summaryPlaceholder}
   />
 
   <button
-  type="button"
-  className={
-    isListening
-      ? "voice-btn listening"
-      : "voice-btn"
-  }
-  onClick={startVoiceInput}
->
-  <HiMiniMicrophone />
+    type="button"
+    className={
+      isListening
+        ? "voice-btn listening"
+        : "voice-btn"
+    }
+    onClick={startVoiceInput}
+  >
+    <HiMiniMicrophone />
 
-  {isListening && (
-    <span className="mic-dot"></span>
-  )}
-</button>
+    {isListening && (
+      <span className="mic-dot"></span>
+    )}
+
+  </button>
 
 </div>
 
@@ -1598,28 +1662,40 @@ if (activePage === "translate") {
   </label>
 
   <textarea
+    rows={1}
     value={text}
-    onChange={(e) =>
-      setText(e.target.value)
-    }
+    onChange={(e) => {
+
+      setText(e.target.value);
+
+      e.target.style.height = "22px";
+
+      e.target.style.height =
+        Math.min(
+          e.target.scrollHeight,
+          150
+        ) + "px";
+
+    }}
     placeholder={t.translatePlaceholder}
   />
 
   <button
-  type="button"
-  className={
-    isListening
-      ? "voice-btn listening"
-      : "voice-btn"
-  }
-  onClick={startVoiceInput}
->
-  <HiMiniMicrophone />
+    type="button"
+    className={
+      isListening
+        ? "voice-btn listening"
+        : "voice-btn"
+    }
+    onClick={startVoiceInput}
+  >
+    <HiMiniMicrophone />
 
-  {isListening && (
-    <span className="mic-dot"></span>
-  )}
-</button>
+    {isListening && (
+      <span className="mic-dot"></span>
+    )}
+
+  </button>
 
 </div>
 
@@ -1736,28 +1812,40 @@ if (activePage === "tiktok") {
   </label>
 
   <textarea
+    rows={1}
     value={text}
-    onChange={(e) =>
-      setText(e.target.value)
-    }
+    onChange={(e) => {
+
+      setText(e.target.value);
+
+      e.target.style.height = "22px";
+
+      e.target.style.height =
+        Math.min(
+          e.target.scrollHeight,
+          150
+        ) + "px";
+
+    }}
     placeholder={t.tiktokPlaceholder}
   />
 
   <button
-  type="button"
-  className={
-    isListening
-      ? "voice-btn listening"
-      : "voice-btn"
-  }
-  onClick={startVoiceInput}
->
-  <HiMiniMicrophone />
+    type="button"
+    className={
+      isListening
+        ? "voice-btn listening"
+        : "voice-btn"
+    }
+    onClick={startVoiceInput}
+  >
+    <HiMiniMicrophone />
 
-  {isListening && (
-    <span className="mic-dot"></span>
-  )}
-</button>
+    {isListening && (
+      <span className="mic-dot"></span>
+    )}
+
+  </button>
 
 </div>
 
@@ -1792,13 +1880,11 @@ if (activePage === "quiz") {
     <div className="ai-card">
 
       <button
-        className="back-btn"
-        onClick={() =>
-          setActivePage("home")
-        }
-      >
-        ←
-      </button>
+            className="back-btn"
+            onClick={() => setActivePage("home")}
+          >
+            ←
+          </button>
 
       <h1>
         ❓ {t.quizTitle}
@@ -1869,28 +1955,40 @@ if (activePage === "quiz") {
   </label>
 
   <textarea
+    rows={1}
     value={text}
-    onChange={(e) =>
-      setText(e.target.value)
-    }
+    onChange={(e) => {
+
+      setText(e.target.value);
+
+      e.target.style.height = "22px";
+
+      e.target.style.height =
+        Math.min(
+          e.target.scrollHeight,
+          150
+        ) + "px";
+
+    }}
     placeholder={t.quizPlaceholder}
   />
 
   <button
-  type="button"
-  className={
-    isListening
-      ? "voice-btn listening"
-      : "voice-btn"
-  }
-  onClick={startVoiceInput}
->
-  <HiMiniMicrophone />
+    type="button"
+    className={
+      isListening
+        ? "voice-btn listening"
+        : "voice-btn"
+    }
+    onClick={startVoiceInput}
+  >
+    <HiMiniMicrophone />
 
-  {isListening && (
-    <span className="mic-dot"></span>
-  )}
-</button>
+    {isListening && (
+      <span className="mic-dot"></span>
+    )}
+
+  </button>
 
 </div>
 
@@ -1925,13 +2023,11 @@ if (activePage === "audio") {
       <div className="ai-card">
 
         <button
-          className="back-btn"
-          onClick={() =>
-            setActivePage("home")
-          }
-        >
-          ←
-        </button>
+  className="back-btn"
+  onClick={() => setActivePage("home")}
+>
+  ←
+</button>
 
         <h1>
           🎙️{t.audioTitle}
@@ -2000,68 +2096,58 @@ if (activePage === "audio") {
 
         <div className="input-wrapper">
 
-          <label
-            className="upload-inside"
-          >
+  <label className="upload-inside">
 
-            +
+    +
 
-            <input
-              type="file"
-              accept=".txt"
-              onChange={handleFileUpload}
-              hidden
-            />
+    <input
+      type="file"
+      accept=".txt"
+      onChange={handleFileUpload}
+      hidden
+    />
 
-          </label>
+  </label>
 
+  <textarea
+    rows={1}
+    maxLength={5000}
+    value={text}
+    placeholder={t.audioPlaceholder}
 
-          <textarea
+    onChange={(e) => {
 
-            rows={1}
+      setText(e.target.value);
 
-            maxLength={5000}
+      e.target.style.height = "22px";
 
-            placeholder={t.audioPlaceholder}
+      e.target.style.height =
+        Math.min(
+          e.target.scrollHeight,
+          150
+        ) + "px";
 
-            value={text}
+    }}
+  />
 
-            onChange={(e) => {
+  <button
+    type="button"
+    className={
+      isListening
+        ? "voice-btn listening"
+        : "voice-btn"
+    }
+    onClick={startVoiceInput}
+  >
+    <HiMiniMicrophone />
 
-              setText(
-                e.target.value
-              );
+    {isListening && (
+      <span className="mic-dot"></span>
+    )}
 
-              e.target.style.height =
-                "auto";
+  </button>
 
-              e.target.style.height =
-                Math.min(
-                  e.target.scrollHeight,
-                  250
-                ) + "px";
-
-            }}
-
-          />
-
-          <button
-  type="button"
-  className={
-    isListening
-      ? "voice-btn listening"
-      : "voice-btn"
-  }
-  onClick={startVoiceInput}
->
-  <HiMiniMicrophone />
-
-  {isListening && (
-    <span className="mic-dot"></span>
-  )}
-</button>
-
-        </div>
+</div>
 
         <button
 
@@ -2093,17 +2179,17 @@ if (activePage === "ask-ai") {
 
       <div className="ai-card">
 
+        <button
+  className="back-btn"
+  onClick={() => setActivePage("home")}
+>
+  ←
+</button>
+
         <div
  className="header"
  {...handlers}
 >
-
-          <button
-            className="back-btn"
-            onClick={() => setActivePage("home")}
-          >
-            ←
-          </button>
 
           <h1 className="ai-title">
   🤖 {t.askAI}
@@ -2176,28 +2262,40 @@ if (activePage === "ask-ai") {
   </label>
 
   <textarea
-  value={text}
-  onChange={(e) =>
-    setText(e.target.value)
-  }
-  placeholder={t.askPlaceholder}
-/>
+    rows={1}
+    value={text}
+    onChange={(e) => {
+
+      setText(e.target.value);
+
+      e.target.style.height = "22px";
+
+      e.target.style.height =
+        Math.min(
+          e.target.scrollHeight,
+          150
+        ) + "px";
+
+    }}
+    placeholder={t.askPlaceholder}
+  />
 
   <button
-  type="button"
-  className={
-    isListening
-      ? "voice-btn listening"
-      : "voice-btn"
-  }
-  onClick={startVoiceInput}
->
-  <HiMiniMicrophone />
+    type="button"
+    className={
+      isListening
+        ? "voice-btn listening"
+        : "voice-btn"
+    }
+    onClick={startVoiceInput}
+  >
+    <HiMiniMicrophone />
 
-  {isListening && (
-    <span className="mic-dot"></span>
-  )}
-</button>
+    {isListening && (
+      <span className="mic-dot"></span>
+    )}
+
+  </button>
 
 </div>
 
@@ -2228,17 +2326,17 @@ if (activePage === "image") {
 
       <div className="ai-card">
 
+        <button
+  className="back-btn"
+  onClick={() => setActivePage("home")}
+>
+  ←
+</button>
+
         <div
  className="header"
  {...handlers}
 >
-
-          <button
-            className="back-btn"
-            onClick={() => setActivePage("home")}
-          >
-            ←
-          </button>
 
           <h1 className="ai-title">
             🖼️ {t.imageTitle}
@@ -2308,28 +2406,40 @@ if (activePage === "image") {
   </label>
 
   <textarea
+    rows={1}
     value={text}
-    onChange={(e) =>
-      setText(e.target.value)
-    }
+    onChange={(e) => {
+
+      setText(e.target.value);
+
+      e.target.style.height = "22px";
+
+      e.target.style.height =
+        Math.min(
+          e.target.scrollHeight,
+          150
+        ) + "px";
+
+    }}
     placeholder={t.imagePlaceholder}
   />
 
   <button
-  type="button"
-  className={
-    isListening
-      ? "voice-btn listening"
-      : "voice-btn"
-  }
-  onClick={startVoiceInput}
->
-  <HiMiniMicrophone />
+    type="button"
+    className={
+      isListening
+        ? "voice-btn listening"
+        : "voice-btn"
+    }
+    onClick={startVoiceInput}
+  >
+    <HiMiniMicrophone />
 
-  {isListening && (
-    <span className="mic-dot"></span>
-  )}
-</button>
+    {isListening && (
+      <span className="mic-dot"></span>
+    )}
+
+  </button>
 
 </div>
 
@@ -3063,10 +3173,10 @@ speechSynthesis.speak(
 </p>
 
 <button
-  className="close-btn"
-  onClick={() => setShowLogin(false)}
+className="modal-close-btn"
+onClick={() => setShowLogin(false)}
 >
-  {t.close}
+✕
 </button>
 
   </div>
@@ -3119,10 +3229,10 @@ speechSynthesis.speak(
 </p>
 
 <button
-  className="close-btn"
-  onClick={() => setShowSignup(false)}
+className="modal-close-btn"
+onClick={() => setShowSignup(false)}
 >
-  {t.close}
+✕
 </button>
 
   </div>

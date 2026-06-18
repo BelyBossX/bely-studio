@@ -2,31 +2,31 @@ const translations = {
 
   ht: {
 
-    askAI: "Mande AI",
+    askAI: "Mande IA",
     translate: "Tradui",
     rewrite: "Re-ekri",
     summary: "Rezime",
-    quiz: "Quiz AI",
+    quiz: "Quiz IA",
     tiktok: "Script TikTok",
     audio: "Jenere Odyo",
     image: "Jenere Imaj",
 
     askDescription:
-      "Poze AI a tout kestyon w' vle",
+      "Poze IA a tout kesyon w' vle",
 
     askPlaceholder:
-      "Poze AI a kestyon...",
+      "Poze IA a kesyon...",
 
     send: "Voye",
 
     thinking:
-      "AI ap reflechi...",
+      "IA a ap reflechi...",
       
       translateTitle: "Tradui",
 translateDescription:
-  "Tradui nenpòt sa w' vle",
+  "Tradui nenpòt sa w' vle a",
 translatePlaceholder:
-  "Ekri tèks pou tradui...",
+  "Ekri tèks pou tradui a...",
 translateButton: "Tradui",
 translateLoading:
   "Tradiksyon an ap fèt...",
@@ -38,25 +38,25 @@ rewritePlaceholder:
   "Ekri tèks pou re-ekri a...",
 rewriteButton: "Re-ekri",
 rewriteLoading:
-  "AI ap re-ekri tèks ou a...",
+  "IA a ap re-ekri tèks ou a...",
 
 summaryTitle: "Rezime",
 summaryDescription:
   "Kreye yon rezime rapid",
 summaryPlaceholder:
-  "Ekri tèks pou rezime...",
+  "Ekri oubyen kole tèks pou rezime a...",
 summaryButton: "Rezime",
 summaryLoading:
-  "AI ap fè rezime a...",
+  "IA a ap fè rezime a...",
 
-quizTitle: "Quiz AI",
+quizTitle: "Quiz IA",
 quizDescription:
-  "Kreye kestyon sou nenpòt sijè",
+  "Kreye Quizz sou nenpòt sijè",
 quizPlaceholder:
   "Antre sijè quiz la...",
 quizButton: "Jenere Quiz",
 quizLoading:
-  "AI ap kreye quiz la...",
+  "IA a ap kreye quiz la...",
 
 tiktokTitle: "Script TikTok",
 tiktokDescription:
@@ -66,7 +66,7 @@ tiktokPlaceholder:
 tiktokButton:
   "Jenere Script",
 tiktokLoading:
-  "AI ap kreye script la...",
+  "IA a ap kreye script la...",
 
 audioTitle:
   "Jenere Odyo",
@@ -82,7 +82,7 @@ audioLoading:
 imageTitle:
   "Jenere Imaj",
 imageDescription:
-  "Kreye imaj ak AI",
+  "Kreye imaj ak IA",
 imagePlaceholder:
   "Dekri imaj la...",
 imageButton:
@@ -106,7 +106,7 @@ lastActivity:
   "Dènye Aktivite",
 
 aiUsage:
-  "Itilizasyon AI",
+  "Itilizasyon IA",
 
 downloadAudio:
   "Telechaje Odyo",
@@ -115,7 +115,7 @@ downloadImage:
   "Telechaje Imaj",
 
 audioReady:
-  "Odyo w la fin jenere",
+  "Odyo w' la fin jenere",
 
 selectVoice:
   "Chwazi Vwa",
@@ -158,13 +158,13 @@ poweredBy:
   "Powered by Bely AI Studio",
 
 audioFeature:
-  "Audio AI",
+  "Jenere Odyo",
 
 translationFeature:
   "Tradiksyon",
 
 rewriteFeature:
-  "Re-ekriti",
+  "Re-ekri",
 
 summaryFeature:
   "Rezime",
@@ -173,15 +173,15 @@ tiktokFeature:
   "Script TikTok",
 
 quizFeature:
-  "Quiz AI",
+  "Quiz IA",
 
 askAIFeature:
-  "Mande AI",
+  "Mande IA",
 
 imageFeature:
   "Jenere Imaj",
 
-  menu: "Menu",
+  menu: "Meni",
 close: "Fèmen",
 home: "Home",
 history: "Istorik",
@@ -191,7 +191,7 @@ historyTitle:
   "Istorik Aktivite",
 
 historyDescription:
-  "Tout aktivite ou yo anrejistre isit.",
+  "Tout aktivite w' yo anrejistre isit la.",
 
 searchHistory:
   "🔍 Chèche nan istorik...",
@@ -200,7 +200,7 @@ noHistory:
   "Pa gen istorik disponib",
 
 noHistoryDescription:
-  "Jenere premye odyo ou oswa itilize AI a pou wè aktivite yo isit la.",
+  "Jenere premye odyo w' oswa itilize IA a pou w' wè aktivite yo isit la.",
 
 totalActivities:
   "Total Aktivite",
@@ -221,7 +221,7 @@ guideTitle: "Gid Itilizasyon",
 guideQuestion: "Ou nouvo?",
 guideText: "Gid",
 aboutModalDescription:
-  "Bely AI Studio se yon aplikasyon ki itilize entèlijans atifisyèl pou ede w kreye kontni pi vit.",
+  "Bely AI Studio se yon aplikasyon ki itilize entèlijans atifisyèl pou ede w' kreye kontni pi vit.",
 
 mainFeatures:
   "Fonksyon prensipal yo:",
@@ -251,6 +251,8 @@ name: "Non",
   email: "Imèl",
   password: "Modpas",
   name: "Non",
+  microphonePermission:
+"Tanpri bay aplikasyon an aksè ak mikwo a",
 
 
   },
@@ -299,7 +301,7 @@ summaryTitle: "Summarize",
 summaryDescription:
   "Create a quick summary",
 summaryPlaceholder:
-  "Enter text to summarize...",
+  "Enter or Paste a text to summarize...",
 summaryButton: "Summarize",
 summaryLoading:
   "AI is creating a summary...",
@@ -523,6 +525,8 @@ name: "Name",
   email: "Email",
   password: "Password",
   name: "Name",
+  microphonePermission:
+"Please allow microphone access",
 
   },
 
@@ -570,7 +574,7 @@ summaryTitle: "Résumer",
 summaryDescription:
   "Créer un résumé rapide",
 summaryPlaceholder:
-  "Entrez le texte à résumer...",
+  "Entrez ou Coller le texte à résumer...",
 summaryButton: "Résumer",
 summaryLoading:
   "L'IA crée le résumé...",
@@ -780,6 +784,8 @@ close: "Fermer",
   email: "Email",
   password: "Mot de passe",
   name: "Nom",
+  microphonePermission:
+"Veuillez autoriser l'accès au microphone",
 
   },
 
@@ -827,7 +833,7 @@ summaryTitle: "Resumir",
 summaryDescription:
   "Crear un resumen rápido",
 summaryPlaceholder:
-  "Escribe el texto para resumir...",
+  "Escribe o pega el texto para resumir...",
 summaryButton: "Resumir",
 summaryLoading:
   "La IA está creando el resumen...",
@@ -1051,6 +1057,8 @@ name: "Nombre",
   email: "Correo",
   password: "Contraseña",
   name: "Nombre",
+  microphonePermission:
+"Permita el acceso al micrófono",
 
   }
 
