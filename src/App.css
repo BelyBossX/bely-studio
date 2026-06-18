@@ -3317,7 +3317,7 @@ box-shadow:none !important;
 
 width:24px;
 
-height:24px;
+height:10px;
 
 padding:0;
 
@@ -3329,7 +3329,7 @@ justify-content:center;
 
 color:white;
 
-font-size:22px;
+font-size:20px;
 
 flex-shrink:0;
 }

@@ -19,6 +19,10 @@ import guides from "./guides";
 import ReactMarkdown from "react-markdown";
 
 import {
+  SpeechRecognition
+} from "@capacitor-community/speech-recognition";
+
+import {
  useSwipeable
 }
 from "react-swipeable";
@@ -28,8 +32,6 @@ function App() {
 const isNative = Capacitor.isNativePlatform();
 
 const [text, setText] = useState("");
-
-const recognitionRef = useRef(null);
 
 const [currentSlide, setCurrentSlide] = useState(1);
 
@@ -255,43 +257,6 @@ useEffect(() => {
 
 useEffect(() => {
 
-  const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
-
-  if (!SpeechRecognition) return;
-
-  const recognition =
-    new SpeechRecognition();
-
-  recognition.lang = language === "ht"
-? "ht-HT"
-: language === "en"
-? "en-US"
-: language === "es"
-? "es-ES"
-: "fr-FR";
-
-  recognition.continuous = false;
-
-  recognition.interimResults = false;
-
-  recognition.onresult = (event) => {
-
-    const transcript =
-      event.results[0][0].transcript;
-
-    setText(transcript);
-
-  };
-
-  recognitionRef.current =
-    recognition;
-
-}, []);
-
-useEffect(() => {
-
   const savedStats =
     localStorage.getItem(
       "belyStats"
@@ -327,124 +292,64 @@ useEffect(() => {
 
 const startVoiceInput = async () => {
 
-  const SpeechRecognition =
-window.SpeechRecognition ||
-window.webkitSpeechRecognition;
-
-if (!SpeechRecognition) {
-
-  if (Capacitor.isNativePlatform()) {
-
-    alert(
-      language === "ht"
-        ? "Fonksyon vokal pa disponib sou aparèy sa."
-        : language === "en"
-        ? "Voice recognition is not available on this device."
-        : language === "fr"
-        ? "La reconnaissance vocale n'est pas disponible sur cet appareil."
-        : "El reconocimiento de voz no está disponible en este dispositivo."
-    );
-
-  }
-
-  return;
-
-}
-
   try {
 
-  await navigator.mediaDevices.getUserMedia({
-    audio: true
-  });
+    const permission =
+      await SpeechRecognition.requestPermissions();
 
-} catch (err) {
+    if (
+      !permission.speechRecognition
+    ) {
 
-  alert(
-    language === "ht"
-      ? "Tanpri bay aplikasyon an aksè ak mikwo a."
-      : language === "en"
-      ? "Please allow microphone access."
-      : language === "fr"
-      ? "Veuillez autoriser l'accès au microphone."
-      : "Por favor permita acceso al micrófono."
-  );
+      alert(
+        "Mikwo pa otorize"
+      );
 
-  console.log(err);
+      return;
 
-  return;
+    }
 
-}
+    setIsListening(true);
 
-console.log(
-  "SpeechRecognition =",
-  SpeechRecognition
-);
+    const result =
+      await SpeechRecognition.start({
+        language:
+          language === "ht"
+            ? "fr-FR"
+            : language === "en"
+            ? "en-US"
+            : language === "es"
+            ? "es-ES"
+            : "fr-FR",
 
-  const recognition =
-  new SpeechRecognition();
+        maxResults: 1,
 
-recognition.lang = language === "ht"
-? "ht-HT"
-: language === "en"
-? "en-US"
-: language === "es"
-? "es-ES"
-: "fr-FR";
+        partialResults: false,
 
-recognition.continuous = false;
+        popup: true
 
-recognition.interimResults = false;
+      });
 
-recognition.onstart = () => {
+    if (
+      result.matches &&
+      result.matches.length > 0
+    ) {
 
-  console.log("VOICE STARTED");
+      setText(
+        result.matches[0]
+      );
 
-  setIsListening(true);
+    }
 
-};
+  } catch(err) {
 
-try {
+    console.log(err);
 
-  recognition.start();
-
-} catch(error) {
-
-  console.log(
-    "START ERROR:",
-    error
-  );
-
-  setIsListening(false);
-
-}
-
-  recognition.onresult = (event) => {
-
-    const transcript =
-      event.results[0][0].transcript;
-
-    setText(transcript);
-
-  };
-
-  recognition.onerror = (event) => {
-
-    console.log(event.error);
-
-    console.log(
-      "Speech Error:",
-      event.error
-    );
+  } finally {
 
     setIsListening(false);
 
-  };
-
-  recognition.onend = () => {
-
-    setIsListening(false);
-
-  };
+  }
 
 };
 
