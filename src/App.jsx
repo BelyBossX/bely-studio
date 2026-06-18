@@ -294,16 +294,21 @@ const startVoiceInput = async () => {
 
   try {
 
+    console.log("START VOICE");
+
     const permission =
       await SpeechRecognition.requestPermissions();
+
+    console.log(
+      "PERMISSION =",
+      permission
+    );
 
     if (
       !permission.speechRecognition
     ) {
 
-      alert(
-        "Mikwo pa otorize"
-      );
+      alert("Mikwo pa otorize");
 
       return;
 
@@ -313,6 +318,7 @@ const startVoiceInput = async () => {
 
     const result =
       await SpeechRecognition.start({
+
         language:
           language === "ht"
             ? "fr-FR"
@@ -330,6 +336,11 @@ const startVoiceInput = async () => {
 
       });
 
+    console.log(
+      "RESULT =",
+      result
+    );
+
     if (
       result.matches &&
       result.matches.length > 0
@@ -341,9 +352,16 @@ const startVoiceInput = async () => {
 
     }
 
-  } catch(err) {
+  } catch (err) {
 
-    console.log(err);
+    console.log(
+      "VOICE ERROR =",
+      err
+    );
+
+    alert(
+      JSON.stringify(err)
+    );
 
   } finally {
 
