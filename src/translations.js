@@ -10,10 +10,6 @@ const translations = {
     tiktok: "Script TikTok",
     audio: "Jenere Odyo",
     image: "Jenere Imaj",
-
-    askDescription:
-      "Poze IA a tout kesyon w' vle",
-
     askPlaceholder:
       "Poze IA a kesyon...",
 
@@ -23,8 +19,6 @@ const translations = {
       "IA a ap reflechi...",
       
       translateTitle: "Tradui",
-translateDescription:
-  "Tradui nenpòt sa w' vle a",
 translatePlaceholder:
   "Ekri tèks pou tradui a...",
 translateButton: "Tradui",
@@ -32,8 +26,6 @@ translateLoading:
   "Tradiksyon an ap fèt...",
 
 rewriteTitle: "Re-ekri",
-rewriteDescription:
-  "Ekri tèks ou vle amelyore a",
 rewritePlaceholder:
   "Ekri tèks pou re-ekri a...",
 rewriteButton: "Re-ekri",
@@ -41,8 +33,6 @@ rewriteLoading:
   "IA a ap re-ekri tèks ou a...",
 
 summaryTitle: "Rezime",
-summaryDescription:
-  "Kreye yon rezime rapid",
 summaryPlaceholder:
   "Ekri oubyen kole tèks pou rezime a...",
 summaryButton: "Rezime",
@@ -50,8 +40,6 @@ summaryLoading:
   "IA a ap fè rezime a...",
 
 quizTitle: "Quiz IA",
-quizDescription:
-  "Kreye Quizz sou nenpòt sijè",
 quizPlaceholder:
   "Antre sijè quiz la...",
 quizButton: "Jenere Quiz",
@@ -59,8 +47,6 @@ quizLoading:
   "IA a ap kreye quiz la...",
 
 tiktokTitle: "Script TikTok",
-tiktokDescription:
-  "Kreye script viral pou TikTok",
 tiktokPlaceholder:
   "Antre sijè videyo a...",
 tiktokButton:
@@ -70,8 +56,6 @@ tiktokLoading:
 
 audioTitle:
   "Jenere Odyo",
-audioDescription:
-  "Konvèti tèks an odyo",
 audioPlaceholder:
   "Ekri tèks la...",
 audioButton:
@@ -81,8 +65,6 @@ audioLoading:
 
 imageTitle:
   "Jenere Imaj",
-imageDescription:
-  "Kreye imaj ak IA",
 imagePlaceholder:
   "Dekri imaj la...",
 imageButton:
@@ -253,7 +235,55 @@ name: "Non",
   name: "Non",
   microphonePermission:
 "Tanpri bay aplikasyon an aksè ak mikwo a",
+  voiceAI: "Pale ak AI",
 
+voiceAITitle: "Pale ak IA",
+
+voiceListening:
+"Map koute w'...",
+
+voiceThinking:
+"IA a ap reflechi...",
+
+voiceSpeaking:
+"IA A ap pale...",
+
+holdToTalk:
+"Kenbe mikwo a pou pale",
+
+releaseToSend:
+"Lage pou voye",
+
+lockHint:
+"Glise anlè pou lòk",
+voiceAIFeature:
+"Pale ak IA a pa vwa",
+askDescription:
+"Poze nenpòt kesyon epi resevwa repons entelijan tousuit.",
+
+translateDescription:
+"Tradui tèks rapidman ak presizyon.",
+
+audioDescription:
+"Konvèti tèks an odyo natirèl.",
+
+voiceAIDescription:
+"Pale ak IA tankou yon moun reyèl.",
+
+rewriteDescription:
+"Amelyore gramè, stil ak klète tèks ou yo.",
+
+summaryDescription:
+"Rezime tèks long yo nan kèk segonn.",
+
+tiktokDescription:
+"Kreye script TikTok ki atire atansyon.",
+
+quizDescription:
+"Jenere kestyon ak repons otomatikman.",
+
+imageDescription:
+"Kreye bèl imaj ak entèlijans atifisyèl.",
 
   },
 
@@ -268,9 +298,6 @@ name: "Non",
     audio: "Generate Audio",
     image: "Generate Image",
 
-    askDescription:
-      "Ask AI any question you want",
-
     askPlaceholder:
       "Ask AI a question...",
 
@@ -280,8 +307,6 @@ name: "Non",
       "AI is thinking...",
 
       translateTitle: "Translate",
-translateDescription:
-  "Translate anything you want",
 translatePlaceholder:
   "Enter text to translate...",
 translateButton: "Translate",
@@ -289,8 +314,6 @@ translateLoading:
   "Translating...",
 
 rewriteTitle: "Rewrite",
-rewriteDescription:
-  "Improve your text",
 rewritePlaceholder:
   "Enter text to rewrite...",
 rewriteButton: "Rewrite",
@@ -298,8 +321,6 @@ rewriteLoading:
   "AI is rewriting your text...",
 
 summaryTitle: "Summarize",
-summaryDescription:
-  "Create a quick summary",
 summaryPlaceholder:
   "Enter or Paste a text to summarize...",
 summaryButton: "Summarize",
@@ -307,8 +328,6 @@ summaryLoading:
   "AI is creating a summary...",
 
 quizTitle: "AI Quiz",
-quizDescription:
-  "Create questions on any topic",
 quizPlaceholder:
   "Enter quiz topic...",
 quizButton:
@@ -318,9 +337,6 @@ quizLoading:
 
 tiktokTitle:
   "TikTok Script",
-
-tiktokDescription:
-  "Create viral TikTok scripts",
 
 tiktokPlaceholder:
   "Enter video topic...",
@@ -334,9 +350,6 @@ tiktokLoading:
 audioTitle:
   "Generate Audio",
 
-audioDescription:
-  "Convert text to audio",
-
 audioPlaceholder:
   "Enter text...",
 
@@ -348,9 +361,6 @@ audioLoading:
 
 imageTitle:
   "Generate Image",
-
-imageDescription:
-  "Create AI images",
 
 imagePlaceholder:
   "Describe the image...",
@@ -527,6 +537,55 @@ name: "Name",
   name: "Name",
   microphonePermission:
 "Please allow microphone access",
+  voiceAI: "Talk to AI",
+
+voiceAITitle: "Talk to AI",
+
+voiceListening:
+"Listening...",
+
+voiceThinking:
+"AI is thinking...",
+
+voiceSpeaking:
+"AI is speaking...",
+
+holdToTalk:
+"Hold to talk",
+
+releaseToSend:
+"Release to send",
+
+lockHint:
+"Slide up to lock",
+voiceAIFeature:
+"Voice AI Assistant",
+askDescription:
+"Ask anything and get instant AI-powered answers.",
+
+translateDescription:
+"Translate text quickly and accurately.",
+
+audioDescription:
+"Convert text into natural sounding audio.",
+
+voiceAIDescription:
+"Talk with AI naturally using your voice.",
+
+rewriteDescription:
+"Improve grammar, style and clarity instantly.",
+
+summaryDescription:
+"Turn long text into concise summaries.",
+
+tiktokDescription:
+"Create engaging TikTok scripts in seconds.",
+
+quizDescription:
+"Generate quizzes and answers automatically.",
+
+imageDescription:
+"Create stunning AI-generated images.",
 
   },
 
@@ -541,9 +600,6 @@ name: "Name",
     audio: "Générer Audio",
     image: "Générer Image",
 
-    askDescription:
-      "Posez toutes vos questions à l'IA",
-
     askPlaceholder:
       "Posez une question...",
 
@@ -553,8 +609,6 @@ name: "Name",
       "L'IA réfléchit...",
 
       translateTitle: "Traduire",
-translateDescription:
-  "Traduisez tout ce que vous voulez",
 translatePlaceholder:
   "Entrez le texte à traduire...",
 translateButton: "Traduire",
@@ -562,8 +616,6 @@ translateLoading:
   "Traduction en cours...",
 
 rewriteTitle: "Réécrire",
-rewriteDescription:
-  "Améliorez votre texte",
 rewritePlaceholder:
   "Entrez le texte à réécrire...",
 rewriteButton: "Réécrire",
@@ -571,8 +623,6 @@ rewriteLoading:
   "L'IA réécrit votre texte...",
 
 summaryTitle: "Résumer",
-summaryDescription:
-  "Créer un résumé rapide",
 summaryPlaceholder:
   "Entrez ou Coller le texte à résumer...",
 summaryButton: "Résumer",
@@ -580,8 +630,6 @@ summaryLoading:
   "L'IA crée le résumé...",
 
 quizTitle: "Quiz IA",
-quizDescription:
-  "Créer des questions sur n'importe quel sujet",
 quizPlaceholder:
   "Entrez le sujet du quiz...",
 quizButton: "Générer Quiz",
@@ -589,8 +637,6 @@ quizLoading:
   "L'IA crée le quiz...",
 
 tiktokTitle: "Script TikTok",
-tiktokDescription:
-  "Créer des scripts TikTok viraux",
 tiktokPlaceholder:
   "Entrez le sujet de la vidéo...",
 tiktokButton:
@@ -600,8 +646,6 @@ tiktokLoading:
 
 audioTitle:
   "Générer Audio",
-audioDescription:
-  "Convertir le texte en audio",
 audioPlaceholder:
   "Entrez le texte...",
 audioButton:
@@ -611,8 +655,6 @@ audioLoading:
 
 imageTitle:
   "Générer Image",
-imageDescription:
-  "Créer des images avec l'IA",
 imagePlaceholder:
   "Décrivez l'image...",
 imageButton:
@@ -786,6 +828,55 @@ close: "Fermer",
   name: "Nom",
   microphonePermission:
 "Veuillez autoriser l'accès au microphone",
+  voiceAI: "Parler avec l'IA",
+
+voiceAITitle: "Parler avec l'IA",
+
+voiceListening:
+"J'écoute...",
+
+voiceThinking:
+"L'IA réfléchit...",
+
+voiceSpeaking:
+"L'IA parle...",
+
+holdToTalk:
+"Maintenez pour parler",
+
+releaseToSend:
+"Relâchez pour envoyer",
+
+lockHint:
+"Glissez vers le haut pour verrouiller",
+voiceAIFeature:
+"Assistant IA Vocal",
+askDescription:
+"Posez n'importe quelle question et obtenez une réponse instantanée.",
+
+translateDescription:
+"Traduisez vos textes rapidement et avec précision.",
+
+audioDescription:
+"Transformez un texte en audio naturel.",
+
+voiceAIDescription:
+"Parlez avec l'IA comme avec une vraie personne.",
+
+rewriteDescription:
+"Améliorez instantanément votre texte.",
+
+summaryDescription:
+"Résumez de longs textes en quelques secondes.",
+
+tiktokDescription:
+"Créez des scripts TikTok captivants.",
+
+quizDescription:
+"Générez automatiquement des quiz et réponses.",
+
+imageDescription:
+"Créez de superbes images avec l'IA.",
 
   },
 
@@ -800,9 +891,6 @@ close: "Fermer",
     audio: "Generar Audio",
     image: "Generar Imagen",
 
-    askDescription:
-      "Haz cualquier pregunta a la IA",
-
     askPlaceholder:
       "Haz una pregunta...",
 
@@ -812,8 +900,6 @@ close: "Fermer",
       "La IA está pensando...",
 
       translateTitle: "Traducir",
-translateDescription:
-  "Traduce todo lo que quieras",
 translatePlaceholder:
   "Escribe el texto para traducir...",
 translateButton: "Traducir",
@@ -821,8 +907,6 @@ translateLoading:
   "Traduciendo...",
 
 rewriteTitle: "Reescribir",
-rewriteDescription:
-  "Mejora tu texto",
 rewritePlaceholder:
   "Escribe el texto para reescribir...",
 rewriteButton: "Reescribir",
@@ -830,8 +914,6 @@ rewriteLoading:
   "La IA está reescribiendo tu texto...",
 
 summaryTitle: "Resumir",
-summaryDescription:
-  "Crear un resumen rápido",
 summaryPlaceholder:
   "Escribe o pega el texto para resumir...",
 summaryButton: "Resumir",
@@ -839,8 +921,6 @@ summaryLoading:
   "La IA está creando el resumen...",
 
 quizTitle: "Quiz IA",
-quizDescription:
-  "Crear preguntas sobre cualquier tema",
 quizPlaceholder:
   "Escribe el tema del quiz...",
 quizButton:
@@ -850,9 +930,6 @@ quizLoading:
 
 tiktokTitle:
   "Script TikTok",
-
-tiktokDescription:
-  "Crear scripts virales para TikTok",
 
 tiktokPlaceholder:
   "Escribe el tema del video...",
@@ -866,9 +943,6 @@ tiktokLoading:
 audioTitle:
   "Generar Audio",
 
-audioDescription:
-  "Convertir texto en audio",
-
 audioPlaceholder:
   "Escribe el texto...",
 
@@ -880,9 +954,6 @@ audioLoading:
 
 imageTitle:
   "Generar Imagen",
-
-imageDescription:
-  "Crear imágenes con IA",
 
 imagePlaceholder:
   "Describe la imagen...",
@@ -1059,6 +1130,55 @@ name: "Nombre",
   name: "Nombre",
   microphonePermission:
 "Permita el acceso al micrófono",
+  voiceAI: "Hablar con IA",
+
+voiceAITitle: "Hablar con IA",
+
+voiceListening:
+"Escuchando...",
+
+voiceThinking:
+"La IA está pensando...",
+
+voiceSpeaking:
+"La IA está hablando...",
+
+holdToTalk:
+"Mantén para hablar",
+
+releaseToSend:
+"Suelta para enviar",
+
+lockHint:
+"Desliza hacia arriba para bloquear",
+voiceAIFeature:
+"Asistente IA por Voz",
+askDescription:
+"Haz cualquier pregunta y obtén respuestas al instante.",
+
+translateDescription:
+"Traduce textos de forma rápida y precisa.",
+
+audioDescription:
+"Convierte texto en audio natural.",
+
+voiceAIDescription:
+"Habla con la IA como si fuera una persona.",
+
+rewriteDescription:
+"Mejora la gramática y claridad de tus textos.",
+
+summaryDescription:
+"Resume textos largos en segundos.",
+
+tiktokDescription:
+"Crea guiones atractivos para TikTok.",
+
+quizDescription:
+"Genera cuestionarios y respuestas automáticamente.",
+
+imageDescription:
+"Crea impresionantes imágenes con IA.",
 
   }
 

@@ -1,30 +1,27 @@
 const guides = {
 
-  ht: `# 📘 Gid Itilizasyon Bely AI Studio
+  ht: `# Gid Itilizasyon Bely AI Studio
 
-Byenvini nan Bely AI Studio!
+Byenvini sou Bely AI Studio!
 
-Bely AI Studio se yon platfòm entèlijans atifisyèl ki ede w kreye kontni, aprann, travay, epi ogmante pwodiktivite w pi vit.
+Bely AI Studio se yon platfòm entèlijans atifisyèl ki ede w' kreye kontni, aprann, travay epi ogmante pwodiktivite w' pi vit.
 
-## 🌐 Chanje Lang
+## Chanje Lang
 
 Nan tèt aplikasyon an ou ka chwazi:
 
-🇭🇹 Kreyòl
+* Kreyòl
+* English
+* Français
+* Español
 
-🇺🇸 English
-
-🇫🇷 Français
-
-🇪🇸 Español
-
-Tout fonksyon AI yo ap adapte ak lang ou chwazi a.
+Tout fonksyon IA yo ap adapte ak lang ou chwazi a.
 
 ---
 
-## 🤖 Mande AI
+## Mande IA
 
-Sèvi ak fonksyon sa a pou poze nenpòt kesyon.
+Sèvi ak fonksyon sa a pou poze nenpòt kestyon.
 
 Egzanp:
 
@@ -32,24 +29,24 @@ Egzanp:
 * Kijan pou m' kreye yon biznis?
 * Ekri yon lèt pwofesyonèl pou mwen.
 
-Plis kesyon an klè, se plis repons AI a ap itil.
+Plis kesyon an klè, se plis repons IA a ap itil.
 
 ---
 
-## 🌍 Tradui
+## Tradui
 
 Fonksyon sa a pèmèt ou tradui nenpòt tèks, mo oswa fraz.
 
 1. Kole oswa ekri tèks la.
-2. Klike sou bouton tradui a.
+2. Klike sou bouton Tradui a.
 
-Ou ka tradui an Kreyòl ayisyen, Anglè, Fransè ak Espayòl.
+Ou ka tradui an Kreyòl Ayisyen, Anglè, Fransè ak Espayòl.
 
 ---
 
-## ✍️ Re-ekri
+## Re-ekri
 
-Fonksyon sa amelyore tèks ou yo.
+Fonksyon sa a amelyore tèks ou yo.
 
 Li kapab:
 
@@ -61,19 +58,19 @@ Li itil pou imèl, mesaj, devwa ak dokiman.
 
 ---
 
-## 📄 Rezime
+## Rezime
 
 Ou gen yon tèks ki twò long?
 
 Kole l' epi itilize bouton Rezime a.
 
-AI a ap retire enfòmasyon ki pa esansyèl yo epi bay yon vèsyon pi kout e pi klè.
+IA a ap retire enfòmasyon ki pa esansyèl yo epi bay yon vèsyon ki pi kout e pi klè.
 
 ---
 
-## ❓ Quiz AI
+## Quiz IA
 
-Ekri yon sijè epi AI a ap kreye kesyon ak repons pou ede w aprann.
+Ekri yon sijè epi IA a ap kreye kesyon ak repons pou ede w aprann.
 
 Egzanp:
 
@@ -84,25 +81,25 @@ Egzanp:
 
 ---
 
-## 🎬 Script TikTok
+## Script TikTok
 
 Ekri sijè videyo ou vle fè a.
 
-AI a ap kreye:
+IA a ap kreye:
 
 * Hook
 * Devlopman
 * Apèl a Aksyon
 
-Sa ede w kreye videyo ki pi enteresan.
+Sa ede w' kreye videyo ki pi enteresan pou rezo sosyal yo.
 
 ---
 
-## 🎙️ Jenere Odyo
+## Jenere Odyo
 
 Ekri tèks ou vle tande a.
 
-Chwazi vwa ou prefere a epi AI a ap kreye odyo a pou ou.
+Chwazi vwa ou prefere a epi IA a ap kreye odyo a pou ou.
 
 Ideyal pou:
 
@@ -113,7 +110,23 @@ Ideyal pou:
 
 ---
 
-## 🖼️ Jenere Imaj
+## Pale ak IA
+
+Peze bouton mikwo a epi pale dirèkteman avèk IA a.
+
+IA a ap koute vwa ou, konprann kestyon oswa demann ou epi reponn ou tankou yon konvèsasyon nòmal.
+
+Ideyal pou:
+
+* itilize san tape (ekri)
+* kesyon rapid
+* pratike lang
+* aksè pi fasil pou tout moun
+* konvèsasyon natirèl
+
+---
+
+## Jenere Imaj
 
 Dekri imaj ou vle kreye a.
 
@@ -125,80 +138,80 @@ Egzanp:
 
 ---
 
-## 💡 Konsèy Pou Pi Bon Rezilta
+## Konsèy Pou Pi Bon Rezilta
 
 * Ekri kesyon yo klè.
 * Bay plis detay lè sa nesesè.
-* Revize rezilta AI yo anvan ou itilize yo.
-* Sèvi ak lang ou pi alèz ladan l.
+* Revize rezilta IA yo anvan ou itilize yo.
+* Sèvi ak lang ou pi alèz ladan l' lan.
 
 ---
 
-Mèsi paske w ap itilize Bely AI Studio ❤️
+Mèsi paske w' ap itilize Bely AI Studio.
+
+Nou swete aplikasyon an ede w aprann, travay epi rann lavi w' pi fasil chak jou.
+
 `,
 
-  en: `# 📘 Bely AI Studio User Guide
+  en: `# Bely AI Studio User Guide
 
 Welcome to Bely AI Studio!
 
-Bely AI Studio is an artificial intelligence platform that helps you create content, learn, work, and increase your productivity faster.
+Bely AI Studio is an artificial intelligence platform designed to help you create content, learn, work, and increase your productivity more efficiently.
 
-## 🌐 Change Language
+## Change Language
 
-At the top of the application you can choose:
+At the top of the application, you can choose:
 
-🇭🇹 Kreyòl
+* Kreyòl
+* English
+* Français
+* Español
 
-🇺🇸 English
-
-🇫🇷 Français
-
-🇪🇸 Español
-
-All AI functions will adapt to the language you select.
+All AI features will automatically adapt to the language you select.
 
 ---
 
-## 🤖 Ask AI
+## Ask AI
 
-Use this function to ask any question.
+Use this feature to ask any question.
 
 Examples:
 
 * What is the capital of Haiti?
-* How can I create a business?
+* How can I start a business?
 * Write a professional letter for me.
 
 The clearer your question is, the more useful the AI response will be.
 
 ---
 
-## 🌍 Translate
+## Translate
 
-This function allows you to translate any text, word, or sentence.
+This feature allows you to translate any text, word, or sentence.
 
-1. Paste or type the text.
-2. Click the translate button.
+1. Paste or type your text.
+2. Click the Translate button.
 
 You can translate into Haitian Creole, English, French, and Spanish.
 
 ---
 
-## ✍️ Rewrite
+## Rewrite
 
-This function improves your texts.
+This feature improves your writing.
 
 It can:
 
 * correct mistakes
-* make the text more professional
-* make it easier to understand
+* make text more professional
+* improve readability
 
-It is useful for emails, messages, assignments, and documents.
+It is useful for emails, messages, assignments, and professional documents.
 
 ---
 
-## 📄 Summarize
+## Summarize
 
 Do you have a text that is too long?
 
@@ -208,9 +221,9 @@ The AI will remove unnecessary information and provide a shorter, clearer versio
 
 ---
 
-## ❓ AI Quiz
+## AI Quiz
 
-Enter a topic and the AI will create questions and answers to help you learn.
+Enter a topic and the AI will generate questions and answers to help you learn.
 
 Examples:
 
@@ -221,21 +234,21 @@ Examples:
 
 ---
 
-## 🎬 TikTok Script
+## TikTok Script
 
 Enter the topic of the video you want to create.
 
 The AI will generate:
 
 * Hook
-* Development
+* Main Content
 * Call To Action
 
-This helps you create more engaging videos.
+This helps you create more engaging content for social media.
 
 ---
 
-## 🎙️ Generate Audio
+## Generate Audio
 
 Enter the text you want to hear.
 
@@ -250,148 +263,180 @@ Ideal for:
 
 ---
 
-## 🖼️ Generate Image
+## Talk to AI
 
-Describe the image you want to create.
+Press the microphone button and speak directly with the AI.
 
-The best results come from precise descriptions.
+The AI will listen to your voice, understand your request, and respond naturally like a real conversation.
 
-Example:
+Ideal for:
 
-"A golden lion on a mountain at sunset."
+* hands-free interaction
+* quick questions
+* language practice
+* accessibility
+* natural conversations
 
 ---
 
-## 💡 Tips For Better Results
+## Generate Image
 
-* Write clear questions.
-* Provide more details when necessary.
-* Review AI results before using them.
+Describe the image you want to create.
+
+The best results come from precise and detailed descriptions.
+
+Example:
+
+"A golden lion standing on a mountain during sunset."
+
+---
+
+## Tips for Better Results
+
+* Ask clear questions.
+* Provide additional details when necessary.
+* Review AI-generated content before using it.
 * Use the language you are most comfortable with.
 
 ---
 
-Thank you for using Bely AI Studio ❤️
+Thank you for using Bely AI Studio.
+
+We hope the platform helps you learn, create, and work more effectively every day.
+
 `,
 
-  fr: `# 📘 Guide d'Utilisation de Bely AI Studio
+  fr: `# Guide d’Utilisation de Bely AI Studio
 
 Bienvenue sur Bely AI Studio !
 
-Bely AI Studio est une plateforme d'intelligence artificielle qui vous aide à créer du contenu, apprendre, travailler et augmenter votre productivité plus rapidement.
+Bely AI Studio est une plateforme d’intelligence artificielle conçue pour vous aider à créer du contenu, apprendre, travailler et améliorer votre productivité.
 
-## 🌐 Changer de Langue
+## Changer de Langue
 
-En haut de l'application, vous pouvez choisir :
+En haut de l’application, vous pouvez choisir :
 
-🇭🇹 Kreyòl
+* Kreyòl
+* English
+* Français
+* Español
 
-🇺🇸 English
-
-🇫🇷 Français
-
-🇪🇸 Español
-
-Toutes les fonctions IA s'adapteront à la langue sélectionnée.
+Toutes les fonctionnalités s’adapteront automatiquement à la langue sélectionnée.
 
 ---
 
-## 🤖 Demander à l'IA
+## Demander à l’IA
 
-Utilisez cette fonction pour poser n'importe quelle question.
+Utilisez cette fonction pour poser n’importe quelle question.
 
 Exemples :
 
-* Quelle est la capitale d'Haïti ?
+* Quelle est la capitale d’Haïti ?
 * Comment créer une entreprise ?
 * Rédigez une lettre professionnelle pour moi.
 
-Plus votre question est claire, plus la réponse de l'IA sera utile.
+Plus votre question est claire, plus la réponse de l’IA sera pertinente.
 
 ---
 
-## 🌍 Traduire
+## Traduire
 
-Cette fonction vous permet de traduire n'importe quel texte, mot ou phrase.
+Cette fonction vous permet de traduire n’importe quel texte, mot ou phrase.
 
-1. Collez ou écrivez le texte.
+1. Collez ou saisissez votre texte.
 2. Cliquez sur le bouton Traduire.
 
-Vous pouvez traduire en créole haïtien, anglais, français et espagnol.
+Vous pouvez traduire vers le créole haïtien, l’anglais, le français et l’espagnol.
 
 ---
 
-## ✍️ Réécrire
+## Réécrire
 
 Cette fonction améliore vos textes.
 
 Elle peut :
 
-* corriger les fautes
+* corriger les erreurs
 * rendre le texte plus professionnel
-* le rendre plus facile à comprendre
+* améliorer la lisibilité
 
-Elle est utile pour les e-mails, messages, devoirs et documents.
+Elle est utile pour les courriels, messages, devoirs et documents professionnels.
 
 ---
 
-## 📄 Résumer
+## Résumer
 
 Vous avez un texte trop long ?
 
 Collez-le puis utilisez le bouton Résumer.
 
-L'IA supprimera les informations inutiles et fournira une version plus courte et plus claire.
+L’IA supprimera les informations inutiles et produira une version plus courte et plus claire.
 
 ---
 
-## ❓ Quiz IA
+## Quiz IA
 
-Entrez un sujet et l'IA créera des questions et réponses pour vous aider à apprendre.
+Entrez un sujet et l’IA générera automatiquement des questions et réponses pour vous aider à apprendre.
 
 Exemples :
 
 * Mathématiques
-* Histoire de l'humanité
+* Histoire de l’humanité
 * Vie
 * Science
 
 ---
 
-## 🎬 Script TikTok
+## Script TikTok
 
 Entrez le sujet de la vidéo que vous souhaitez créer.
 
-L'IA générera :
+L’IA générera :
 
 * Accroche
 * Développement
-* Appel à l'Action
+* Appel à l’action
 
-Cela vous aide à créer des vidéos plus attrayantes.
+Cela vous aide à créer des vidéos plus engageantes.
 
 ---
 
-## 🎙️ Générer Audio
+## Générer un Audio
 
-Entrez le texte que vous souhaitez écouter.
+Saisissez le texte que vous souhaitez écouter.
 
-Choisissez votre voix préférée et l'IA générera l'audio pour vous.
+Choisissez votre voix préférée et l’IA générera l’audio pour vous.
 
 Idéal pour :
 
 * vidéos
 * podcasts
 * narration
-* contenu pour les réseaux sociaux
+* réseaux sociaux
 
 ---
 
-## 🖼️ Générer Image
+## Parler avec l’IA
 
-Décrivez l'image que vous souhaitez créer.
+Appuyez sur le bouton du microphone et parlez directement avec l’IA.
 
-Les meilleurs résultats proviennent de descriptions précises.
+L’IA écoutera votre voix, comprendra votre demande et répondra naturellement comme dans une conversation réelle.
+
+Idéal pour :
+
+* interaction mains libres
+* questions rapides
+* apprentissage des langues
+* accessibilité
+* conversations naturelles
+
+---
+
+## Générer une Image
+
+Décrivez l’image que vous souhaitez créer.
+
+Les meilleurs résultats proviennent de descriptions précises et détaillées.
 
 Exemple :
 
@@ -399,41 +444,41 @@ Exemple :
 
 ---
 
-## 💡 Conseils Pour de Meilleurs Résultats
+## Conseils pour de Meilleurs Résultats
 
-* Rédigez des questions claires.
-* Ajoutez plus de détails lorsque nécessaire.
-* Vérifiez les résultats de l'IA avant de les utiliser.
-* Utilisez la langue avec laquelle vous êtes le plus à l'aise.
+* Posez des questions claires.
+* Ajoutez des détails lorsque nécessaire.
+* Vérifiez les résultats générés avant de les utiliser.
+* Utilisez la langue avec laquelle vous êtes le plus à l’aise.
 
 ---
 
-Merci d'utiliser Bely AI Studio ❤️
+Merci d’utiliser Bely AI Studio.
+
+Nous espérons que cette plateforme vous aidera à apprendre, créer et travailler plus efficacement chaque jour.
+
 `,
 
-  es: `# 📘 Guía de Uso de Bely AI Studio
+  es: `# Guía de Uso de Bely AI Studio
 
 ¡Bienvenido a Bely AI Studio!
 
-Bely AI Studio es una plataforma de inteligencia artificial que te ayuda a crear contenido, aprender, trabajar y aumentar tu productividad más rápido.
+Bely AI Studio es una plataforma de inteligencia artificial diseñada para ayudarte a crear contenido, aprender, trabajar y aumentar tu productividad de forma más eficiente.
 
-## 🌐 Cambiar Idioma
+## Cambiar Idioma
 
 En la parte superior de la aplicación puedes elegir:
 
-🇭🇹 Kreyòl
+* Kreyòl
+* English
+* Français
+* Español
 
-🇺🇸 English
-
-🇫🇷 Français
-
-🇪🇸 Español
-
-Todas las funciones de IA se adaptarán al idioma seleccionado.
+Todas las funciones de IA se adaptarán automáticamente al idioma seleccionado.
 
 ---
 
-## 🤖 Preguntar a la IA
+## Preguntar a la IA
 
 Utiliza esta función para hacer cualquier pregunta.
 
@@ -447,18 +492,18 @@ Cuanto más clara sea tu pregunta, más útil será la respuesta de la IA.
 
 ---
 
-## 🌍 Traducir
+## Traducir
 
 Esta función te permite traducir cualquier texto, palabra o frase.
 
-1. Pega o escribe el texto.
+1. Pega o escribe tu texto.
 2. Haz clic en el botón Traducir.
 
-Puedes traducir a criollo haitiano, inglés, francés y español.
+Puedes traducir al criollo haitiano, inglés, francés y español.
 
 ---
 
-## ✍️ Reescribir
+## Reescribir
 
 Esta función mejora tus textos.
 
@@ -466,25 +511,25 @@ Puede:
 
 * corregir errores
 * hacer el texto más profesional
-* hacerlo más fácil de entender
+* mejorar la claridad
 
-Es útil para correos electrónicos, mensajes, tareas y documentos.
+Es útil para correos electrónicos, mensajes, tareas y documentos profesionales.
 
 ---
 
-## 📄 Resumir
+## Resumir
 
 ¿Tienes un texto demasiado largo?
 
 Pégalo y utiliza el botón Resumir.
 
-La IA eliminará la información innecesaria y proporcionará una versión más corta y clara.
+La IA eliminará la información innecesaria y generará una versión más breve y clara.
 
 ---
 
-## ❓ Quiz IA
+## Quiz IA
 
-Escribe un tema y la IA creará preguntas y respuestas para ayudarte a aprender.
+Escribe un tema y la IA generará preguntas y respuestas para ayudarte a aprender.
 
 Ejemplos:
 
@@ -495,7 +540,7 @@ Ejemplos:
 
 ---
 
-## 🎬 Script de TikTok
+## Script de TikTok
 
 Escribe el tema del video que deseas crear.
 
@@ -503,32 +548,48 @@ La IA generará:
 
 * Gancho
 * Desarrollo
-* Llamado a la Acción
+* Llamado a la acción
 
-Esto te ayuda a crear videos más atractivos.
+Esto te ayudará a crear contenido más atractivo.
 
 ---
 
-## 🎙️ Generar Audio
+## Generar Audio
 
 Escribe el texto que deseas escuchar.
 
-Elige la voz que prefieras y la IA generará el audio para ti.
+Elige tu voz favorita y la IA generará el audio para ti.
 
 Ideal para:
 
 * videos
 * podcasts
-* narración
+* narraciones
 * contenido para redes sociales
 
 ---
 
-## 🖼️ Generar Imagen
+## Hablar con IA
+
+Presiona el botón del micrófono y habla directamente con la IA.
+
+La IA escuchará tu voz, comprenderá tu solicitud y responderá de forma natural como en una conversación real.
+
+Ideal para:
+
+* interacción manos libres
+* preguntas rápidas
+* práctica de idiomas
+* accesibilidad
+* conversaciones naturales
+
+---
+
+## Generar Imagen
 
 Describe la imagen que deseas crear.
 
-Los mejores resultados provienen de descripciones precisas.
+Los mejores resultados se obtienen con descripciones precisas y detalladas.
 
 Ejemplo:
 
@@ -536,16 +597,19 @@ Ejemplo:
 
 ---
 
-## 💡 Consejos Para Obtener Mejores Resultados
+## Consejos para Obtener Mejores Resultados
 
-* Escribe preguntas claras.
+* Haz preguntas claras.
 * Proporciona más detalles cuando sea necesario.
-* Revisa los resultados de la IA antes de utilizarlos.
+* Revisa los resultados generados antes de utilizarlos.
 * Utiliza el idioma con el que te sientas más cómodo.
 
 ---
 
-Gracias por utilizar Bely AI Studio ❤️
+Gracias por utilizar Bely AI Studio.
+
+Esperamos que esta plataforma te ayude a aprender, crear y trabajar de manera más eficiente cada día.
+
 `
 
 };
