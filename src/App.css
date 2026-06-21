@@ -3489,6 +3489,13 @@ body,
 
 }
 
+.voice-user-message,
+.voice-ai-message {
+
+  max-width: 230px;
+
+}
+
 .voice-preview{
 
   background:#111827;
@@ -4313,6 +4320,99 @@ box-shadow:
   color:#60a5fa;
 
   transform:scale(1.1);
+
+}
+
+.voice-bubble{
+
+display:flex;
+
+align-items:center;
+display:flex;
+align-items:center;
+
+gap:12px;
+
+padding:12px;
+
+border-radius:16px;
+
+background:rgba(
+255,
+255,
+255,
+0.08
+);
+
+}
+
+.voice-duration {
+
+  min-width:40px;
+
+  text-align:center;
+
+}
+
+.voice-play-btn,
+.voice-replay-btn,
+.voice-download-btn{
+
+background:none;
+
+border:none;
+
+font-size:22px;
+
+cursor:pointer;
+
+color:white;
+
+}
+
+.voice-wave {
+
+  width: 50px;
+
+  height: 20px;
+
+  border-radius: 20px;
+
+  background: rgba(
+    255,
+    255,
+    255,
+    .15
+  );
+
+}
+
+.voice-wave.playing {
+
+  animation:
+    pulseWave .8s infinite;
+
+}
+
+@keyframes pulseWave {
+
+  0% {
+
+    transform: scaleX(1);
+
+  }
+
+  50% {
+
+    transform: scaleX(1.4);
+
+  }
+
+  100% {
+
+    transform: scaleX(1);
+
+  }
 
 }
 

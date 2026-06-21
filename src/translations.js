@@ -284,6 +284,8 @@ quizDescription:
 
 imageDescription:
 "Kreye bèl imaj ak entèlijans atifisyèl.",
+you: "Ou menm",
+ai: "IA",
 
   },
 
@@ -586,6 +588,8 @@ quizDescription:
 
 imageDescription:
 "Create stunning AI-generated images.",
+you: "You",
+ai: "AI",
 
   },
 
@@ -877,6 +881,8 @@ quizDescription:
 
 imageDescription:
 "Créez de superbes images avec l'IA.",
+ you: "Vous",
+ai: "IA",
 
   },
 
@@ -1179,6 +1185,8 @@ quizDescription:
 
 imageDescription:
 "Crea impresionantes imágenes con IA.",
+you: "Tú",
+ai: "IA",
 
   }
 

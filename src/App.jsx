@@ -56,7 +56,11 @@ import {
   HiSpeakerXMark,
   HiLockClosed,
   HiArrowLeft,
-  HiBars3
+  HiBars3,
+  HiPlay,
+  HiPause,
+  HiArrowPath,
+  HiArrowDownTray
 
 } from "react-icons/hi2";
 
@@ -102,6 +106,20 @@ const [imageLoading, setImageLoading] = useState(false);
 const [selectedImage, setSelectedImage] = useState(null);
 
 const [previewImage, setPreviewImage] = useState("");
+
+const [userAudioUrl,
+setUserAudioUrl] =
+useState(null);
+
+const mediaRecorderRef = useRef(null);
+
+const [audioChunks,
+setAudioChunks] =
+useState([]);
+
+const [pendingUserAudio,
+setPendingUserAudio] =
+useState(null);
 
 const [isListening, setIsListening] = useState(false);
 
@@ -157,6 +175,12 @@ useState([]);
 const [recording,setRecording] =
 useState(false);
 
+const [currentAudio, setCurrentAudio] =
+  useState(null);
+
+const [playingIndex, setPlayingIndex] =
+  useState(null);
+
 const [voiceText,setVoiceText] =
 useState("");
 
@@ -168,6 +192,9 @@ useState(false);
 
 const [showLockHint, setShowLockHint] =
 useState(false);
+
+const [isPlaying,setIsPlaying] =
+  useState(false);
 
 const chatEndRef = useRef(null);
 
@@ -210,26 +237,6 @@ useState("");
   const [activePage, setActivePage] = useState("home");
 
   const [showMenu, setShowMenu] = useState(false);
-
-  useEffect(() => {
-
-  if (
-
-    !recording &&
-
-    voiceText.trim()
-
-  ) {
-
-    sendVoiceMessage();
-
-  }
-
-}, [
-
-  recording
-
-]);
 
 useEffect(() => {
 
@@ -463,6 +470,197 @@ const speakText = (text) => {
 
 };
 
+const toggleAudio = (
+  msg,
+  index
+) => {
+
+  console.log(
+  "MSG TYPE =",
+  msg.type
+);
+
+console.log(
+  "MSG AUDIO =",
+  msg.audioUrl
+);
+
+  if (!msg.audioUrl) return;
+
+  if (
+  currentAudio &&
+  playingIndex === index
+) {
+
+  if (
+    currentAudio.paused
+  ) {
+
+    currentAudio.play();
+
+    setIsPlaying(true);
+
+  } else {
+
+    currentAudio.pause();
+
+    setIsPlaying(false);
+
+  }
+
+  return;
+
+}
+
+  if (currentAudio) {
+
+    currentAudio.pause();
+
+setIsPlaying(false);
+
+    currentAudio.currentTime = 0;
+
+  }
+
+  const audio =
+document.createElement("audio");
+
+audio.src =
+msg.audioUrl;
+
+audio.preload = "auto";
+
+audio.play()
+.catch(console.error);
+
+  setCurrentAudio(audio);
+
+  setPlayingIndex(index);
+
+  audio.onloadedmetadata =
+() => {
+
+  console.log(
+    "DURATION =",
+    audio.duration
+  );
+
+  if (
+    audio.duration === Infinity
+  ) {
+
+    audio.currentTime =
+      1e101;
+
+    audio.ontimeupdate =
+      () => {
+
+        audio.ontimeupdate =
+          null;
+
+        audio.currentTime =
+          0;
+
+      };
+
+  }
+
+};
+
+console.log(
+  "PLAYING:",
+  msg.audioUrl
+);
+
+audio.onerror =
+(e) => {
+
+  console.log(
+    "AUDIO ERROR:",
+    e
+  );
+
+};
+
+audio.oncanplay =
+() => {
+
+  console.log(
+    "CAN PLAY"
+  );
+
+};
+
+  audio.play();
+
+setIsPlaying(true);
+
+setPlayingIndex(index);
+
+  audio.onended = () => {
+
+  setPlayingIndex(null);
+
+  setIsPlaying(false);
+
+  console.log(
+  "AUDIO URL =",
+  msg.audioUrl
+);
+
+console.log(
+  "TYPE =",
+  msg.type
+);
+
+};
+
+};
+
+
+const playVoiceMessage = (
+  audioUrl,
+  index
+) => {
+
+  if (
+    currentAudio &&
+    playingIndex === index
+  ) {
+
+    currentAudio.pause();
+
+    setPlayingIndex(null);
+
+    return;
+
+  }
+
+  if (currentAudio) {
+
+    currentAudio.pause();
+
+    currentAudio.currentTime = 0;
+
+  }
+
+  const audio =
+    new Audio(audioUrl);
+
+  audio.play();
+
+  setCurrentAudio(audio);
+
+  setPlayingIndex(index);
+
+  audio.onended = () => {
+
+    setPlayingIndex(null);
+
+  };
+
+};
+
 const startVoiceInputWeb = () => {
 
   const SpeechRecognitionWeb =
@@ -513,9 +711,15 @@ const startVoiceInputWeb = () => {
 
   recognition.onend = () => {
 
-    setIsListening(false);
+  setRecording(false);
 
-  };
+  if (voiceText.trim()) {
+
+    sendVoiceMessage();
+
+  }
+
+};
 
 };
 
@@ -598,62 +802,198 @@ const startVoiceInput = async () => {
 
 };
 
-const startVoiceRecordWeb = () => {
+const startVoiceRecordWeb = async () => {
 
-  const SpeechRecognitionWeb =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
+  try {
 
-  if (!SpeechRecognitionWeb) {
+    const stream =
 
-    alert(
-      "Voice recognition pa sipòte sou navigatè sa."
+      await navigator
+      .mediaDevices
+      .getUserMedia({
+
+        audio:true
+
+      });
+
+    const recorder =
+  new MediaRecorder(
+    stream,
+    {
+      mimeType:
+        "audio/webm;codecs=opus"
+    }
+  );
+
+console.log(
+  "RECORDER TYPE:",
+  recorder.mimeType
+);
+
+  console.log(
+  "MIME TYPE =",
+  recorder.mimeType
+);
+
+console.log(
+  "MIME =",
+  recorder.mimeType
+);
+
+    const chunks = [];
+
+    recorder.ondataavailable =
+  (event) => {
+
+    console.log(
+      "DATA SIZE =",
+      event.data.size
     );
 
-    return;
+    if (
+      event.data &&
+      event.data.size > 0
+    ) {
+
+      chunks.push(
+        event.data
+      );
+
+    }
+
+  };
+
+    recorder.onstop = async () => {
+
+      console.log(
+  "ONSTOP"
+);
+
+  const blob = new Blob(
+  chunks,
+  {
+    type: "audio/webm"
+  }
+);
+
+    console.log(
+  "CHUNKS =",
+  chunks.length
+);
+
+console.log(
+  "FIRST CHUNK SIZE =",
+  chunks[0]?.size
+);
+
+console.log(
+  "TOTAL SIZE =",
+  blob.size
+);
+
+  const audioUrl =
+
+    URL.createObjectURL(
+      blob
+    );
+
+  setPendingUserAudio(
+    audioUrl
+  );
+
+  setUserAudioUrl(
+    audioUrl
+  );
+
+  setAudioChunks(
+    chunks
+  );
+
+  if (
+    voiceText.trim()
+  ) {
+
+    setTimeout(() => {
+
+      sendVoiceMessage(
+        audioUrl
+      );
+
+    }, 100);
 
   }
 
-  const recognition =
-    new SpeechRecognitionWeb();
+};
 
-  recognition.lang =
-    language === "en"
+console.log(
+  "START RECORD"
+);
+
+    recorder.start(1000);
+
+    mediaRecorderRef.current = recorder;
+
+    const SpeechRecognitionWeb =
+
+      window.SpeechRecognition ||
+      window.webkitSpeechRecognition;
+
+    const recognition =
+
+      new SpeechRecognitionWeb();
+
+    recognition.lang =
+
+      language === "en"
       ? "en-US"
       : language === "es"
       ? "es-ES"
       : "fr-FR";
 
-  recognition.continuous = false;
+    recognition.continuous =
+      false;
 
-  recognition.interimResults = true;
+    recognition.interimResults =
+      true;
 
-  recognition.start();
+    recognition.start();
 
-  recognition.onresult = (event) => {
+    recognition.onresult =
+      (event) => {
 
-    const transcript = Array.from(
-      event.results
-    )
-      .map(result => result[0].transcript)
-      .join("");
+        const transcript =
 
-    setVoiceText(transcript);
+          Array.from(
+            event.results
+          )
 
-  };
+          .map(
+            result =>
+            result[0].transcript
+          )
 
-  recognition.onend = () => {
+          .join("");
 
-    setRecording(false);
+        setVoiceText(
+          transcript
+        );
 
-  };
+      };
 
-  window.voiceRecognitionRef =
-    recognition;
+    window.voiceRecognitionRef =
+      recognition;
+
+  } catch(err){
+
+    console.log(err);
+
+  }
 
 };
 
 const startVoiceRecord = async () => {
+
+  if (recording) return;
 
   setRecording(true);
 
@@ -702,33 +1042,40 @@ const startVoiceRecord = async () => {
 
 };
 
-const stopVoiceRecord = async () => {
+const stopVoiceRecord =
+async () => {
 
   setShowLockHint(false);
 
   if (
-    !Capacitor.isNativePlatform()
+  !Capacitor.isNativePlatform()
+) {
+
+  if (
+    window.voiceRecognitionRef
   ) {
 
-    if (
-      window.voiceRecognitionRef
-    ) {
-
-      window.voiceRecognitionRef.stop();
-
-    }
-
-    setRecording(false);
-
-    return;
+    window.voiceRecognitionRef.stop();
 
   }
+
+  if (mediaRecorderRef.current) {
+
+  mediaRecorderRef.current.stop();
+
+}
+
+  setRecording(false);
+
+  return;
+
+}
 
   try {
 
     await SpeechRecognition.stop();
 
-  } catch(err) {
+  } catch(err){
 
     console.log(err);
 
@@ -738,22 +1085,92 @@ const stopVoiceRecord = async () => {
 
 };
 
-const sendVoiceMessage = async () => {
+const generateVoiceAIAudio = async (
+  textToSpeak
+) => {
+
+  try {
+
+    const response = await fetch(
+      "https://bely-studio-backend.onrender.com/generate",
+      {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
+
+        body: JSON.stringify({
+
+          text: textToSpeak,
+
+          voice
+
+        })
+
+      }
+    );
+
+    const data =
+      await response.json();
+
+    if(data.success){
+
+      return `https://bely-studio-backend.onrender.com/audio/${data.audio}?t=${Date.now()}`;
+
+    }
+
+  } catch(err){
+
+    console.log(err);
+
+  }
+
+  return null;
+
+};
+
+const sendVoiceMessage = async (
+  recordedAudioUrl = null
+) => {
 
   if (!voiceText.trim()) return;
 
-  const userMessage = voiceText;
+  const userMessage =
+    voiceText;
+
+const currentUserAudio =
+
+  recordedAudioUrl ||
+
+  pendingUserAudio ||
+
+  userAudioUrl;
 
   setVoiceMessages((prev) => [
 
     ...prev,
 
     {
+
       type:"user",
-      text:userMessage
+
+      text:userMessage,
+
+      audioUrl:
+        currentUserAudio,
+
+      duration:t.you
+
     }
 
   ]);
+
+  setPendingUserAudio(
+  null
+);
 
   setVoiceText("");
 
@@ -818,28 +1235,28 @@ ${userMessage}
 
     .trim();
 
-  setVoiceMessages((prev)=>([
+  const audioUrl =
+  await generateVoiceAIAudio(
+    cleanAnswer
+  );
 
-    ...prev,
+setVoiceMessages((prev)=>([
 
-    {
-  type:"ai",
-  text:cleanAnswer
+  ...prev,
 
-  .replace(/#/g,"")
+  {
 
-  .replace(/\*/g,"")
+    type:"ai",
 
-  .replace(/=/g,"")
+    text:cleanAnswer,
 
-  .replace(/_/g,"")
+    audioUrl,
 
-  .replace(/-{3,}/g,"")
+    duration:t.ai
 
-  .trim()
-}
+  }
 
-  ]));
+]));
 
   const cleanSpeech =
 
@@ -2958,20 +3375,23 @@ if (activePage === "voice-ai") {
 
           <button
   className="back-btn"
-  onClick={() =>
-    setActivePage("home")
+  onClick={() => {
+
+  if (currentAudio) {
+
+    currentAudio.pause();
+
+    currentAudio.currentTime = 0;
+
   }
+
+  setPlayingIndex(null);
+
+  setActivePage("home");
+
+}}
 >
   <HiArrowLeft />
-</button>
-
-          <button
-  className="voice-stop-btn"
-  onClick={() =>
-    speechSynthesis.cancel()
-  }
->
-  <HiSpeakerXMark />
 </button>
 
           <h1 className="ai-title">
@@ -3002,20 +3422,85 @@ if (activePage === "voice-ai") {
 
           {voiceMessages.map((msg,index)=>(
 
-            <div
-              key={index}
-              className={
-                msg.type === "user"
-                ? "voice-user-message"
-                : "voice-ai-message"
-              }
-            >
+  <div
+    key={index}
+    className={
+      msg.type === "user"
+        ? "voice-user-message"
+        : "voice-ai-message"
+    }
+  >
 
-              {msg.text}
+    <div className="voice-bubble">
 
-            </div>
+      <button
+  className="voice-play-btn"
+  onClick={() =>
+    toggleAudio(
+      msg,
+      index
+    )
+  }
+>
 
-          ))}
+  {
+
+    playingIndex === index &&
+
+    currentAudio &&
+
+    !currentAudio.paused
+
+      ? <HiPause />
+
+      : <HiPlay />
+
+  }
+
+</button>
+
+      <div
+  className={
+    playingIndex === index
+      ? "voice-wave playing"
+      : "voice-wave"
+  }
+/>
+
+      <span className="voice-duration">
+
+        {msg.duration || "0:00"}
+
+      </span>
+
+      {msg.type === "ai" &&
+ msg.audioUrl && (
+
+        <>
+
+          {msg.type === "ai" && (
+
+<a
+  href={msg.audioUrl}
+  download
+  className="voice-download-btn"
+>
+
+<HiArrowDownTray />
+
+</a>
+
+)}
+
+        </>
+
+      )}
+
+    </div>
+
+  </div>
+
+))}
 
           {voiceLoading && (
 
