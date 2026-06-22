@@ -1240,15 +1240,23 @@ ${userMessage}
     cleanAnswer
   );
 
-setVoiceMessages((prev) => [
+setVoiceMessages((prev)=>([
+
   ...prev,
+
   {
-    type: "ai",
-    text: finalAnswer,
-    audioUrl: audioUrl,
-    duration: "0:00"
+
+    type:"ai",
+
+    text:cleanAnswer,
+
+    audioUrl,
+
+    duration:t.ai
+
   }
-]);
+
+]));
 
   const cleanSpeech =
 
