@@ -123,8 +123,7 @@ useState(null);
 
 const [isListening, setIsListening] = useState(false);
 
-  const [voice, setVoice] =
-  useState("male");
+  const [voice, setVoice] = useState("fr");
   const [language, setLanguage] =
   useState("ht");
   console.log("LANG =", language);
@@ -262,6 +261,8 @@ useEffect(() => {
   setShowMenu(false);
   return;
 
+
+  
 }
 
 if (activePage !== "home") {
@@ -616,7 +617,6 @@ console.log(
 };
 
 };
-
 
 const playVoiceMessage = (
   audioUrl,
@@ -3049,26 +3049,26 @@ if (activePage === "audio") {
   {t.selectVoice}
 </h3>
 
-          <select
-            value={voice}
-            onChange={(e) =>
-              setVoice(e.target.value)
-            }
-          >
+<select
+  value={voice}
+  onChange={(e) =>
+    setVoice(e.target.value)
+  }
+>
 
-            <option value="male">
-              {t.maleVoice}
-            </option>
+  <option value="fr">
+    🇫🇷 Français
+  </option>
 
-            <option value="female">
-              {t.femaleVoice}
-            </option>
+  <option value="en">
+    🇺🇸 English
+  </option>
 
-            <option value="narrator">
-              {t.narratorVoice}
-            </option>
+  <option value="es">
+    🇪🇸 Español
+  </option>
 
-          </select>
+</select>
 
         </div>
 
@@ -3533,23 +3533,31 @@ if (activePage === "voice-ai") {
           <div className="voice-bottom-bar">
 
             <button
+  className={
+    recording
+      ? "voice-record-btn recording"
+      : "voice-record-btn"
+  }
 
-              className={
-                recording
-                  ? "voice-record-btn recording"
-                  : "voice-record-btn"
-              }
+  onClick={() => {
 
-              onMouseDown={startVoiceRecord}
-              onMouseUp={stopVoiceRecord}
-              onTouchStart={startVoiceRecord}
-              onTouchEnd={stopVoiceRecord}
+    if (recording) {
 
-            >
+      stopVoiceRecord();
 
-              {recording ? "🛑" : "🎙️"}
+    } else {
 
-            </button>
+      startVoiceRecord();
+
+    }
+
+  }}
+
+>
+
+  {recording ? "🛑" : "🎙️"}
+
+</button>
 
           </div>
 
@@ -3727,7 +3735,6 @@ if (activePage === "image") {
 }
 
   return (
-    
 
   <div className="container">
 
@@ -3762,7 +3769,6 @@ if (activePage === "image") {
       setActivePage("home")
     }
   >
-
     <img
       src={logo}
       alt="Bely AI Studio"
