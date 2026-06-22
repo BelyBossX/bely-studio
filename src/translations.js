@@ -34,7 +34,7 @@ rewriteLoading:
 
 summaryTitle: "Rezime",
 summaryPlaceholder:
-  "Ekri oubyen kole tèks pou rezime a...",
+  "Ekri tèks pou rezime a...",
 summaryButton: "Rezime",
 summaryLoading:
   "IA a ap fè rezime a...",
@@ -235,7 +235,7 @@ name: "Non",
   name: "Non",
   microphonePermission:
 "Tanpri bay aplikasyon an aksè ak mikwo a",
-  voiceAI: "Pale ak AI",
+  voiceAI: "Pale ak IA",
 
 voiceAITitle: "Pale ak IA",
 

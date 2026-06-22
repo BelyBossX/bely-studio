@@ -12,6 +12,10 @@ import { Capacitor } from "@capacitor/core";
 
 import { HiMiniMicrophone } from "react-icons/hi2";
 
+import {
+ HiStop
+} from "react-icons/hi";
+
 import translations from "./translations.js";
 
 import guides from "./guides";
@@ -421,6 +425,44 @@ useEffect(() => {
       }
 
     }
+  );
+
+}, []);
+
+useEffect(() => {
+
+  const handleResult = (data) => {
+
+    if (
+      data.matches &&
+      data.matches.length > 0
+    ) {
+
+      const transcript =
+        data.matches[0];
+
+      setVoiceText(transcript);
+
+      stopVoiceRecord();
+
+      setTimeout(() => {
+
+        sendVoiceMessage();
+
+      }, 300);
+
+    }
+
+  };
+
+  SpeechRecognition.addListener(
+    "partialResults",
+    handleResult
+  );
+
+  SpeechRecognition.addListener(
+    "results",
+    handleResult
   );
 
 }, []);
@@ -1024,7 +1066,7 @@ const startVoiceRecord = async () => {
 
       maxResults: 1,
 
-      partialResults: true,
+      partialResults: false,
 
       popup: false
 
@@ -1133,13 +1175,17 @@ const generateVoiceAIAudio = async (
 };
 
 const sendVoiceMessage = async (
-  recordedAudioUrl = null
+  recordedAudioUrl = null,
+  transcriptText = null
 ) => {
 
-  if (!voiceText.trim()) return;
-
   const userMessage =
+
+    transcriptText ||
+
     voiceText;
+
+  if (!userMessage.trim()) return;
 
 const currentUserAudio =
 
@@ -3555,7 +3601,11 @@ if (activePage === "voice-ai") {
 
 >
 
-  {recording ? "🛑" : "🎙️"}
+  {
+ recording
+ ? <HiStop />
+ : <HiMiniMicrophone />
+}
 
 </button>
 
