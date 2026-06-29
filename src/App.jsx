@@ -12,10 +12,6 @@ import { Capacitor } from "@capacitor/core";
 
 import { HiMiniMicrophone } from "react-icons/hi2";
 
-import {
- HiStop
-} from "react-icons/hi";
-
 import translations from "./translations.js";
 
 import guides from "./guides";
@@ -80,9 +76,36 @@ import {
   FaRobot
 } from "react-icons/fa";
 
+import { HiPencil } from "react-icons/hi2";
+import { FaTrash } from "react-icons/fa";
+
 function App() {  
 
 const isNative = Capacitor.isNativePlatform();
+
+const [showPlans, setShowPlans] =
+useState(false);
+
+const [credits,setCredits] =
+useState(0);
+
+const [user,setUser] =
+useState(null);
+
+const [loginEmail,setLoginEmail] =
+useState("");
+
+const [loginPassword,setLoginPassword] =
+useState("");
+
+const [signupName,setSignupName] =
+useState("");
+
+const [signupEmail,setSignupEmail] =
+useState("");
+
+const [signupPassword,setSignupPassword] =
+useState("");
 
 const [text, setText] = useState("");
 
@@ -201,6 +224,8 @@ const [isPlaying,setIsPlaying] =
 
 const chatEndRef = useRef(null);
 
+const transcriptRef = useRef("");
+
 const tiktokLabels = {
 
   ht: {
@@ -317,6 +342,60 @@ useState(false);
 const [showSignup, setShowSignup] =
 useState(false);
 
+const [showProfile,
+setShowProfile] =
+useState(false);
+
+const [profilePhoto, setProfilePhoto] =
+useState(
+  localStorage.getItem("bely_photo") || ""
+);
+
+const [avatar, setAvatar] =
+useState(
+  localStorage.getItem("bely_avatar") || ""
+);
+
+const [offline,
+setOffline] =
+useState(false);
+
+useEffect(() => {
+
+  const goOffline =
+    () =>
+      setOffline(true);
+
+  const goOnline =
+    () =>
+      setOffline(false);
+
+  window.addEventListener(
+    "offline",
+    goOffline
+  );
+
+  window.addEventListener(
+    "online",
+    goOnline
+  );
+
+  return () => {
+
+    window.removeEventListener(
+      "offline",
+      goOffline
+    );
+
+    window.removeEventListener(
+      "online",
+      goOnline
+    );
+
+  };
+
+}, []);
+
 const [email, setEmail] =
 useState("");
 
@@ -371,7 +450,19 @@ useState({
 const estimatedSeconds =
   Math.ceil(wordCount / 2.5);
 
-  
+const logout = () => {
+
+  localStorage.removeItem(
+    "bely_user"
+  );
+
+  localStorage.removeItem(
+    "bely_token"
+  );
+
+  setUser(null);
+
+};
 
 useEffect(() => {
 
@@ -385,6 +476,30 @@ useEffect(() => {
     setHistory(
       JSON.parse(savedHistory)
     );
+
+  }
+
+}, []);
+
+useEffect(() => {
+
+  const savedUser =
+    localStorage.getItem(
+      "bely_user"
+    );
+
+  if (savedUser) {
+
+    const parsed =
+      JSON.parse(savedUser);
+
+    setUser(parsed);
+
+    setCredits(
+      parsed.freeCredits || 0
+    );
+
+    refreshCredits();
 
   }
 
@@ -425,44 +540,6 @@ useEffect(() => {
       }
 
     }
-  );
-
-}, []);
-
-useEffect(() => {
-
-  const handleResult = (data) => {
-
-    if (
-      data.matches &&
-      data.matches.length > 0
-    ) {
-
-      const transcript =
-        data.matches[0];
-
-      setVoiceText(transcript);
-
-      stopVoiceRecord();
-
-      setTimeout(() => {
-
-        sendVoiceMessage();
-
-      }, 300);
-
-    }
-
-  };
-
-  SpeechRecognition.addListener(
-    "partialResults",
-    handleResult
-  );
-
-  SpeechRecognition.addListener(
-    "results",
-    handleResult
   );
 
 }, []);
@@ -751,18 +828,6 @@ const startVoiceInputWeb = () => {
 
   };
 
-  recognition.onend = () => {
-
-  setRecording(false);
-
-  if (voiceText.trim()) {
-
-    sendVoiceMessage();
-
-  }
-
-};
-
 };
 
 const startVoiceInput = async () => {
@@ -907,37 +972,32 @@ console.log(
 
     recorder.onstop = async () => {
 
-      console.log(
-  "ONSTOP"
-);
+  console.log("ONSTOP");
 
   const blob = new Blob(
-  chunks,
-  {
-    type: "audio/webm"
-  }
-);
+    chunks,
+    {
+      type: "audio/webm"
+    }
+  );
 
-    console.log(
-  "CHUNKS =",
-  chunks.length
-);
+  console.log(
+    "CHUNKS =",
+    chunks.length
+  );
 
-console.log(
-  "FIRST CHUNK SIZE =",
-  chunks[0]?.size
-);
+  console.log(
+    "FIRST CHUNK SIZE =",
+    chunks[0]?.size
+  );
 
-console.log(
-  "TOTAL SIZE =",
-  blob.size
-);
+  console.log(
+    "TOTAL SIZE =",
+    blob.size
+  );
 
   const audioUrl =
-
-    URL.createObjectURL(
-      blob
-    );
+    URL.createObjectURL(blob);
 
   setPendingUserAudio(
     audioUrl
@@ -951,19 +1011,20 @@ console.log(
     chunks
   );
 
-  if (
-    voiceText.trim()
-  ) {
+  console.log(
+    "AUDIO READY =",
+    audioUrl
+  );
 
-    setTimeout(() => {
+  console.log(
+    "TRANSCRIPT REF =",
+    transcriptRef.current
+  );
 
-      sendVoiceMessage(
-        audioUrl
-      );
-
-    }, 100);
-
-  }
+  sendVoiceMessage(
+    audioUrl,
+    transcriptRef.current
+  );
 
 };
 
@@ -1000,27 +1061,36 @@ console.log(
 
     recognition.start();
 
-    recognition.onresult =
-      (event) => {
+    recognition.onresult = (
+  event
+) => {
 
-        const transcript =
+  const transcript =
 
-          Array.from(
-            event.results
-          )
+    Array.from(
+      event.results
+    )
 
-          .map(
-            result =>
-            result[0].transcript
-          )
+    .map(
+      result =>
+      result[0].transcript
+    )
 
-          .join("");
+    .join("");
 
-        setVoiceText(
-          transcript
-        );
+  console.log(
+    "TRANSCRIPT =",
+    transcript
+  );
 
-      };
+  transcriptRef.current =
+    transcript;
+
+  setVoiceText(
+    transcript
+  );
+
+};
 
     window.voiceRecognitionRef =
       recognition;
@@ -1053,39 +1123,68 @@ const startVoiceRecord = async () => {
 
   try {
 
-    await SpeechRecognition.start({
+  const permission =
+    await SpeechRecognition.requestPermissions();
 
-      language:
-        language === "ht"
-          ? "fr-FR"
-          : language === "en"
-          ? "en-US"
-          : language === "es"
-          ? "es-ES"
-          : "fr-FR",
+  console.log(
+    "PERMISSION =",
+    permission
+  );
 
-      maxResults: 1,
+  if (
+    !permission.speechRecognition
+  ) {
 
-      partialResults: false,
-
-      popup: false
-
-    });
-
-  } catch(err) {
-
-    console.log(err);
+    alert(
+      "Microphone permission denied"
+    );
 
     setRecording(false);
 
     setShowLockHint(false);
 
+    return;
+
   }
+
+  await SpeechRecognition.start({
+
+    language:
+      language === "ht"
+        ? "fr-FR"
+        : language === "en"
+        ? "en-US"
+        : language === "es"
+        ? "es-ES"
+        : "fr-FR",
+
+    maxResults: 1,
+
+    partialResults: true,
+
+    popup: true
+
+  });
+
+} catch(err) {
+
+  console.log(
+    "VOICE ERROR =",
+    err
+  );
+
+  setRecording(false);
+
+  setShowLockHint(false);
+
+}
 
 };
 
 const stopVoiceRecord =
 async () => {
+
+  console.log("STOP BUTTON CLICKED");
 
   setShowLockHint(false);
 
@@ -1176,71 +1275,63 @@ const generateVoiceAIAudio = async (
 
 const sendVoiceMessage = async (
   recordedAudioUrl = null,
-  transcriptText = null
+  transcriptText = ""
 ) => {
 
+  if (!user) {
+    setShowLogin(true);
+    return;
+  }
+
+  if (!checkCredits()) {
+    return;
+  }
+
   const userMessage =
-
-    transcriptText ||
-
-    voiceText;
+    transcriptText || voiceText;
 
   if (!userMessage.trim()) return;
 
-const currentUserAudio =
-
-  recordedAudioUrl ||
-
-  pendingUserAudio ||
-
-  userAudioUrl;
+  const currentUserAudio =
+    recordedAudioUrl ||
+    pendingUserAudio ||
+    userAudioUrl;
 
   setVoiceMessages((prev) => [
-
     ...prev,
-
     {
-
-      type:"user",
-
-      text:userMessage,
-
-      audioUrl:
-        currentUserAudio,
-
-      duration:t.you
-
+      type: "user",
+      text: userMessage,
+      audioUrl: currentUserAudio,
+      duration: t.you
     }
-
   ]);
 
-  setPendingUserAudio(
-  null
-);
-
+  setPendingUserAudio(null);
   setVoiceText("");
 
   try {
 
     setVoiceLoading(true);
 
-    const response =
-      await fetch(
+    const token =
+      localStorage.getItem("bely_token");
 
-        "https://bely-studio-backend.onrender.com/ask-ai",
+    const response = await fetch(
+      "https://bely-studio-backend.onrender.com/ask-ai",
+      {
+        method: "POST",
 
-        {
+        headers: {
+          "Content-Type":
+            "application/json",
 
-          method:"POST",
+          Authorization:
+            `Bearer ${token}`
+        },
 
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-
-          body:JSON.stringify({
-
-            prompt:`
+        body: JSON.stringify({
+          prompt: `
 
 You are Bely AI.
 
@@ -1252,90 +1343,75 @@ User:
 
 ${userMessage}
 
-            `
-
-          })
-
-        }
-
-      );
+`
+        })
+      }
+    );
 
     const data =
       await response.json();
 
-    if(data.success){
+    if (!data.success) {
 
-      const cleanAnswer =
+      if (
+        data.code === "NO_CREDITS"
+      ) {
 
-  data.answer
+        await refreshCredits();
 
-    .replace(/#+/g,"")
+        alert(
+          t.noCredits ||
+          "No credits"
+        );
 
-    .replace(/\*+/g,"")
+        return;
+      }
 
-    .replace(/=+/g,"")
+      return;
+    }
 
-    .replace(/_{2,}/g,"")
+    await refreshCredits();
 
-    .replace(/-{3,}/g,"")
+    const cleanAnswer =
+      data.answer
+        .replace(/#+/g, "")
+        .replace(/\*+/g, "")
+        .replace(/=+/g, "")
+        .replace(/_{2,}/g, "")
+        .replace(/-{3,}/g, "")
+        .trim();
 
-    .trim();
+    const audioUrl =
+      await generateVoiceAIAudio(
+        cleanAnswer
+      );
 
-  const audioUrl =
-  await generateVoiceAIAudio(
-    cleanAnswer
-  );
+    setVoiceMessages((prev) => [
+      ...prev,
+      {
+        type: "ai",
+        text: cleanAnswer,
+        audioUrl,
+        duration: t.ai
+      }
+    ]);
 
-setVoiceMessages((prev)=>([
+    speakText(cleanAnswer);
 
-  ...prev,
-
-  {
-
-    type:"ai",
-
-    text:cleanAnswer,
-
-    audioUrl,
-
-    duration:t.ai
-
-  }
-
-]));
-
-  const cleanSpeech =
-
-  data.answer
-
-    .replace(/#+/g,"")
-
-    .replace(/\*+/g,"")
-
-    .replace(/=+/g,"")
-
-    .replace(/_{2,}/g,"")
-
-    .replace(/-{3,}/g,"")
-
-    .trim();
-
-speakText(
-  cleanSpeech
-);
-
-}
-
-  } catch(err){
+  } catch (err) {
 
     console.log(err);
+
+    alert(
+      t.connectionError ||
+      "Connection error"
+    );
 
   } finally {
 
     setVoiceLoading(false);
 
   }
-
 };
 
 const handleFileUpload = (event) => {
@@ -1358,10 +1434,27 @@ const handleFileUpload = (event) => {
 
 const generateAudio = async () => {
 
-  console.log("BOUTON AN KLIKE");
+  if (!checkCredits()) {
+    return;
+  }
+
+  if (!user) {
+    setShowLogin(true);
+    return;
+  }
 
   if (text.trim() === "") {
-    alert(t.microphonePermission);
+
+    alert(
+      language === "ht"
+        ? "Tanpri antre yon tèks."
+        : language === "fr"
+        ? "Veuillez entrer un texte."
+        : language === "es"
+        ? "Por favor escribe un texto."
+        : "Please enter a text."
+    );
+
     return;
   }
 
@@ -1369,24 +1462,44 @@ const generateAudio = async () => {
 
     setLoading(true);
 
-    const response = await fetch(
-      "https://bely-studio-backend.onrender.com/generate",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          text,
-          voice,
-        }),
-      }
+    const token =
+      localStorage.getItem(
+        "bely_token"
+      );
+
+    const response =
+      await fetch(
+        "https://bely-studio-backend.onrender.com/generate",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+
+            Authorization:
+              `Bearer ${token}`
+          },
+
+          body: JSON.stringify({
+            text,
+            voice
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    console.log(
+      "STATUS:",
+      response.status
     );
 
-    const data = await response.json();
-
-console.log("STATUS:", response.status);
-console.log("DATA:", data);
+    console.log(
+      "DATA:",
+      data
+    );
 
     if (data.success) {
 
@@ -1395,56 +1508,88 @@ console.log("DATA:", data);
 
       setAudioUrl(audioLink);
 
-      console.log("audioUrl mete:", audioLink);
-
-setTimeout(() => {
-  console.log("audioUrl apre 1 segonn:", audioLink);
-}, 1000);
-
       const newItem = {
+
         text,
-        date: new Date().toLocaleTimeString(),
-        textContent: text,
-        audio: audioLink,
+
+        date:
+          new Date()
+            .toLocaleTimeString(),
+
+        textContent:
+          text,
+
+        audio:
+          audioLink
+
       };
 
       setHistory((prev) => {
 
         const updatedHistory = [
+
           newItem,
-          ...prev,
+
+          ...prev
+
         ].slice(0, 20);
 
         return updatedHistory;
 
       });
 
-      setStats((prev) => {
+      setStats((prev) => ({
 
-        const updatedStats = {
+        totalAudios:
+          prev.totalAudios + 1,
 
-          totalAudios:
-            prev.totalAudios + 1,
+        totalWords:
+          prev.totalWords +
+          text
+            .split(/\s+/)
+            .length,
 
-          totalWords:
-            prev.totalWords +
-            text.split(/\s+/).length,
+        totalAI:
+          prev.totalAI,
 
-          totalAI:
-            prev.totalAI,
+        lastUsed:
+          new Date()
+            .toLocaleString()
 
-          lastUsed:
-            new Date().toLocaleString()
+      }));
 
-        };
-
-        return updatedStats;
-
-      });
+      await refreshCredits();
 
     } else {
 
-      alert("Erè pandan jenerasyon odyo a");
+      if (
+        data.code ===
+        "NO_CREDITS"
+      ) {
+
+        alert(
+          language === "ht"
+            ? "Ou pa gen kredi ankò."
+            : language === "fr"
+            ? "Vous n'avez plus de crédits."
+            : language === "es"
+            ? "No tienes más créditos."
+            : "You don't have any credits left."
+        );
+
+      } else {
+
+        alert(
+          language === "ht"
+            ? "Erè pandan odyo a ap jenere a."
+            : language === "fr"
+            ? "Erreur lors de la génération audio."
+            : language === "es"
+            ? "Error al generar el audio."
+            : "Error generating audio."
+        );
+
+      }
 
     }
 
@@ -1452,7 +1597,15 @@ setTimeout(() => {
 
     console.error(error);
 
-    alert("Erè koneksyon ak backend la");
+    alert(
+      language === "ht"
+        ? "Erè koneksyon ak sèvè a."
+        : language === "fr"
+        ? "Erreur de connexion avec le serveur."
+        : language === "es"
+        ? "Error de conexión con el servidor."
+        : "Connection error with server."
+    );
 
   } finally {
 
@@ -1464,71 +1617,144 @@ setTimeout(() => {
 
 const generateImage = async () => {
 
+  if (!checkCredits()) {
+    return;
+  }
+
+  if (!user) {
+    setShowLogin(true);
+    return;
+  }
+
   if (!imagePrompt.trim()) {
 
-    alert("Ekri sa ou vle kreye");
+    alert(
+      language === "ht"
+        ? "Ekri sa w vle kreye a."
+        : language === "fr"
+        ? "Écrivez ce que vous voulez créer."
+        : language === "es"
+        ? "Escribe lo que quieres crear."
+        : "Write what you want to create."
+    );
 
     return;
-
   }
 
   try {
 
     setImageLoading(true);
 
-    console.log("IMAGE PROMPT =", imagePrompt);
+    const token =
+      localStorage.getItem(
+        "bely_token"
+      );
 
-console.log(
-  "BODY VOYE =",
-  JSON.stringify({
-    prompt: imagePrompt,
-  })
-);
-
-    const response = await fetch(
-      "https://bely-studio-backend.onrender.com/generate-image",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          prompt: imagePrompt,
-        }),
-      }
+    console.log(
+      "IMAGE PROMPT =",
+      imagePrompt
     );
 
-    const data = await response.json();
+    const response =
+      await fetch(
+        "https://bely-studio-backend.onrender.com/generate-image",
+        {
+          method: "POST",
 
-    console.log("IMAGE DATA:", data);
+          headers: {
+            "Content-Type":
+              "application/json",
+
+            Authorization:
+              `Bearer ${token}`
+          },
+
+          body: JSON.stringify({
+            prompt:
+              imagePrompt
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    console.log(
+      "IMAGE DATA:",
+      data
+    );
 
     if (data.success) {
 
-      setGeneratedImage(data.image);
+      setGeneratedImage(
+        data.image
+      );
+
+      setStats((prev) => ({
+
+        ...prev,
+
+        totalImages:
+          prev.totalImages + 1,
+
+        lastUsed:
+          new Date()
+            .toLocaleString()
+
+      }));
+
+      await refreshCredits();
 
     } else {
 
-      alert(data.message || "Erè pandan jenerasyon imaj la");
+      if (
+        data.code ===
+        "NO_CREDITS"
+      ) {
+
+        alert(
+          language === "ht"
+            ? "Ou pa gen kredi ankò."
+            : language === "fr"
+            ? "Vous n'avez plus de crédits."
+            : language === "es"
+            ? "No tienes más créditos."
+            : "You don't have any credits left."
+        );
+
+      } else {
+
+        alert(
+          data.message ||
+
+          (
+            language === "ht"
+              ? "Erè pandan imaj la ap jenere a."
+              : language === "fr"
+              ? "Erreur lors de la génération de l'image."
+              : language === "es"
+              ? "Error al generar la imagen."
+              : "Error generating image."
+          )
+        );
+
+      }
 
     }
-
-    setStats((prev) => ({
-
-  ...prev,
-
-  totalImages:
-    prev.totalImages + 1,
-
-  lastUsed:
-    new Date().toLocaleString()
-
-}));
 
   } catch (error) {
 
     console.error(error);
 
-    alert("Erè koneksyon ak backend la");
+    alert(
+      language === "ht"
+        ? "Erè koneksyon ak sèvè a."
+        : language === "fr"
+        ? "Erreur de connexion avec le serveur."
+        : language === "es"
+        ? "Error de conexión con el servidor."
+        : "Connection error with server."
+    );
 
   } finally {
 
@@ -1540,7 +1766,8 @@ console.log(
 
 const handleImageUpload = (e) => {
 
-  const file = e.target.files[0];
+  const file =
+    e.target.files[0];
 
   if (!file) return;
 
@@ -1554,34 +1781,60 @@ const handleImageUpload = (e) => {
 
 const askAI = async () => {
 
+  if (!checkCredits()) {
+    return;
+  }
+
+  if (!user) {
+    setShowLogin(true);
+    return;
+  }
+
   if (text.trim() === "") {
 
-    alert("Tanpri antre yon kestyon oswa tèks");
+    alert(
+      language === "ht"
+        ? "Tanpri antre yon kesyon oswa yon tèks."
+        : language === "fr"
+        ? "Veuillez entrer une question ou un texte."
+        : language === "es"
+        ? "Por favor escribe una pregunta o un texto."
+        : "Please enter a question or text."
+    );
 
     return;
-
   }
 
   try {
 
     setAiLoading(true);
-
     setAiResponse("");
 
-    console.log("Kesyon voye:", text);
+    const token =
+      localStorage.getItem(
+        "bely_token"
+      );
 
-    const response = await fetch(
-      "https://bely-studio-backend.onrender.com/ask-ai",
-      {
-        method: "POST",
+    console.log("Kesyon voye:");
+    console.log(text);
 
-        headers: {
-          "Content-Type": "application/json"
-        },
+    const response =
+      await fetch(
+        "https://bely-studio-backend.onrender.com/ask-ai",
+        {
+          method: "POST",
 
-        body: JSON.stringify({
+          headers: {
+            "Content-Type":
+              "application/json",
 
-  prompt: `
+            Authorization:
+              `Bearer ${token}`
+          },
+
+          body: JSON.stringify({
+
+            prompt: `
 You are Bely AI, a helpful AI assistant.
 
 ${language === "ht" ? creolePromptRules : ""}
@@ -1600,68 +1853,100 @@ User question:
 ${text}
 `
 
-})
-      }
-    );
+          })
 
-    const data = await response.json();
+        }
+      );
 
-console.log(data);
+    const data =
+      await response.json();
+
+    console.log(data);
 
     if (data.success) {
 
       const finalAnswer =
-  language === "ht"
-    ? correctCreole(data.answer)
-    : data.answer;
+        language === "ht"
+          ? correctCreole(
+              data.answer
+            )
+          : data.answer;
 
-  setAiResponse(
-  finalAnswer
-);
-  setMessages((prev) => [
+      setAiResponse(
+        finalAnswer
+      );
 
-  ...prev,
+      setMessages(
+        (prev) => [
 
-  {
-    type:"user",
-    text:text
-  },
+          ...prev,
 
-  {
-    type:"ai",
-    text:finalAnswer
+          {
+            type: "user",
+            text: text
+          },
 
-  .replace(/#/g,"")
+          {
+            type: "ai",
 
-  .replace(/\*/g,"")
+            text:
+              finalAnswer
 
-  .replace(/=/g,"")
+                .replace(/#/g, "")
+                .replace(/\*/g, "")
+                .replace(/=/g, "")
+                .replace(/_/g, "")
+                .replace(/-{3,}/g, "")
+                .trim()
+          }
 
-  .replace(/_/g,"")
+        ]
+      );
 
-  .replace(/-{3,}/g,"")
+      setStats(
+        (prev) => ({
 
-  .trim()
-  }
+          ...prev,
 
-]);
+          totalAI:
+            prev.totalAI + 1,
 
-setStats((prev) => ({
+          lastUsed:
+            new Date()
+              .toLocaleString()
 
-  ...prev,
+        })
+      );
 
-  totalAI: prev.totalAI + 1,
+      await refreshCredits();
 
-  lastUsed:
-    new Date().toLocaleString()
+      setText("");
 
-}));
+    } else {
 
-  setText("");
+      if (
+        data.code ===
+        "NO_CREDITS"
+      ) {
 
-} else {
+        alert(
+          language === "ht"
+            ? "Ou pa gen kredi ankò."
+            : language === "fr"
+            ? "Vous n'avez plus de crédits."
+            : language === "es"
+            ? "No tienes más créditos."
+            : "You don't have any credits left."
+        );
 
-      setAiResponse("Erè pandan repons AI a.");
+      } else {
+
+        setAiResponse(
+          data.message ||
+          "Erè pandan repons AI a."
+        );
+
+      }
 
     }
 
@@ -1674,7 +1959,13 @@ setStats((prev) => ({
     setAiLoading(false);
 
     setAiResponse(
-      "Erè koneksyon ak AI a."
+      language === "ht"
+        ? "Erè koneksyon ak IA a."
+        : language === "fr"
+        ? "Erreur de connexion avec l'IA."
+        : language === "es"
+        ? "Error de conexión con la IA."
+        : "Connection error with AI."
     );
 
   }
@@ -1683,29 +1974,56 @@ setStats((prev) => ({
 
 const translateText = async () => {
 
+  if (!checkCredits()) {
+    return;
+  }
+
+  if (!user) {
+    setShowLogin(true);
+    return;
+  }
+
   if (text.trim() === "") {
 
-    alert("Tanpri antre yon tèks");
+    alert(
+      language === "ht"
+        ? "Tanpri antre yon tèks."
+        : language === "fr"
+        ? "Veuillez entrer un texte."
+        : language === "es"
+        ? "Por favor escribe un texto."
+        : "Please enter a text."
+    );
 
     return;
-
   }
 
   try {
 
     setAiLoading(true);
 
-    const response = await fetch(
-      "https://bely-studio-backend.onrender.com/ask-ai",
-      {
-        method: "POST",
+    const token =
+      localStorage.getItem(
+        "bely_token"
+      );
 
-        headers: {
-          "Content-Type": "application/json"
-        },
+    const response =
+      await fetch(
+        "https://bely-studio-backend.onrender.com/ask-ai",
+        {
+          method: "POST",
 
-        body: JSON.stringify({
-          prompt: `
+          headers: {
+            "Content-Type":
+              "application/json",
+
+            Authorization:
+              `Bearer ${token}`
+          },
+
+          body: JSON.stringify({
+
+            prompt: `
 Translate the following text into
 ${language === "ht" ? creolePromptRules : ""}
 ${langMap[language]}.
@@ -1719,11 +2037,13 @@ Text:
 
 ${text}
 `
-        })
-      }
-    );
 
-    const data = await response.json();
+          })
+        }
+      );
+
+    const data =
+      await response.json();
 
     console.log(data);
 
@@ -1731,49 +2051,100 @@ ${text}
 
       const finalAnswer =
         language === "ht"
-          ? correctCreole(data.answer)
+          ? correctCreole(
+              data.answer
+            )
           : data.answer;
 
-      setTranslationMessages((prev) => [
+      setTranslationMessages(
+        (prev) => [
 
-        ...prev,
+          ...prev,
 
-        {
-          type: "user",
-          text: text
-        },
+          {
+            type: "user",
+            text: text
+          },
 
-        {
-          type: "ai",
-          text: finalAnswer
-        }
+          {
+            type: "ai",
+            text: finalAnswer
+          }
 
-      ]);
+        ]
+      );
 
       setStats((prev) => ({
 
         ...prev,
 
-        totalAI: prev.totalAI + 1,
+        totalAI:
+          prev.totalAI + 1,
 
         lastUsed:
-          new Date().toLocaleString()
+          new Date()
+            .toLocaleString()
 
       }));
 
+      await refreshCredits();
+
       setText("");
 
-    }
+    } else {
 
-    setAiLoading(false);
+      if (
+        data.code ===
+        "NO_CREDITS"
+      ) {
+
+        alert(
+          language === "ht"
+            ? "Ou pa gen kredi ankò."
+            : language === "fr"
+            ? "Vous n'avez plus de crédits."
+            : language === "es"
+            ? "No tienes más créditos."
+            : "You don't have any credits left."
+        );
+
+      } else {
+
+        alert(
+          data.message ||
+
+          (
+            language === "ht"
+              ? "Erè pandan tradiksyon an."
+              : language === "fr"
+              ? "Erreur pendant la traduction."
+              : language === "es"
+              ? "Error durante la traducción."
+              : "Translation error."
+          )
+        );
+
+      }
+
+    }
 
   } catch (error) {
 
     console.error(error);
 
-    setAiLoading(false);
+    alert(
+      language === "ht"
+        ? "Erè koneksyon ak sèvè a."
+        : language === "fr"
+        ? "Erreur de connexion avec le serveur."
+        : language === "es"
+        ? "Error de conexión con el servidor."
+        : "Connection error with server."
+    );
 
-    alert("Erè koneksyon");
+  } finally {
+
+    setAiLoading(false);
 
   }
 
@@ -1781,29 +2152,56 @@ ${text}
 
 const rewriteText = async () => {
 
+  if (!checkCredits()) {
+    return;
+  }
+
+  if (!user) {
+    setShowLogin(true);
+    return;
+  }
+
   if (text.trim() === "") {
 
-    alert("Tanpri antre yon tèks");
+    alert(
+      language === "ht"
+        ? "Tanpri antre yon tèks."
+        : language === "fr"
+        ? "Veuillez entrer un texte."
+        : language === "es"
+        ? "Por favor escribe un texto."
+        : "Please enter a text."
+    );
 
     return;
-
   }
 
   try {
 
     setAiLoading(true);
 
-    const response = await fetch(
-      "https://bely-studio-backend.onrender.com/ask-ai",
-      {
-        method: "POST",
+    const token =
+      localStorage.getItem(
+        "bely_token"
+      );
 
-        headers: {
-          "Content-Type": "application/json"
-        },
+    const response =
+      await fetch(
+        "https://bely-studio-backend.onrender.com/ask-ai",
+        {
+          method: "POST",
 
-        body: JSON.stringify({
-          prompt: `
+          headers: {
+            "Content-Type":
+              "application/json",
+
+            Authorization:
+              `Bearer ${token}`
+          },
+
+          body: JSON.stringify({
+
+            prompt: `
 You are a professional editor.
 
 ${language === "ht" ? creolePromptRules : ""}
@@ -1822,59 +2220,114 @@ Text:
 
 ${text}
 `
-        })
-      }
-    );
 
-    const data = await response.json();
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    console.log(data);
 
     if (data.success) {
 
       const finalAnswer =
         language === "ht"
-          ? correctCreole(data.answer)
+          ? correctCreole(
+              data.answer
+            )
           : data.answer;
 
-      setRewrites((prev) => [
+      setRewrites(
+        (prev) => [
 
-        ...prev,
+          ...prev,
 
-        {
-          type: "user",
-          text: text
-        },
+          {
+            type: "user",
+            text: text
+          },
 
-        {
-          type: "ai",
-          text: finalAnswer
-        }
+          {
+            type: "ai",
+            text: finalAnswer
+          }
 
-      ]);
+        ]
+      );
 
       setStats((prev) => ({
 
         ...prev,
 
-        totalAI: prev.totalAI + 1,
+        totalAI:
+          prev.totalAI + 1,
 
         lastUsed:
-          new Date().toLocaleString()
+          new Date()
+            .toLocaleString()
 
       }));
 
+      await refreshCredits();
+
       setText("");
 
-    }
+    } else {
 
-    setAiLoading(false);
+      if (
+        data.code ===
+        "NO_CREDITS"
+      ) {
+
+        alert(
+          language === "ht"
+            ? "Ou pa gen kredi ankò."
+            : language === "fr"
+            ? "Vous n'avez plus de crédits."
+            : language === "es"
+            ? "No tienes más créditos."
+            : "You don't have any credits left."
+        );
+
+      } else {
+
+        alert(
+          data.message ||
+
+          (
+            language === "ht"
+              ? "Erè pandan re-ekriti a."
+              : language === "fr"
+              ? "Erreur pendant la réécriture."
+              : language === "es"
+              ? "Error durante la reescritura."
+              : "Rewrite error."
+          )
+        );
+
+      }
+
+    }
 
   } catch (error) {
 
     console.error(error);
 
-    setAiLoading(false);
+    alert(
+      language === "ht"
+        ? "Erè koneksyon ak sèvè a."
+        : language === "fr"
+        ? "Erreur de connexion avec le serveur."
+        : language === "es"
+        ? "Error de conexión con el servidor."
+        : "Connection error with server."
+    );
 
-    alert("Erè koneksyon");
+  } finally {
+
+    setAiLoading(false);
 
   }
 
@@ -1882,29 +2335,56 @@ ${text}
 
 const summarizeText = async () => {
 
+  if (!checkCredits()) {
+    return;
+  }
+
+  if (!user) {
+    setShowLogin(true);
+    return;
+  }
+
   if (text.trim() === "") {
 
-    alert("Tanpri antre yon tèks");
+    alert(
+      language === "ht"
+        ? "Tanpri antre yon tèks."
+        : language === "fr"
+        ? "Veuillez entrer un texte."
+        : language === "es"
+        ? "Por favor escribe un texto."
+        : "Please enter a text."
+    );
 
     return;
-
   }
 
   try {
 
     setAiLoading(true);
 
-    const response = await fetch(
-      "https://bely-studio-backend.onrender.com/ask-ai",
-      {
-        method: "POST",
+    const token =
+      localStorage.getItem(
+        "bely_token"
+      );
 
-        headers: {
-          "Content-Type": "application/json"
-        },
+    const response =
+      await fetch(
+        "https://bely-studio-backend.onrender.com/ask-ai",
+        {
+          method: "POST",
 
-        body: JSON.stringify({
-          prompt: `
+          headers: {
+            "Content-Type":
+              "application/json",
+
+            Authorization:
+              `Bearer ${token}`
+          },
+
+          body: JSON.stringify({
+
+            prompt: `
 You are a professional summarizer.
 
 ${language === "ht" ? creolePromptRules : ""}
@@ -1922,59 +2402,114 @@ Text:
 
 ${text}
 `
-        })
-      }
-    );
 
-    const data = await response.json();
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    console.log(data);
 
     if (data.success) {
 
       const finalAnswer =
         language === "ht"
-          ? correctCreole(data.answer)
+          ? correctCreole(
+              data.answer
+            )
           : data.answer;
 
-      setSummaries((prev) => [
+      setSummaries(
+        (prev) => [
 
-        ...prev,
+          ...prev,
 
-        {
-          type: "user",
-          text: text
-        },
+          {
+            type: "user",
+            text: text
+          },
 
-        {
-          type: "ai",
-          text: finalAnswer
-        }
+          {
+            type: "ai",
+            text: finalAnswer
+          }
 
-      ]);
+        ]
+      );
 
       setStats((prev) => ({
 
         ...prev,
 
-        totalAI: prev.totalAI + 1,
+        totalAI:
+          prev.totalAI + 1,
 
         lastUsed:
-          new Date().toLocaleString()
+          new Date()
+            .toLocaleString()
 
       }));
 
+      await refreshCredits();
+
       setText("");
 
-    }
+    } else {
 
-    setAiLoading(false);
+      if (
+        data.code ===
+        "NO_CREDITS"
+      ) {
+
+        alert(
+          language === "ht"
+            ? "Ou pa gen kredi ankò."
+            : language === "fr"
+            ? "Vous n'avez plus de crédits."
+            : language === "es"
+            ? "No tienes más créditos."
+            : "You don't have any credits left."
+        );
+
+      } else {
+
+        alert(
+          data.message ||
+
+          (
+            language === "ht"
+              ? "Erè pandan rezime a."
+              : language === "fr"
+              ? "Erreur pendant le résumé."
+              : language === "es"
+              ? "Error durante el resumen."
+              : "Summary error."
+          )
+        );
+
+      }
+
+    }
 
   } catch (error) {
 
     console.error(error);
 
-    setAiLoading(false);
+    alert(
+      language === "ht"
+        ? "Erè koneksyon ak sèvè a."
+        : language === "fr"
+        ? "Erreur de connexion avec le serveur."
+        : language === "es"
+        ? "Error de conexión con el servidor."
+        : "Connection error with server."
+    );
 
-    alert("Erè koneksyon");
+  } finally {
+
+    setAiLoading(false);
 
   }
 
@@ -1982,29 +2517,56 @@ ${text}
 
 const generateTikTokScript = async () => {
 
+  if (!checkCredits()) {
+    return;
+  }
+
+  if (!user) {
+    setShowLogin(true);
+    return;
+  }
+
   if (text.trim() === "") {
 
-    alert("Tanpri antre yon sijè");
+    alert(
+      language === "ht"
+        ? "Tanpri antre yon sijè."
+        : language === "fr"
+        ? "Veuillez entrer un sujet."
+        : language === "es"
+        ? "Por favor escribe un tema."
+        : "Please enter a topic."
+    );
 
     return;
-
   }
 
   try {
 
     setAiLoading(true);
 
-    const response = await fetch(
-      "https://bely-studio-backend.onrender.com/ask-ai",
-      {
-        method: "POST",
+    const token =
+      localStorage.getItem(
+        "bely_token"
+      );
 
-        headers: {
-          "Content-Type": "application/json"
-        },
+    const response =
+      await fetch(
+        "https://bely-studio-backend.onrender.com/ask-ai",
+        {
+          method: "POST",
 
-        body: JSON.stringify({
-          prompt: `
+          headers: {
+            "Content-Type":
+              "application/json",
+
+            Authorization:
+              `Bearer ${token}`
+          },
+
+          body: JSON.stringify({
+
+            prompt: `
 You are a professional TikTok content creator.
 
 ${language === "ht" ? creolePromptRules : ""}
@@ -2031,61 +2593,115 @@ Format exactly like this:
 🎬 ${tiktokLabels[language].development}
 
 📢 ${tiktokLabels[language].cta}
-
 `
-        })
-      }
-    );
 
-    const data = await response.json();
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    console.log(data);
 
     if (data.success) {
 
       const finalAnswer =
         language === "ht"
-          ? correctCreole(data.answer)
+          ? correctCreole(
+              data.answer
+            )
           : data.answer;
 
-      setTiktokScripts((prev) => [
+      setTiktokScripts(
+        (prev) => [
 
-        ...prev,
+          ...prev,
 
-        {
-          type: "user",
-          text: text
-        },
+          {
+            type: "user",
+            text: text
+          },
 
-        {
-          type: "ai",
-          text: finalAnswer
-        }
+          {
+            type: "ai",
+            text: finalAnswer
+          }
 
-      ]);
+        ]
+      );
 
       setStats((prev) => ({
 
         ...prev,
 
-        totalAI: prev.totalAI + 1,
+        totalAI:
+          prev.totalAI + 1,
 
         lastUsed:
-          new Date().toLocaleString()
+          new Date()
+            .toLocaleString()
 
       }));
 
+      await refreshCredits();
+
       setText("");
 
-    }
+    } else {
 
-    setAiLoading(false);
+      if (
+        data.code ===
+        "NO_CREDITS"
+      ) {
+
+        alert(
+          language === "ht"
+            ? "Ou pa gen kredi ankò."
+            : language === "fr"
+            ? "Vous n'avez plus de crédits."
+            : language === "es"
+            ? "No tienes más créditos."
+            : "You don't have any credits left."
+        );
+
+      } else {
+
+        alert(
+          data.message ||
+
+          (
+            language === "ht"
+              ? "Erè pandan script la ap jenere a."
+              : language === "fr"
+              ? "Erreur pendant la génération du script."
+              : language === "es"
+              ? "Error al generar el guion."
+              : "Script generation error."
+          )
+        );
+
+      }
+
+    }
 
   } catch (error) {
 
     console.error(error);
 
-    setAiLoading(false);
+    alert(
+      language === "ht"
+        ? "Erè koneksyon ak sèvè la."
+        : language === "fr"
+        ? "Erreur de connexion avec le serveur."
+        : language === "es"
+        ? "Error de conexión con el servidor."
+        : "Connection error with server."
+    );
 
-    alert("Erè koneksyon");
+  } finally {
+
+    setAiLoading(false);
 
   }
 
@@ -2093,30 +2709,56 @@ Format exactly like this:
     
 const generateQuiz = async () => {
 
+  if (!checkCredits()) {
+    return;
+  }
+
+  if (!user) {
+    setShowLogin(true);
+    return;
+  }
+
   if (text.trim() === "") {
 
-    alert("Tanpri antre yon sijè");
+    alert(
+      language === "ht"
+        ? "Tanpri antre yon sijè."
+        : language === "fr"
+        ? "Veuillez entrer un sujet."
+        : language === "es"
+        ? "Por favor escribe un tema."
+        : "Please enter a topic."
+    );
 
     return;
-
   }
 
   try {
 
     setAiLoading(true);
 
-    const response = await fetch(
-      "https://bely-studio-backend.onrender.com/ask-ai",
-      {
-        method: "POST",
+    const token =
+      localStorage.getItem(
+        "bely_token"
+      );
 
-        headers: {
-          "Content-Type": "application/json"
-        },
+    const response =
+      await fetch(
+        "https://bely-studio-backend.onrender.com/ask-ai",
+        {
+          method: "POST",
 
-        body: JSON.stringify({
-          prompt: `
+          headers: {
+            "Content-Type":
+              "application/json",
 
+            Authorization:
+              `Bearer ${token}`
+          },
+
+          body: JSON.stringify({
+
+            prompt: `
 You are a professional teacher and quiz creator.
 
 ${language === "ht" ? creolePromptRules : ""}
@@ -2156,49 +2798,95 @@ Rules:
 - Only one correct answer.
 - Include an explanation for each answer.
 - Return only the quiz.
-
 `
-        })
-      }
-    );
 
-    const data = await response.json();
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    console.log(data);
 
     if (data.success) {
 
       const finalAnswer =
         language === "ht"
-          ? correctCreole(data.answer)
+          ? correctCreole(
+              data.answer
+            )
           : data.answer;
 
-      setQuizzes((prev) => [
+      setQuizzes(
+        (prev) => [
 
-        ...prev,
+          ...prev,
 
-        {
-          type: "user",
-          text: text
-        },
+          {
+            type: "user",
+            text: text
+          },
 
-        {
-          type: "ai",
-          text: finalAnswer
-        }
+          {
+            type: "ai",
+            text: finalAnswer
+          }
 
-      ]);
+        ]
+      );
 
       setStats((prev) => ({
 
         ...prev,
 
-        totalAI: prev.totalAI + 1,
+        totalAI:
+          prev.totalAI + 1,
 
         lastUsed:
-          new Date().toLocaleString()
+          new Date()
+            .toLocaleString()
 
       }));
 
+      await refreshCredits();
+
       setText("");
+
+    } else {
+
+      if (
+        data.code ===
+        "NO_CREDITS"
+      ) {
+
+        alert(
+          language === "ht"
+            ? "Ou pa gen kredi ankò."
+            : language === "fr"
+            ? "Vous n'avez plus de crédits."
+            : language === "es"
+            ? "No tienes más créditos."
+            : "You don't have any credits left."
+        );
+
+      } else {
+
+        alert(
+          data.message ||
+
+          (
+            language === "ht"
+              ? "Erè pandan quiz la ap jenere a."
+              : language === "fr"
+              ? "Erreur pendant la génération du quiz."
+              : language === "es"
+              ? "Error al generar el quiz."
+              : "Quiz generation error."
+          )
+        );
+
+      }
 
     }
 
@@ -2206,11 +2894,284 @@ Rules:
 
     console.error(error);
 
-    alert("Erè koneksyon");
+    alert(
+      language === "ht"
+        ? "Erè koneksyon ak sèvè a."
+        : language === "fr"
+        ? "Erreur de connexion avec le serveur."
+        : language === "es"
+        ? "Error de conexión con el servidor."
+        : "Connection error with server."
+    );
+
+  } finally {
+
+    setAiLoading(false);
 
   }
 
-  setAiLoading(false);
+};
+
+const signupUser =
+async () => {
+
+  try {
+
+    const response =
+      await fetch(
+"https://bely-studio-backend.onrender.com/api/auth/signup",
+
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":
+"application/json"
+},
+
+body:JSON.stringify({
+
+name:
+signupName,
+
+email:
+signupEmail,
+
+password:
+signupPassword
+
+})
+
+}
+
+);
+
+const data =
+await response.json();
+
+if(data.success){
+
+alert(
+language==="ht"
+?
+"Kont kreye avèk siksè"
+:
+"Account created"
+);
+
+setShowSignup(false);
+
+setShowLogin(true);
+
+}else{
+
+alert(
+  data.message ||
+  data.code ||
+  "Server Error"
+);
+
+}
+
+}catch(err){
+
+console.log(err);
+
+}
+
+};
+
+const loginUser =
+async () => {
+
+  try {
+
+    const response =
+      await fetch(
+"https://bely-studio-backend.onrender.com/api/auth/login",
+
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":
+"application/json"
+},
+
+body:JSON.stringify({
+
+email:
+loginEmail,
+
+password:
+loginPassword
+
+})
+
+}
+
+);
+
+const data =
+await response.json();
+
+if(data.success){
+
+  console.log(data.user);
+console.log(data.user.freeCredits);
+
+setUser(data.user);
+
+const savedPhoto =
+  localStorage.getItem(
+    "bely_photo"
+  );
+
+const savedAvatar =
+  localStorage.getItem(
+    "bely_avatar"
+  );
+
+if (savedPhoto) {
+  setProfilePhoto(
+    savedPhoto
+  );
+}
+
+if (savedAvatar) {
+  setAvatar(
+    savedAvatar
+  );
+}
+
+setCredits(
+  data.user.freeCredits
+);
+
+console.log("Credits:", data.user.freeCredits);
+
+localStorage.setItem(
+  "bely_token",
+  data.token
+);
+
+localStorage.setItem(
+  "bely_user",
+  JSON.stringify(data.user)
+);
+
+setShowLogin(false);
+
+await refreshCredits();
+
+}else{
+
+alert(
+  data.message ||
+  data.code ||
+  "Server Error"
+);
+
+}
+
+}catch(err){
+
+console.log(err);
+
+}
+
+};
+
+const checkCredits = () => {
+
+  if (
+    user?.plan === "free" &&
+    credits <= 0
+  ) {
+
+    setShowPlans(true);
+
+    return false;
+  }
+
+  return true;
+};
+
+const refreshCredits =
+async () => {
+
+  try {
+
+    const token =
+      localStorage.getItem(
+        "bely_token"
+      );
+
+    if (!token) return;
+
+    const response =
+      await fetch(
+        "https://bely-studio-backend.onrender.com/api/auth/credits",
+        {
+          headers: {
+            Authorization:
+              `Bearer ${token}`
+          }
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if (data.success) {
+
+      setCredits(
+        data.freeCredits
+      );
+
+      setUser((prev) => {
+  const updated = {
+    ...prev,
+    freeCredits: data.freeCredits
+  };
+
+  localStorage.setItem(
+    "bely_user",
+    JSON.stringify(updated)
+  );
+
+  return updated;
+});
+
+      const savedUser =
+        localStorage.getItem(
+          "bely_user"
+        );
+
+      if (savedUser) {
+
+        const parsed =
+          JSON.parse(savedUser);
+
+        parsed.freeCredits =
+          data.freeCredits;
+
+        localStorage.setItem(
+          "bely_user",
+          JSON.stringify(parsed)
+        );
+
+      }
+
+    }
+
+  } catch (err) {
+
+    console.log(err);
+
+  }
 
 };
 
@@ -3601,11 +4562,7 @@ if (activePage === "voice-ai") {
 
 >
 
-  {
- recording
- ? <HiStop />
- : <HiMiniMicrophone />
-}
+  {recording ? "🛑" : "🎙️"}
 
 </button>
 
@@ -3784,7 +4741,180 @@ if (activePage === "image") {
 
 }
 
-  return (
+const uploadPhoto =
+(e)=>{
+
+  const file =
+    e.target.files[0];
+
+  if (!file)
+    return;
+
+  const reader =
+    new FileReader();
+
+  reader.onload =
+  ()=>{
+
+    setProfilePhoto(
+      reader.result
+    );
+
+    localStorage.setItem(
+      "bely_photo",
+      reader.result
+    );
+
+    setAvatar("");
+
+    localStorage.removeItem(
+      "bely_avatar"
+    );
+
+  };
+
+  const image = new Image();
+
+reader.onload = (e) => {
+
+  image.src = e.target.result;
+
+  image.onload = () => {
+
+    const canvas =
+      document.createElement("canvas");
+
+    const MAX =
+      300;
+
+    let width =
+      image.width;
+
+    let height =
+      image.height;
+
+    if (width > height) {
+
+      if (width > MAX) {
+
+        height *=
+          MAX / width;
+
+        width =
+          MAX;
+
+      }
+
+    } else {
+
+      if (height > MAX) {
+
+        width *=
+          MAX / height;
+
+        height =
+          MAX;
+
+      }
+
+    }
+
+    canvas.width =
+      width;
+
+    canvas.height =
+      height;
+
+    const ctx =
+      canvas.getContext(
+        "2d"
+      );
+
+    ctx.drawImage(
+      image,
+      0,
+      0,
+      width,
+      height
+    );
+
+    const compressed =
+      canvas.toDataURL(
+        "image/jpeg",
+        0.7
+      );
+
+    setProfilePhoto(
+      compressed
+    );
+
+    setAvatar("");
+
+    localStorage.setItem(
+      "bely_photo",
+      compressed
+    );
+
+    localStorage.removeItem(
+      "bely_avatar"
+    );
+
+  };
+
+};
+
+reader.readAsDataURL(
+  file
+);
+
+};
+
+const chooseAvatar =
+(avatarUrl)=>{
+
+  setAvatar(
+    avatarUrl
+  );
+
+  setProfilePhoto("");
+
+  localStorage.setItem(
+    "bely_avatar",
+    avatarUrl
+  );
+
+  localStorage.removeItem(
+    "bely_photo"
+  );
+
+};
+
+const openPage = (page) => {
+
+  if (!user) {
+
+    setShowLogin(true);
+    return;
+
+  }
+
+  setActivePage(page);
+
+};
+
+const translatedPlan =
+
+user?.plan === "free"
+  ? t.freeText
+  : user?.plan === "basic"
+  ? t.basicText
+  : user?.plan === "pro"
+  ? t.proText
+  : user?.plan === "unlimited"
+  ? t.unlimitedText
+  : user?.plan;
+
+return (
 
   <div className="container">
 
@@ -3813,21 +4943,37 @@ if (activePage === "image") {
   <HiBars3 />
 </button>
 
+  {offline && (
+
+<div className="offline-banner">
+
+  {t.offlineText}
+
+</div>
+
+)}
+
   <div
     className="logo-wrapper"
     onClick={() =>
       setActivePage("home")
     }
   >
-    <img
-      src={logo}
-      alt="Bely AI Studio"
-      className="site-logo"
-    />
 
     <span className="logo-text">
       Bely AI Studio
     </span>
+
+    {user && (
+    <div
+  className="credits-box"
+  onClick={() =>
+    setShowPlans(true)
+  }
+>
+  ⭐ {credits}
+</div>
+  )}
 
   </div>
 
@@ -3835,50 +4981,69 @@ if (activePage === "image") {
 
   <div className="right-menu">
 
-    <select
-  className="flag-select"
-  value={language}
-  onChange={(e) =>
-    setLanguage(e.target.value)
-  }
->
+  <select
+    className="flag-select"
+    value={language}
+    onChange={(e) =>
+      setLanguage(e.target.value)
+    }
+  >
+    <option value="ht">🇭🇹</option>
+    <option value="en">🇺🇸</option>
+    <option value="fr">🇫🇷</option>
+    <option value="es">🇪🇸</option>
+  </select>
 
-  <option value="ht">
-    🇭🇹
-  </option>
+  {activePage !== "menu" && (
+  <button
+    className="login-btn"
+    onClick={() => {
 
-  <option value="en">
-    🇺🇸
-  </option>
+      if (user) {
 
-  <option value="fr">
-    🇫🇷
-  </option>
+        setShowProfile(true);
 
-  <option value="es">
-    🇪🇸
-  </option>
+      } else {
 
-</select>
+        setShowLogin(true);
 
+      }
 
+    }}
+  >
 
-    {activePage !== "menu" && (
+    {
+      profilePhoto ? (
 
-<button
-  className="login-btn"
-  onClick={() =>
-    setShowLogin(true)
-  }
->
-  <HiUser />
-</button>
+        <img
+          src={profilePhoto}
+          className="profile-mini"
+          alt=""
+        />
 
+      ) : avatar ? (
+
+        <img
+          src={avatar}
+          className="profile-mini"
+          alt=""
+        />
+
+      ) : user ? (
+
+        user.name.charAt(0)
+
+      ) : (
+
+        <HiUser />
+
+      )
+    }
+
+  </button>
 )}
 
-
-
-  </div>
+</div>
 
 </div>
 
@@ -4338,6 +5503,7 @@ speechSynthesis.speak(
   <HiDevicePhoneMobile />
   {t.downloadApk}
 </a>
+
 )}
 
 <div className="slider-dots">
@@ -4368,7 +5534,9 @@ speechSynthesis.speak(
 
   <div
   className="tool-card home-ask-card"
-  onClick={() => setActivePage("ask-ai")}
+  onClick={() =>
+  openPage("ask-ai")
+}
 >
     <div className="tool-icon">
       <FaRobot />
@@ -4378,7 +5546,9 @@ speechSynthesis.speak(
 
   <div
   className="tool-card home-translate-card"
-  onClick={() => setActivePage("translate")}
+  onClick={() =>
+  openPage("translate")
+}
 >
     <div className="tool-icon">
       <MdTranslate />
@@ -4388,7 +5558,9 @@ speechSynthesis.speak(
 
   <div
   className="tool-card home-audio-card"
-  onClick={() => setActivePage("audio")}
+  onClick={() =>
+  openPage("audio")
+}
 >
     <div className="tool-icon">
       <HiOutlineSpeakerWave />
@@ -4398,7 +5570,9 @@ speechSynthesis.speak(
 
   <div
   className="tool-card home-voice-card"
-  onClick={() => setActivePage("voice-ai")}
+  onClick={() =>
+  openPage("voice-ai")
+}
 >
     <div className="tool-icon">
       <HiOutlineChatBubbleLeftRight />
@@ -4416,7 +5590,9 @@ speechSynthesis.speak(
 
   <div
   className="tool-card home-rewrite-card"
-  onClick={() => setActivePage("rewrite")}
+  onClick={() =>
+  openPage("rewrite")
+}
 >
     <div className="tool-icon">
       <HiOutlinePencilSquare />
@@ -4426,7 +5602,9 @@ speechSynthesis.speak(
 
   <div
   className="tool-card home-summary-card"
-  onClick={() => setActivePage("summary")}
+  onClick={() =>
+  openPage("summary")
+}
 >
     <div className="tool-icon">
       <HiOutlineDocumentText />
@@ -4436,7 +5614,9 @@ speechSynthesis.speak(
 
   <div
   className="tool-card home-tiktok-card"
-  onClick={() => setActivePage("tiktok")}
+  onClick={() =>
+  openPage("tiktok")
+}
 >
     <div className="tool-icon">
       <HiOutlineVideoCamera />
@@ -4446,7 +5626,9 @@ speechSynthesis.speak(
 
   <div
   className="tool-card home-quiz-card"
-  onClick={() => setActivePage("quiz")}
+  onClick={() =>
+  openPage("quiz")
+}
 >
     <div className="tool-icon">
       <HiOutlineAcademicCap />
@@ -4456,7 +5638,9 @@ speechSynthesis.speak(
 
   <div
   className="tool-card home-image-card"
-  onClick={() => setActivePage("image")}
+  onClick={() =>
+  openPage("image")
+}
 >
     <div className="tool-icon">
       <HiOutlinePhoto />
@@ -4566,17 +5750,30 @@ speechSynthesis.speak(
 </h2>
 
 <input
-  type="email"
-  placeholder={t.email}
+type="email"
+placeholder={t.email}
+value={loginEmail}
+onChange={(e)=>
+setLoginEmail(
+e.target.value
+)}
 />
 
 <input
-  type="password"
-  placeholder={t.password}
+type="password"
+placeholder={t.password}
+value={loginPassword}
+onChange={(e)=>
+setLoginPassword(
+e.target.value
+)}
 />
 
-<button className="auth-btn">
-  {t.login}
+<button
+className="auth-btn"
+onClick={loginUser}
+>
+{t.login}
 </button>
 
 <p>
@@ -4617,22 +5814,40 @@ onClick={() => setShowLogin(false)}
 </h2>
 
 <input
-  type="text"
-  placeholder={t.name}
+type="text"
+placeholder={t.name}
+value={signupName}
+onChange={(e)=>
+setSignupName(
+e.target.value
+)}
 />
 
 <input
-  type="email"
-  placeholder={t.email}
+type="email"
+placeholder={t.email}
+value={signupEmail}
+onChange={(e)=>
+setSignupEmail(
+e.target.value
+)}
 />
 
 <input
-  type="password"
-  placeholder={t.password}
+type="password"
+placeholder={t.password}
+value={signupPassword}
+onChange={(e)=>
+setSignupPassword(
+e.target.value
+)}
 />
 
-<button className="auth-btn">
-  {t.signup}
+<button
+className="auth-btn"
+onClick={signupUser}
+>
+{t.signup}
 </button>
 
 <p>
@@ -4655,6 +5870,394 @@ onClick={() => setShowSignup(false)}
 >
 ✕
 </button>
+
+  </div>
+
+</div>
+
+)}
+
+{showPlans && (
+
+  <div className="popup-overlay">
+
+    <div className="popup-card">
+
+      <div className="payment-card">
+
+  <h3>{t.paymentMethods}</h3>
+
+  <div className="payment-icons">
+
+    <img src="/visa.png" alt="Visa" />
+    <img src="/mastercard.png" alt="Mastercard" />
+    <img src="/paypal.png" alt="PayPal" />
+    <img src="/moncash.png" alt="MonCash" />
+    <img src="/natcash.png" alt="NatCash" />
+    <img src="/zelle.png" alt="Zelle" />
+    <img src="/cashapp.png" alt="Cashapp" />
+
+  </div>
+
+</div>
+
+      <button
+        className="modal-close-btn"
+        onClick={() =>
+          setShowPlans(false)
+        }
+      >
+        ✕
+      </button>
+
+      <h2>{t.premiumTitle}</h2>
+
+      <p>{t.premiumDescription}</p>
+
+      <div className="plan-card free-card">
+
+  <h3>{t.freePlan}</h3>
+  <p>10 {t.creditsText}</p>
+
+  <button
+    className="buy-plan-btn"
+  >
+    {t.choosePlan}
+  </button>
+
+</div>
+
+<div className="plan-card basic-card">
+
+  <span className="popular-badge">
+    {t.mostPopular}
+  </span>
+
+  <h3>{t.basicPlan}</h3>
+
+  <p>$4.99{t.monthText}</p>
+
+  <p>500 {t.creditsText}</p>
+
+  <button
+    className="buy-plan-btn"
+  >
+    {t.choosePlan}
+  </button>
+
+</div>
+
+<div className="plan-card pro-card">
+
+  <h3>{t.proPlan}</h3>
+  <p>$9.99 {t.monthText}</p>
+  <p>2000 {t.creditsText}</p>
+
+  <button
+    className="buy-plan-btn"
+  >
+    {t.choosePlan}
+  </button>
+
+</div>
+
+<div className="plan-card unlimited-card">
+
+  <h3>{t.unlimitedPlan}</h3>
+  <p>$19.99 {t.monthText}</p>
+  <p>{t.unlimitedCredits}</p>
+
+  <button
+    className="buy-plan-btn"
+  >
+    {t.choosePlan}
+  </button>
+
+</div>
+
+      <button
+        onClick={() =>
+          setShowPlans(false)
+        }
+      >
+        {t.closePlan}
+      </button>
+
+    </div>
+
+  </div>
+
+)}
+
+{showProfile && (
+
+<div className="popup-overlay">
+
+  <div className="profile-popup">
+
+    <button
+      className="modal-close-btn"
+      onClick={() =>
+        setShowProfile(false)
+      }
+    >
+      ✕
+    </button>
+
+    <div className="profile-photo">
+
+  {
+    profilePhoto ?
+
+      <img
+        src={
+          profilePhoto
+        }
+        className="
+        profile-avatar
+        "
+      />
+
+    :
+
+    avatar ?
+
+      <img
+        src={avatar}
+        className="
+        profile-avatar
+        "
+      />
+
+    :
+
+      user?.name
+      ?.charAt(0)
+  }
+
+<button
+  className="remove-photo-btn"
+  onClick={() => {
+
+    setProfilePhoto("");
+    setAvatar("");
+
+    localStorage.removeItem(
+      "bely_photo"
+    );
+
+    localStorage.removeItem(
+      "bely_avatar"
+    );
+
+  }}
+>
+  🗑
+  
+</button>
+
+  <label
+    className="edit-photo-btn"
+  >
+
+    <HiPencil />
+
+    <input
+      type="file"
+      accept="image/*"
+      hidden
+      onChange={uploadPhoto}
+    />
+
+  </label>
+
+</div>
+
+<h2 className="profile-name">
+  {user.name}
+</h2>
+
+<p className="profile-email">
+  {user.email}
+</p>
+
+<div className="profile-info">
+
+  <div className="profile-row">
+
+    <span>
+      {t.planText}
+    </span>
+
+    <strong>
+      {translatedPlan}
+    </strong>
+
+  </div>
+
+  <div className="profile-row">
+
+    <span>
+      {t.creditsTextProfile}
+    </span>
+
+    <strong>
+      {credits}
+    </strong>
+
+  </div>
+
+</div>
+
+<div
+className="
+avatar-list">
+
+<img
+src="
+/avatars/avatar1.png
+"
+onClick={()=>
+chooseAvatar(
+"/avatars/avatar1.png"
+)}
+/>
+
+<img
+src="
+/avatars/avatar2.png
+"
+onClick={()=>
+chooseAvatar(
+"/avatars/avatar2.png"
+)}
+/>
+
+<img
+src="
+/avatars/avatar3.png
+"
+onClick={()=>
+chooseAvatar(
+"/avatars/avatar3.png"
+)}
+/>
+
+<img
+src="
+/avatars/avatar4.png
+"
+onClick={()=>
+chooseAvatar(
+"/avatars/avatar4.png"
+)}
+/>
+
+<img
+src="
+/avatars/avatar5.png
+"
+onClick={()=>
+chooseAvatar(
+"/avatars/avatar5.png"
+)}
+/>
+
+<img
+src="
+/avatars/avatar6.png
+"
+onClick={()=>
+chooseAvatar(
+"/avatars/avatar6.png"
+)}
+/>
+
+<img
+src="
+/avatars/avatar7.png
+"
+onClick={()=>
+chooseAvatar(
+"/avatars/avatar7.png"
+)}
+/>
+
+<img
+src="
+/avatars/avatar8.png
+"
+onClick={()=>
+chooseAvatar(
+"/avatars/avatar8.png"
+)}
+/>
+
+<img
+src="
+/avatars/avatar9.png
+"
+onClick={()=>
+chooseAvatar(
+"/avatars/avatar9.png"
+)}
+/>
+
+<img
+src="
+/avatars/avatar10.png
+"
+onClick={()=>
+chooseAvatar(
+"/avatars/avatar10.png"
+)}
+/>
+
+<img
+src="
+/avatars/avatar11.png
+"
+onClick={()=>
+chooseAvatar(
+"/avatars/avatar11.png"
+)}
+/>
+
+<img
+src="
+/avatars/avatar12.png
+"
+onClick={()=>
+chooseAvatar(
+"/avatars/avatar12.png"
+)}
+/>
+
+</div>
+
+    <div
+  className="logout-text"
+onClick={() => {
+
+  localStorage.removeItem(
+    "bely_token"
+  );
+
+  localStorage.removeItem(
+    "bely_user"
+  );
+
+  setUser(null);
+
+  setProfilePhoto("");
+  setAvatar("");
+
+  setShowProfile(false);
+
+}}
+>
+  {t.logout}
+</div>
 
   </div>
 

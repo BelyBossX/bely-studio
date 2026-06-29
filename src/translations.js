@@ -286,6 +286,51 @@ imageDescription:
 "Kreye bèl imaj ak entèlijans atifisyèl.",
 you: "Ou menm",
 ai: "IA",
+ALL_FIELDS_REQUIRED: "Tout espas yo obligatwa.",
+
+EMAIL_ALREADY_EXISTS: "Imèl sa egziste deja.",
+
+ACCOUNT_CREATED: "Kont lan kreye avèk siksè.",
+
+SERVER_ERROR: "Yon erè pwodui sou sèvè a.",
+ACCOUNT_NOT_FOUND:
+"Nou pa jwenn kont sa.",
+
+INVALID_PASSWORD:
+"Modpas sa pa bon.",
+
+LOGIN_SUCCESS:
+"Koneksyon reyisi.",
+
+NOT_AUTHENTICATED:
+"Ou pa konekte.",
+
+INVALID_TOKEN:
+"Jeton an pa valab.",
+premiumTitle: "⭐ Bely AI Premium",
+premiumDescription: "Ou pa gen kredi ankò, Chwazi yon plan.",
+freePlan: "Gratis",
+basicPlan: "Bazik",
+proPlan: "Pwofesyonèl",
+unlimitedPlan: "San Limit",
+creditsText: "kredi",
+unlimitedCredits: "Kredi san limit",
+closePlan: "Fèmen",
+monthText: "/ mwa",
+paymentMethods: "Mwayen Pèman",
+choosePlan: "Chwazi Plan",
+mostPopular: "Pi Popilè",
+profileTitle: "Pwofil",
+planText: "Plan",
+creditsTextProfile: "Kredi",
+changePhoto: "Chanje Foto",
+logout: "Dekonekte",
+closeProfile: "Fèmen",
+offlineText: "Pa gen entènèt.",
+freeText: "Gratis",
+basicText: "Bazik",
+proText: "Pwofesyonèl",
+unlimitedText: "San Limit",
 
   },
 
@@ -590,6 +635,50 @@ imageDescription:
 "Create stunning AI-generated images.",
 you: "You",
 ai: "AI",
+ALL_FIELDS_REQUIRED: "All fields are required.",
+
+EMAIL_ALREADY_EXISTS: "This email already exists.",
+
+ACCOUNT_CREATED: "Account created successfully.",
+
+SERVER_ERROR: "Server error.",
+ACCOUNT_NOT_FOUND:
+"Account not found.",
+
+INVALID_PASSWORD:
+"Incorrect password.",
+
+LOGIN_SUCCESS:
+"Login successful.",
+NOT_AUTHENTICATED:
+"You are not authenticated.",
+
+INVALID_TOKEN:
+"Invalid token.",
+premiumTitle: "⭐ Bely AI Premium",
+premiumDescription: "You don't have any credits left. Choose a plan.",
+freePlan: "Free",
+basicPlan: "Basic",
+proPlan: "Pro",
+unlimitedPlan: "Unlimited",
+creditsText: "credits",
+unlimitedCredits: "Unlimited credits",
+closePlan: "Close",
+monthText: "/ month",
+paymentMethods: "Payment Methods",
+choosePlan: "Choose Plan",
+mostPopular: "Most Popular",
+profileTitle: "Profile",
+planText: "Plan",
+creditsTextProfile: "Credits",
+changePhoto: "Change Photo",
+logout: "Logout",
+closeProfile: "Close",
+offlineText: "No internet connection.",
+freeText: "Free",
+basicText: "Basic",
+proText: "Pro",
+unlimitedText: "Unlimited",
 
   },
 
@@ -883,6 +972,50 @@ imageDescription:
 "Créez de superbes images avec l'IA.",
  you: "Vous",
 ai: "IA",
+ALL_FIELDS_REQUIRED: "Tous les champs sont obligatoires.",
+
+EMAIL_ALREADY_EXISTS: "Cette adresse e-mail existe déjà.",
+
+ACCOUNT_CREATED: "Compte créé avec succès.",
+
+SERVER_ERROR: "Erreur du serveur.",
+ACCOUNT_NOT_FOUND:
+"Compte introuvable.",
+
+INVALID_PASSWORD:
+"Mot de passe incorrect.",
+
+LOGIN_SUCCESS:
+"Connexion réussie.",
+NOT_AUTHENTICATED:
+"Vous n'êtes pas connecté.",
+
+INVALID_TOKEN:
+"Jeton invalide.",
+premiumTitle: "⭐ Bely AI Premium",
+premiumDescription: "Vous n'avez plus de crédits. Choisissez un forfait.",
+freePlan: "Gratuit",
+basicPlan: "Basique",
+proPlan: "Pro",
+unlimitedPlan: "Illimité",
+creditsText: "crédits",
+unlimitedCredits: "Crédits illimités",
+closePlan: "Fermer",
+monthText: "/ mois",
+paymentMethods: "Méthodes de Paiement",
+choosePlan: "Choisir un forfait",
+mostPopular: "Le plus populaire",
+profileTitle: "Profil",
+planText: "Forfait",
+creditsTextProfile: "Crédits",
+changePhoto: "Changer la photo",
+logout: "Déconnexion",
+closeProfile: "Fermer",
+offlineText: "Pas de connexion Internet.",
+freeText: "Gratuit",
+basicText: "Basique",
+proText: "Pro",
+unlimitedText: "Illimité",
 
   },
 
@@ -1187,6 +1320,50 @@ imageDescription:
 "Crea impresionantes imágenes con IA.",
 you: "Tú",
 ai: "IA",
+ALL_FIELDS_REQUIRED: "Todos los campos son obligatorios.",
+
+EMAIL_ALREADY_EXISTS: "Este correo electrónico ya existe.",
+
+ACCOUNT_CREATED: "Cuenta creada correctamente.",
+
+SERVER_ERROR: "Error del servidor.",
+ACCOUNT_NOT_FOUND:
+"Cuenta no encontrada.",
+
+INVALID_PASSWORD:
+"Contraseña incorrecta.",
+
+LOGIN_SUCCESS:
+"Inicio de sesión exitoso.",
+NOT_AUTHENTICATED:
+"No has iniciado sesión.",
+
+INVALID_TOKEN:
+"Token inválido.",
+premiumTitle: "⭐ Bely AI Premium",
+premiumDescription: "No tienes más créditos. Elige un plan.",
+freePlan: "Gratis",
+basicPlan: "Básico",
+proPlan: "Pro",
+unlimitedPlan: "Ilimitado",
+creditsText: "créditos",
+unlimitedCredits: "Créditos ilimitados",
+closePlan: "Cerrar",
+monthText: "/ mes",
+paymentMethods: "Métodos de Pago",
+choosePlan: "Elegir Plan",
+mostPopular: "Más Popular",
+profileTitle: "Perfil",
+planText: "Plan",
+creditsTextProfile: "Créditos",
+changePhoto: "Cambiar foto",
+logout: "Cerrar sesión",
+closeProfile: "Cerrar",
+offlineText: "Sin conexión a Internet.",
+freeText: "Gratis",
+basicText: "Básico",
+proText: "Pro",
+unlimitedText: "Ilimitado",
 
   }
 
